@@ -16,3 +16,4 @@ githubinfo
 qrgen
 wiki
 checkhost
+createavatarspack
