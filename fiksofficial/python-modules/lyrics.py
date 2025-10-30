@@ -2,6 +2,8 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @PyModule
+# requires: lyricsgenius===3.7.0
+
 from lyricsgenius import Genius
 from .. import loader, utils
 
