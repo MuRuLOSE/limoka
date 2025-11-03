@@ -11,7 +11,7 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @pymodule
-# requires: opencv-python
+# requires: opencv-python pillow
 
 import os, shutil, cv2
 from PIL import Image, UnidentifiedImageError
