@@ -1,6 +1,5 @@
 en:
     guide: "<emoji document_id=5956561916573782596>📜</emoji> <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Guide for obtaining access token for Yandex.Music</a></b>"
-    iguide: "📜 <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Guide for obtaining access token for Yandex.Music</a></b>"
     no_token: "<emoji document_id=5778527486270770928>❌</emoji> <b>You didn't specify the access token in the config!</b>"
     autobio:
         d: "<emoji document_id=5429189857324841688>🎧</emoji> <b>Autobio is off now</b>"
@@ -32,7 +31,6 @@ en:
 
 ru:
     guide: "<emoji document_id=5956561916573782596>📜</emoji> <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Гайд по получению токена Яндекс.Музыки</a></b>"
-    iguide: "📜 <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Гайд по получению токена Яндекс.Музыки</a></b>"
     no_token: "<emoji document_id=5312526098750252863>❌</emoji> <b>Вы не указали токен Яндекс.Музыки в конфиге!</b>"
     autobio:
         d: "<emoji document_id=5429189857324841688>🎧</emoji> <b>Автобио выключено</b>"

@@ -173,8 +173,8 @@ class YandexMusic():
 @loader.tds
 class YaMusicMod(loader.Module):
     """The module for Yandex.Music streaming service"""
-    strings = {"name": "YaMusic"}
-    strings_ru = {"_cls_doc": "Модуль для стримингового сервиса Яндекс.Музыка"}
+    strings = {"name": "YaMusic", "iguide": "📜 <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Guide for obtaining access token for Yandex.Music</a></b>"}
+    strings_ru = {"_cls_doc": "Модуль для стримингового сервиса Яндекс.Музыка", "iguide": "📜 <b><a href=\"https://yandex-music.rtfd.io/en/main/token.html\">Гайд по получению токена Яндекс.Музыки</a></b>"}
 
     def __init__(self):
         self.config = loader.ModuleConfig(
@@ -206,12 +206,6 @@ class YaMusicMod(loader.Module):
                 "Hello!",
                 lambda: self.strings["_cfg"]["no_playing_bio"],
                 validator=loader.validators.String()
-            ),
-            loader.ConfigValue(
-                "banner_version",
-                "new",
-                "Version of track banner (old/new)",
-                validator=loader.validators.Choice(["new", "old"])
             )
         )
 
@@ -346,7 +340,8 @@ class YaMusicMod(loader.Module):
             message, out+self.strings("downloading")
         )
 
-        audio = io.BytesIO((await utils.run_sync(requests.get, (await ym.client.tracks_download_info(now['track'].id, get_direct_links=True))[0].direct_link)).content)
+        link = (await now['track'].get_download_info_async(get_direct_links=True))[0].direct_link
+        audio = io.BytesIO((await utils.run_sync(requests.get, link)).content)
         audio.name = "audio.mp3"
         await utils.answer(
             message=message, response=out,
@@ -411,8 +406,7 @@ class YaMusicMod(loader.Module):
         )
 
         lyrics = await ym.get_lyrics(now['track'].id, True)
-        func = self.__create_banner if self.config['banner_version'] == "new" else self.__create_banner_old
-        file = func(
+        file = self.__create_banner(
             now['track'].title, [x.name for x in now['track'].artists],
             now['duration_ms'], now['progress_ms'],
             requests.get(f"https://{now['track'].cover_uri[:-2]}1000x1000").content,
@@ -551,9 +545,7 @@ class YaMusicMod(loader.Module):
         )
         message = await utils.answer(message, out+self.strings("downloading"))
 
-        info = await ym.client.tracks_download_info(search.tracks.results[0].id, True)
-        link = info[0].direct_link
-        audio = None
+        link = (await search.tracks.results[0].get_download_info_async(get_direct_links=True))[0].direct_link
         audio = io.BytesIO((await utils.run_sync(requests.get, link)).content)
         audio.name = "audio.mp3"
 
@@ -578,12 +570,16 @@ class YaMusicMod(loader.Module):
     ):
         # ——————————————— CONSTS ———————————————
         W, H = 1920, 768
-        title_font = ImageFont.truetype(io.BytesIO(requests.get(
+        title_font, title_font_nl = ImageFont.truetype(io.BytesIO(requests.get(
+            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
+        ).content), 55), ImageFont.truetype(io.BytesIO(requests.get(
+            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
+        ).content), 80)
+        artist_font, artist_font_nl = ImageFont.truetype(io.BytesIO(requests.get(
+            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
+        ).content), 46), ImageFont.truetype(io.BytesIO(requests.get(
             "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
         ).content), 55)
-        artist_font = ImageFont.truetype(io.BytesIO(requests.get(
-            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
-        ).content), 46)
         time_font = ImageFont.truetype(io.BytesIO(requests.get(
             "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
         ).content), 36)
@@ -617,30 +613,8 @@ class YaMusicMod(loader.Module):
         track_cov = track_cov.crop(track_cov.getbbox())
         banner.paste(track_cov, (175, 175), mask)
 
-        # ——————————————— ARTIST & TITLE ———————————————
-        text_width, _ = measure(f"{', '.join(artists)} — {title}", title_font, draw)
-        if text_width > 1680:
-            lines = [f"{title}", f"{', '.join(artists)}"]
-            lsizes = [measure(lines[0], title_font, draw), measure(lines[1], artist_font, draw)]
-        else:
-            lines = [f"{', '.join(artists)} — {title}"]
-            lsizes = [measure(lines[0], title_font, draw)]
-        text_h = sum(th for _, th in lsizes) + (len(lines) - 1)
-        text_y = (150 - text_h) / 2
-        for i, (l, (lw, lh)) in enumerate(zip(lines, lsizes)):
-            if len(lines) == 2 and i == 1:
-                ftu = artist_font
-            else:
-                ftu = title_font
-            if lw > 1680:
-                while lw > 1680 and len(l) > 3:
-                    l = l[:-4] + "…"
-                    lw, _ = measure(l, ftu, draw)
-            tx = (W - lw) / 2
-            draw.text((tx, text_y), l, font=ftu, fill="#A0A0A0")
-            text_y += lh + 5
-
         # ——————————————— LYRICS ———————————————
+        llast, lnext = "", ""
         if lyrics:
             lyrics_lines = []
             for match in re.finditer(r"\[(\d{2}):(\d{2}\.\d{2})\] (.+)", lyrics):
@@ -649,7 +623,6 @@ class YaMusicMod(loader.Module):
                 text = match.group(3)
                 time_ms = int((minutes * 60 + seconds) * 1000)
                 lyrics_lines.append((time_ms, text))
-            llast, lnext = "", ""
             for i, (time_ms, text) in enumerate(lyrics_lines):
                 if time_ms <= progress:
                     llast = text
@@ -688,83 +661,58 @@ class YaMusicMod(loader.Module):
                     draw.text((tx, y_start + 40), line, font=nlyrics_font, fill="#A0A0A0")
                     y_start += next_heights[j] + 10
 
+        # ——————————————— ARTIST & TITLE ———————————————
+        if lyrics and (llast or lnext):
+            text_width, _ = measure(f"{', '.join(artists)} — {title}", title_font, draw)
+            if text_width > 1680:
+                lines = [title, ', '.join(artists)]
+                lsizes = [measure(lines[0], title_font, draw), measure(lines[1], artist_font, draw)]
+            else:
+                lines = [f"{', '.join(artists)} — {title}"]
+                lsizes = [measure(lines[0], title_font, draw)]
+            text_h = sum(th for _, th in lsizes) + (len(lines) - 1)
+            text_y = (150 - text_h) / 2
+            for i, (l, (lw, lh)) in enumerate(zip(lines, lsizes)):
+                if len(lines) == 2 and i == 1:
+                    ftu = artist_font
+                else:
+                    ftu = title_font
+                if lw > 1680:
+                    while lw > 1680 and len(l) > 3:
+                        l = l[:-4] + "…"
+                        lw, _ = measure(l, ftu, draw)
+                tx = (W - lw) / 2
+                draw.text((tx, text_y), l, font=ftu, fill="#A0A0A0")
+                text_y += lh + 5
+        else:
+            x1, y1, x2, y2 = 643, 175, 1887, 593
+            aw, ah = x2-x1, y2-y1
+            tls = textwrap.wrap(title, width=23)
+            if len(tls) > 2:
+                tls = tls[:2]
+                tls[-1] = tls[-1][:-1]+"…"
+            als = textwrap.wrap(', '.join(artists), width=30)
+            if len(als) > 1:
+                als = als[:1]
+                als[-1] = als[-1][:-1]+"…"
+            lines = tls+als
+            lsizes = [measure(l, artist_font_nl if (i==(len(lines)-1)) else title_font_nl, draw) for i, l in enumerate(lines)]
+            hs = [h for _, h in lsizes]
+            spacing = title_font_nl.size+10
+            th = sum(hs) + spacing
+            y_start = y1 + (ah-th) / 2
+            for i, line in enumerate(lines):
+                w, _ = lsizes[i]
+                draw.text((x1 + (aw-w) / 2, y_start), line, font=(artist_font_nl if (i==(len(lines)-1)) else title_font_nl), fill="#FFFFFF")
+                y_start += spacing
+
         # ——————————————— STATUS BAR ———————————————
-        draw.rounded_rectangle([75, 700, 768 + 1072, 700 + 15], radius=15 // 2, fill="#A0A0A0")
-        draw.rounded_rectangle([75, 700, 768 + int(1072 * (progress / duration)), 700 + 15], radius=15 // 2, fill="#FFFFFF")
         draw.text((75, 650), f"{(progress//1000//60):02}:{(progress//1000%60):02}", font=time_font, fill="#FFFFFF")
         draw.text((1745, 650), f"{(duration//1000//60):02}:{(duration//1000%60):02}", font=time_font, fill="#FFFFFF")
+        draw.rounded_rectangle([75, 700, 1846, 715], radius=15//2, fill="#A0A0A0")
+        draw.rounded_rectangle([75, 700, 75+(progress/duration*1846), 715], radius=15//2, fill="#FFFFFF")
 
         # ——————————————— SAVE ———————————————
-        by = io.BytesIO()
-        banner.save(by, format="PNG"); by.seek(0)
-        by.name = "banner.png"
-        return by
-
-
-    def __create_banner_old(
-        self,
-        title: str, artists: list,
-        duration: int, progress: int,
-        track_cover: bytes,
-        *args, **kwargs
-    ):
-        w, h = 1920, 768
-        title_font = ImageFont.truetype(io.BytesIO(requests.get(
-            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
-        ).content), 80)
-        art_font = ImageFont.truetype(io.BytesIO(requests.get(
-            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Regular.ttf"
-        ).content), 55)
-        time_font = ImageFont.truetype(io.BytesIO(requests.get(
-            "https://raw.githubusercontent.com/kamekuro/assets/master/fonts/Onest-Bold.ttf"
-        ).content), 36)
-
-        # Gen banner (bg)
-        track_cov = Image.open(io.BytesIO(track_cover)).convert("RGBA")
-        banner = track_cov.resize((w, w)).crop(
-            (0, (w-h)//2, w, ((w-h)//2)+h)
-        ).filter(ImageFilter.GaussianBlur(radius=14))
-        banner = ImageEnhance.Brightness(banner).enhance(0.3)
-
-        # Gen track cover and put to bg
-        track_cov = track_cov.resize((banner.size[1]-150, banner.size[1]-150))
-        mask = Image.new("L", track_cov.size, 0)
-        ImageDraw.Draw(mask).rounded_rectangle((0, 0, track_cov.size[0], track_cov.size[1]), radius=35, fill=255)
-        track_cov.putalpha(mask)
-        track_cov = track_cov.crop(track_cov.getbbox())
-        banner.paste(track_cov, (75, 75), mask)
-
-        # Editing text
-        title_lines = textwrap.wrap(title, 23)
-        if len(title_lines) > 1:
-            title_lines[1] = title_lines[1] + "..." if len(title_lines) > 2 else title_lines[1]
-        title_lines = title_lines[:2]
-        artists_lines = textwrap.wrap(" • ".join(artists), width=40)
-        if len(artists_lines) > 1:
-            for index, art in enumerate(artists_lines):
-                if "•" in art[-2:]:
-                    artists_lines[index] = art[:art.rfind("•") - 1]
-
-        # Put title and artists to banner
-        draw = ImageDraw.Draw(banner)
-        x, y = 150+track_cov.size[0], 110
-        for index, line in enumerate(title_lines):
-            draw.text((x, y), line, font=title_font, fill="#FFFFFF")
-            if index != len(title_lines)-1:
-                y += 70
-        x, y = 150+track_cov.size[0], 110*2
-        if len(title_lines) > 1: y += 70
-        for index, line in enumerate(artists_lines):
-            draw.text((x, y), line, font=art_font, fill="#A0A0A0")
-            if index != len(artists_lines)-1:
-                y += 50
-
-        # Drawing status bar
-        draw.rounded_rectangle([768, 650, 768+1072, 650+15], radius=15//2, fill="#A0A0A0")
-        draw.rounded_rectangle([768, 650, 768+int(1072*(progress/duration)), 650+15], radius=15//2, fill="#FFFFFF")
-        draw.text((768, 600), f"{(progress//1000//60):02}:{(progress//1000%60):02}", font=time_font, fill="#FFFFFF")
-        draw.text((1745, 600), f"{(duration//1000//60):02}:{(duration//1000%60):02}", font=time_font, fill="#FFFFFF")
-
         by = io.BytesIO()
         banner.save(by, format="PNG"); by.seek(0)
         by.name = "banner.png"
