@@ -16854,7 +16854,7 @@
   },
   "fiksofficial/python-modules/speedtest.py": {
     "name": "SpeedTestMod",
-    "description": "Модуль для проверки скорости интернета",
+    "description": "Checking your internet speed",
     "meta": {
       "pic": null,
       "banner": null,
@@ -16862,15 +16862,15 @@
     },
     "commands": [
       {
-        "speedcmd": "Запускает тест скорости интернета"
+        "speedcmd": "(.st) - Запускает тест скорости интернета (.st) - Runs an internet speed test"
       }
     ],
     "new_commands": [
       {
         "speed": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "Запускает тест скорости интернета"
+          "ru_doc": "(.st) - Запускает тест скорости интернета",
+          "en_doc": "(.st) - Runs an internet speed test",
+          "doc": null
         }
       }
     ],
@@ -17024,9 +17024,6 @@
     "commands": [
       {
         "ttf": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла/<reply>"
-      },
-      {
-        "ttf_noreply": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла"
       }
     ],
     "new_commands": [
@@ -17035,13 +17032,6 @@
           "ru_doc": null,
           "en_doc": null,
           "doc": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла/<reply>"
-        }
-      },
-      {
-        "ttf_noreply": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла"
         }
       }
     ],
@@ -17212,33 +17202,6 @@
     ],
     "category": [
       "Tools",
-      "Chat"
-    ]
-  },
-  "Ruslan-Isaev/modules/SFTPUploader.py": {
-    "name": "SFTPUploaderMod",
-    "description": "Загрузка файлов на SFTP",
-    "meta": {
-      "pic": null,
-      "banner": null,
-      "developer": "@RUIS_VlP"
-    },
-    "commands": [
-      {
-        "sftp": "<reply> - загружает файл на SFPT"
-      }
-    ],
-    "new_commands": [
-      {
-        "sftp": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "<reply> - загружает файл на SFPT"
-        }
-      }
-    ],
-    "category": [
-      "Security",
       "Chat"
     ]
   },
@@ -17726,7 +17689,7 @@
   },
   "Ruslan-Isaev/modules/ssh.py": {
     "name": "SSHMod",
-    "description": "SSH module for uploading files and executing commands",
+    "description": "Модуль для работы с SSH",
     "meta": {
       "pic": null,
       "banner": null,
@@ -17734,25 +17697,45 @@
     },
     "commands": [
       {
-        "save": "<reply> - saves the file to the ~/sshmod directory"
+        "sftpsave": "<reply> [dir] - сохраняет указанных файл на сервер"
       },
       {
-        "sterminal": "<command> - executes a command on the SSH server"
+        "sftpdownload": "<path> - скачивает указанных файл с сервера"
+      },
+      {
+        "addkey": "<ключ> - сохраняет указанный ssh ключ"
+      },
+      {
+        "sterminal": "<команда> - выполняет команду на ssh сервере"
       }
     ],
     "new_commands": [
       {
-        "save": {
+        "sftpsave": {
           "ru_doc": null,
           "en_doc": null,
-          "doc": "<reply> - saves the file to the ~/sshmod directory"
+          "doc": "<reply> [dir] - сохраняет указанных файл на сервер"
+        }
+      },
+      {
+        "sftpdownload": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "<path> - скачивает указанных файл с сервера"
+        }
+      },
+      {
+        "addkey": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "<ключ> - сохраняет указанный ssh ключ"
         }
       },
       {
         "sterminal": {
           "ru_doc": null,
           "en_doc": null,
-          "doc": "<command> - executes a command on the SSH server"
+          "doc": "<команда> - выполняет команду на ssh сервере"
         }
       }
     ],
