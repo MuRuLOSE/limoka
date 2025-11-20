@@ -449,7 +449,7 @@ class DeviceInfo(loader.Module):
                     await call.edit(
                         text=self.strings["no_results"].format(query),
                         reply_markup=[],
-                        photo=None,  # Explicitly remove any existing photo
+                        photo=None,
                         disable_web_page_preview=True
                     )
                 except Exception as edit_error:
@@ -471,7 +471,7 @@ class DeviceInfo(loader.Module):
                 await call.edit(
                     text=list_text,
                     reply_markup=button_rows,
-                    photo=None,  # Explicitly remove any existing photo
+                    photo=None,
                     disable_web_page_preview=True
                 )
             except Exception as edit_error:
@@ -491,8 +491,8 @@ class DeviceInfo(loader.Module):
                 await call.edit(
                     text=self.strings["error"].format(str(e)),
                     reply_markup=[],
-                    photo=None,  # Explicitly remove any existing photo
-                    disable_web_page_preview=True
+                    photo=None,
+                   disable_web_page_preview=True
                 )
             except Exception as edit_error:
                 logger.warning(f"DeviceInfo: Failed to edit error message: {edit_error}")
