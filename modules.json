@@ -16039,33 +16039,6 @@
       "Tools"
     ]
   },
-  "fiksofficial/python-modules/createavatarspack.py": {
-    "name": "CreateAvatarsPack",
-    "description": "Creates a sticker pack from photos and video avatars of participants",
-    "meta": {
-      "pic": null,
-      "banner": null,
-      "developer": "@pymodule"
-    },
-    "commands": [
-      {
-        "createavatars": "- Create a sticker pack from the avatars of users in the group - Создать стикерпак из аватаров пользователей группы"
-      }
-    ],
-    "new_commands": [
-      {
-        "createavatars": {
-          "ru_doc": "- Создать стикерпак из аватаров пользователей группы",
-          "en_doc": null,
-          "doc": "- Create a sticker pack from the avatars of users in the group"
-        }
-      }
-    ],
-    "category": [
-      "Tools",
-      "Chat"
-    ]
-  },
   "fiksofficial/python-modules/lyrics.py": {
     "name": "LyricsMod",
     "description": "Модуль для поиска текста песни через Genius API",
@@ -16725,6 +16698,43 @@
       "Fun"
     ]
   },
+  "fiksofficial/python-modules/createpacks.py": {
+    "name": "CreatePacks",
+    "description": "Creates sticker packs and emoji packs from the avatars of chat participants",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@pymodule"
+    },
+    "commands": [
+      {
+        "createavatars": "- Create a sticker pack from avatars in a group - Создать стикерпак из аватаров в группе"
+      },
+      {
+        "createemojis": "[emoji] - Create an emoji pack from all avatars [эмодзи] - Создать эмодзи-пак из всех аватаров"
+      }
+    ],
+    "new_commands": [
+      {
+        "createavatars": {
+          "ru_doc": "- Создать стикерпак из аватаров в группе",
+          "en_doc": null,
+          "doc": "- Create a sticker pack from avatars in a group"
+        }
+      },
+      {
+        "createemojis": {
+          "ru_doc": "[эмодзи] - Создать эмодзи-пак из всех аватаров",
+          "en_doc": null,
+          "doc": "[emoji] - Create an emoji pack from all avatars"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Chat"
+    ]
+  },
   "fiksofficial/python-modules/checkhost.py": {
     "name": "CheckHostMod",
     "description": "Check host via check-host.net",
@@ -16854,7 +16864,7 @@
   },
   "fiksofficial/python-modules/speedtest.py": {
     "name": "SpeedTestMod",
-    "description": "Модуль для проверки скорости интернета",
+    "description": "Checking your internet speed",
     "meta": {
       "pic": null,
       "banner": null,
@@ -16862,15 +16872,15 @@
     },
     "commands": [
       {
-        "speedcmd": "Запускает тест скорости интернета"
+        "speedcmd": "(.st) - Запускает тест скорости интернета (.st) - Runs an internet speed test"
       }
     ],
     "new_commands": [
       {
         "speed": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "Запускает тест скорости интернета"
+          "ru_doc": "(.st) - Запускает тест скорости интернета",
+          "en_doc": "(.st) - Runs an internet speed test",
+          "doc": null
         }
       }
     ],
@@ -17024,9 +17034,6 @@
     "commands": [
       {
         "ttf": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла/<reply>"
-      },
-      {
-        "ttf_noreply": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла"
       }
     ],
     "new_commands": [
@@ -17035,13 +17042,6 @@
           "ru_doc": null,
           "en_doc": null,
           "doc": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла/<reply>"
-        }
-      },
-      {
-        "ttf_noreply": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "Создает текстовый файл с заданным именем и расширением, \nзаписывает в него текст, отправляет его в Telegram и удаляет с диска.\n\nПример:\n.ttf название.txt\nТекст для файла"
         }
       }
     ],
@@ -17212,33 +17212,6 @@
     ],
     "category": [
       "Tools",
-      "Chat"
-    ]
-  },
-  "Ruslan-Isaev/modules/SFTPUploader.py": {
-    "name": "SFTPUploaderMod",
-    "description": "Загрузка файлов на SFTP",
-    "meta": {
-      "pic": null,
-      "banner": null,
-      "developer": "@RUIS_VlP"
-    },
-    "commands": [
-      {
-        "sftp": "<reply> - загружает файл на SFPT"
-      }
-    ],
-    "new_commands": [
-      {
-        "sftp": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "<reply> - загружает файл на SFPT"
-        }
-      }
-    ],
-    "category": [
-      "Security",
       "Chat"
     ]
   },
@@ -17726,7 +17699,7 @@
   },
   "Ruslan-Isaev/modules/ssh.py": {
     "name": "SSHMod",
-    "description": "SSH module for uploading files and executing commands",
+    "description": "Модуль для работы с SSH",
     "meta": {
       "pic": null,
       "banner": null,
@@ -17734,25 +17707,45 @@
     },
     "commands": [
       {
-        "save": "<reply> - saves the file to the ~/sshmod directory"
+        "sftpsave": "<reply> [dir] - сохраняет указанных файл на сервер"
       },
       {
-        "sterminal": "<command> - executes a command on the SSH server"
+        "sftpdownload": "<path> - скачивает указанных файл с сервера"
+      },
+      {
+        "addkey": "<ключ> - сохраняет указанный ssh ключ"
+      },
+      {
+        "sterminal": "<команда> - выполняет команду на ssh сервере"
       }
     ],
     "new_commands": [
       {
-        "save": {
+        "sftpsave": {
           "ru_doc": null,
           "en_doc": null,
-          "doc": "<reply> - saves the file to the ~/sshmod directory"
+          "doc": "<reply> [dir] - сохраняет указанных файл на сервер"
+        }
+      },
+      {
+        "sftpdownload": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "<path> - скачивает указанных файл с сервера"
+        }
+      },
+      {
+        "addkey": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "<ключ> - сохраняет указанный ssh ключ"
         }
       },
       {
         "sterminal": {
           "ru_doc": null,
           "en_doc": null,
-          "doc": "<command> - executes a command on the SSH server"
+          "doc": "<команда> - выполняет команду на ssh сервере"
         }
       }
     ],
@@ -29457,25 +29450,25 @@
         "ybiocmd": "👉 Enable/disable autobio 👉 Включить/выключить автобио"
       },
       {
-        "ynowtcmd": "👉 Get now playing track (with track file) 👉 Получить трек, который играет сейчас (с файлом трека)"
+        "ysearchcmd": "👉 Searching tracks in Yandex.Music 👉 Поиск треков в Яндекс.Музыке"
       },
       {
-        "ynowcmd": "👉 Get now playing track's banner 👉 Получить баннер трека, который играет сейчас"
+        "ynowcmd": "👉 Get the banner of the track playing right now 👉 Получить баннер трека, который играет сейчас"
       },
       {
-        "ylikecmd": "👉 Like now playing track's banner 👉 Лайкнуть играющий сейчас трек"
+        "ynowtcmd": "👉 Get the track playing right now 👉 Получить трек, который играет сейчас"
       },
       {
-        "yunlikecmd": "👉 Unlike now playing track 👉 Убрать лайк с играющего сейчас трека"
+        "ylikecmd": "👉 Like the track playing right now 👉 Лайкнуть играющий сейчас трек"
       },
       {
-        "ydislikecmd": "👉 Dislike now playing track 👉 Дизлайкнуть играющий сейчас трек"
+        "yunlikecmd": "👉 Unlike the track playing right now 👉 Снять лайк с играющего сейчас трека"
       },
       {
-        "ylyricscmd": "👉 Get lyrics of the now playing track 👉 Получить текст играющего сейчас трека"
+        "ydislikecmd": "👉 Dislike the track playing right now 👉 Дизлайкнуть играющий сейчас трек"
       },
       {
-        "ysearchcmd": "<query> 👉 Search track in Yandex.Music <запрос> 👉 Поиск трека в Яндекс.Музыке"
+        "ylyricscmd": "👉 Get the lyrics of the track playing right now 👉 Получить текст играющего сейчас трека"
       }
     ],
     "new_commands": [
@@ -29494,58 +29487,58 @@
         }
       },
       {
-        "ynowt": {
-          "ru_doc": "👉 Получить трек, который играет сейчас (с файлом трека)",
+        "ysearch": {
+          "ru_doc": "👉 Поиск треков в Яндекс.Музыке",
           "en_doc": null,
-          "doc": "👉 Get now playing track (with track file)"
+          "doc": "👉 Searching tracks in Yandex.Music"
         }
       },
       {
         "ynow": {
           "ru_doc": "👉 Получить баннер трека, который играет сейчас",
           "en_doc": null,
-          "doc": "👉 Get now playing track's banner"
+          "doc": "👉 Get the banner of the track playing right now"
+        }
+      },
+      {
+        "ynowt": {
+          "ru_doc": "👉 Получить трек, который играет сейчас",
+          "en_doc": null,
+          "doc": "👉 Get the track playing right now"
         }
       },
       {
         "ylike": {
           "ru_doc": "👉 Лайкнуть играющий сейчас трек",
           "en_doc": null,
-          "doc": "👉 Like now playing track's banner"
+          "doc": "👉 Like the track playing right now"
         }
       },
       {
         "yunlike": {
-          "ru_doc": "👉 Убрать лайк с играющего сейчас трека",
+          "ru_doc": "👉 Снять лайк с играющего сейчас трека",
           "en_doc": null,
-          "doc": "👉 Unlike now playing track"
+          "doc": "👉 Unlike the track playing right now"
         }
       },
       {
         "ydislike": {
           "ru_doc": "👉 Дизлайкнуть играющий сейчас трек",
           "en_doc": null,
-          "doc": "👉 Dislike now playing track"
+          "doc": "👉 Dislike the track playing right now"
         }
       },
       {
         "ylyrics": {
           "ru_doc": "👉 Получить текст играющего сейчас трека",
           "en_doc": null,
-          "doc": "👉 Get lyrics of the now playing track"
-        }
-      },
-      {
-        "ysearch": {
-          "ru_doc": "<запрос> 👉 Поиск трека в Яндекс.Музыке",
-          "en_doc": null,
-          "doc": "<query> 👉 Search track in Yandex.Music"
+          "doc": "👉 Get the lyrics of the track playing right now"
         }
       }
     ],
     "category": [
       "Tools",
-      "Chat"
+      "Fun"
     ]
   },
   "unneyon/hikka-mods/privacy.py": {
