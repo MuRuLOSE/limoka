@@ -1,4 +1,4 @@
-__version__ = (2, 0, 0)
+__version__ = (2, 0, 1)
 #                    region KAMEKURO.
 #          █▄▀ ▄▀█ █▀▄▀█ █▀▀ █▄▀ █  █ █▀█ █▀█
 #          █ █ █▀█ █ ▀ █ ██▄ █ █ ▀▄▄▀ █▀▄ █▄█ ▄
@@ -31,6 +31,7 @@ import random
 import requests
 import string
 import textwrap
+import typing
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 import telethon
@@ -67,17 +68,12 @@ class Banners:
         bbox = draw.textbbox((0, 0), text, font=font)
         return bbox[2] - bbox[0], bbox[3] - bbox[1]
 
+
     def new(self):
         W, H = 1920, 768
-        title_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_b).content), 80
-        )
-        artist_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_b).content), 55
-        )
-        time_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_b).content), 36
-        )
+        title_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_b).content), 80)
+        artist_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_b).content), 55)
+        time_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_b).content), 36)
 
         track_cov = Image.open(io.BytesIO(self.track_cover)).convert("RGBA")
         banner = (
@@ -109,19 +105,19 @@ class Banners:
         lines = title_lines + artist_lines
         lines_sizes = [
             self.measure(
-                line, artist_font if (i == len(lines) - 1) else title_font, draw
+                line, artist_font if (i == len(lines)-1) else title_font, draw
             )
             for i, line in enumerate(lines)
         ]
-        heights = [h for _, h in lines_sizes]
+        total_sizes = [sum(w for w, _ in lines_sizes), sum(h for _, h in lines_sizes)]
         spacing = title_font.size + 10
-        y_start = space[1] + (space[3] - space[1]) / 2
+        y_start = space[1] + ((space[3]-space[1]-total_sizes[1]) / 2)
         for i, line in enumerate(lines):
             w, _ = lines_sizes[i]
             draw.text(
-                (space[0] + (space[2] - space[0] - w) / 2, y_start),
+                (space[0] + (space[2]-space[0]-w) / 2, y_start),
                 line,
-                font=(artist_font if (i == (len(lines) - 1)) else title_font),
+                font=(artist_font if (i == (len(lines)-1)) else title_font),
                 fill="#FFFFFF",
             )
             y_start += spacing
@@ -151,17 +147,12 @@ class Banners:
         by.name = "banner.png"
         return by
 
+
     def old(self):
         w, h = 1920, 768
-        title_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_b).content), 80
-        )
-        art_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_r).content), 55
-        )
-        time_font = ImageFont.truetype(
-            io.BytesIO(requests.get(self.onest_b).content), 36
-        )
+        title_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_b).content), 80)
+        art_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_r).content), 55)
+        time_font = ImageFont.truetype(io.BytesIO(requests.get(self.onest_b).content), 36)
 
         track_cov = Image.open(io.BytesIO(self.track_cover)).convert("RGBA")
         banner = (
@@ -387,9 +378,7 @@ class YaMusicMod(loader.Module):
         )
         await utils.answer(message, out + self.strings("downloading_track"))
 
-        info = await ym_client.tracks_download_info(search.tracks.results[0].id, True)
-        audio = io.BytesIO(requests.get(info[0].direct_link).content)
-        audio.name = "audio.mp3"
+        audio = await self.__download_track(ym_client, search.tracks.results[0].id)
         await utils.answer(
             message=message,
             response=out,
@@ -538,12 +527,10 @@ class YaMusicMod(loader.Module):
         except:
             pass
 
-        audio = io.BytesIO(requests.get(now["track"]["download_link"]).content)
-        audio.name = "audio.mp3"
         await utils.answer(
             message=message,
             response=out,
-            file=audio,
+            file=now["track"]["bytes_io"],
             attributes=(
                 [
                     telethon.types.DocumentAttributeAudio(
@@ -652,6 +639,29 @@ class YaMusicMod(loader.Module):
                 ),
             )
 
+
+    async def __download_track(
+        self,
+        client: yandex_music.ClientAsync,
+        track_id: typing.Union[int, str],
+        link_only: bool = False,
+    ):
+        last_exception = None
+        for attempt in range(5):
+            try:
+                info = await client.tracks_download_info(
+                    track_id, get_direct_links=True
+                )
+                if link_only:
+                    return info[0].direct_link
+                by = io.BytesIO(await info[0].download_bytes_async())
+                by.name = "audio.mp3"
+                return by
+            except Exception as e:
+                if attempt != 4:
+                    await asyncio.sleep(1)
+                    continue
+                raise e
 
     # Original code: https://raw.githubusercontent.com/MIPOHBOPOHIH/YMMBFA/main/main.py
     async def __get_ynison(self):
@@ -778,12 +788,8 @@ class YaMusicMod(loader.Module):
                     "duration": track_object.duration_ms // 1000,
                     "minutes": round(track_object.duration_ms / 1000) // 60,
                     "seconds": round(track_object.duration_ms / 1000) % 60,
-                    "download_link": (
-                        (
-                            await ym_client.tracks_download_info(
-                                track_object.track_id, get_direct_links=True
-                            )
-                        )[0].direct_link
+                    "bytes_io": (
+                        await self.__download_track(ym_client, track_object.track_id)
                     ),
                 },
             }
