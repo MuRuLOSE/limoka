@@ -9,35 +9,25 @@
     },
     "commands": [
       {
-        "limokacmd": "[query] - Search module with filter options [запрос] - Поиск модуля с опциями фильтрации"
+        "limokacmd": "[query / nothing] - Search modules [запрос / ничего] — Поиск модулей"
       },
       {
-        "lshistorycmd": "- Showing the last 10 requests  - Показать последние 10 запросов"
-      },
-      {
-        "limokadotd": "- Show the Module of the Day - Показать модуль дня"
+        "lshistorycmd": "- Show search history — Показать историю поиска"
       }
     ],
     "new_commands": [
       {
         "limoka": {
-          "ru_doc": "[запрос] - Поиск модуля с опциями фильтрации",
+          "ru_doc": "[запрос / ничего] — Поиск модулей",
           "en_doc": null,
-          "doc": "[query] - Search module with filter options"
+          "doc": "[query / nothing] - Search modules"
         }
       },
       {
         "lshistory": {
-          "ru_doc": " - Показать последние 10 запросов",
+          "ru_doc": "— Показать историю поиска",
           "en_doc": null,
-          "doc": "- Showing the last 10 requests"
-        }
-      },
-      {
-        "limokadotd": {
-          "ru_doc": "- Показать модуль дня",
-          "en_doc": null,
-          "doc": "- Show the Module of the Day"
+          "doc": "- Show search history"
         }
       }
     ],
