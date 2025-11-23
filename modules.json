@@ -1,7 +1,7 @@
 {
   "Limoka.py": {
     "name": "Limoka",
-    "description": "Hikka modules are now in one place with easy searching!",
+    "description": "Modules are now in one place with easy searching!",
     "meta": {
       "pic": null,
       "banner": null,
@@ -12,7 +12,7 @@
         "limokacmd": "[query / nothing] - Search modules [запрос / ничего] — Поиск модулей"
       },
       {
-        "lshistorycmd": "- Show search history — Показать историю поиска"
+        "lshistorycmd": "[clear] - Show or clear search history [clear] — Показать или очистить историю поиска"
       }
     ],
     "new_commands": [
@@ -25,9 +25,9 @@
       },
       {
         "lshistory": {
-          "ru_doc": "— Показать историю поиска",
+          "ru_doc": "[clear] — Показать или очистить историю поиска",
           "en_doc": null,
-          "doc": "- Show search history"
+          "doc": "[clear] - Show or clear search history"
         }
       }
     ],
