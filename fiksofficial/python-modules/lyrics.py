@@ -4,7 +4,7 @@
 # meta developer: @PyModule
 # requires: lyricsgenius===3.7.0
 
-from lyricsgenius import Genius
+from lyricsgenius import Genius #
 from .. import loader, utils
 
 @loader.tds
