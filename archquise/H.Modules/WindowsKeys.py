@@ -114,7 +114,7 @@ class WindowsKeys(loader.Module):
         )
 
     async def _inline__give_key(self, call, winver):
-        url = "https://raw.githubusercontent.com/C0dwiz/H.Modules/refs/heads/assets/winkeys.json"
+        url = "https://files.archquise.ru/winkeys.json"
         try:
             response = requests.get(url)
             response.raise_for_status()
