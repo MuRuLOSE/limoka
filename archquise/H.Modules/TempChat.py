@@ -91,7 +91,7 @@ class TempChatMod(loader.Module):
 
     async def client_ready(self, client, db):
         self.hmodslib = await self.import_lib(
-            "https://raw.githubusercontent.com/archquise/H.Modules/refs/heads/main/HModsLibrary.py"
+            "https://files.archquise.ru/HModsLibrary.py"
         )
         self.temp_chats = self.get("temp_chats", {})
 
