@@ -82,7 +82,7 @@ class VirusTotalMod(loader.Module):
 
     async def client_ready(self, client, db):
         self.hmodslib = await self.import_lib(
-            "https://raw.githubusercontent.com/C0dwiz/H.Modules/refs/heads/main-fix/HModsLibrary.py"
+            "https://files.archquise.ru/HModsLibrary.py"
         )
 
     @loader.command(
