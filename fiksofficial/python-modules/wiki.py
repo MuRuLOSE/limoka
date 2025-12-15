@@ -88,8 +88,10 @@ class WikiSearchMod(loader.Module):
                 "srsearch": query,
                 "srlimit": 1
             }
-
-            async with aiohttp.ClientSession() as session:
+            headers = {
+            "User-Agent": "Mozilla/5.0 (Android 10; Mobile; rv:145.0) Gecko/145.0 Firefox/145.0"
+            }
+            async with aiohttp.ClientSession(headers=headers) as session:
                 async with session.get(search_url, params=params) as res:
                     data = await res.json()
                     results = data.get("query", {}).get("search", [])
