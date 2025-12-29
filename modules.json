@@ -22136,7 +22136,7 @@
         "send": "[text] - Write a message [text] - Написать сообщение"
       },
       {
-        "sendclosedtopic": "[text] - Write a message to a closed topic [text] - Написать сообщение в закрытую тему"
+        "sendclosedtopic": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic [text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему"
       },
       {
         "sendpm": "[@UserName] [text or replay] - Write a message to personal messages [@UserName] [text or replay] - Написать сообщение в личные сообщения"
@@ -22155,9 +22155,9 @@
       },
       {
         "sendclosedtopic": {
-          "ru_doc": "[text] - Написать сообщение в закрытую тему",
+          "ru_doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему",
           "en_doc": null,
-          "doc": "[text] - Write a message to a closed topic"
+          "doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic"
         }
       },
       {
