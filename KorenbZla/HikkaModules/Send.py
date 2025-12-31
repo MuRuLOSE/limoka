@@ -23,10 +23,11 @@
 # meta pic: https://i.postimg.cc/Hx3Zm8rB/logo.png
 # meta banner: https://te.legra.ph/file/55fa6eebae860a359ac27.jpg
 
-__version__ = (1, 2, 0)
+__version__ = (1, 3, 2)
 
-from .. import loader, utils
-from telethon.tl.types import Message # type: ignore
+from .. import loader, utils # type: ignore
+from telethon.tl import types # type: ignore
+from telethon.tl.types import Message, InputDocument # type: ignore
 
 @loader.tds
 class SendMod(loader.Module):
@@ -104,19 +105,68 @@ class SendMod(loader.Module):
 
 
     @loader.command(
-        ru_doc="[text] - Написать сообщение в закрытую тему",
-        uz_doc="[text] - Yopiq mavzuga xabar yozing",
-        de_doc="[text] - Schreiben Sie eine Nachricht zu einem geschlossenen Thema",
-        es_doc="[text] - Escribir un mensaje a un tema cerrado",
+        ru_doc="[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему",
+        uz_doc="[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Yopiq mavzuga xabar yozing",
+        de_doc="[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Schreiben Sie eine Nachricht zu einem geschlossenen Thema",
+        es_doc="[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Escribir un mensaje a un tema cerrado",
     )
-    async def sendclosedtopic(self, message: Message):
-        """[text] - Write a message to a closed topic"""
-        if not utils.get_args_raw(message):
-            await utils.answer(message, self.strings["error_send"])
+    async def sendclosedtopic(self, message: Message): 
+        """[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic"""
+        args = utils.get_args_raw(message)
+        message_text = args if args else ""
+        reply = await message.get_reply_message()
+
+        media = None
+        temp_file = None
+
+        if reply and reply.media:
+            doc = getattr(reply.media, "document", None)
+
+            if doc and any(a.__class__.__name__ == "DocumentAttributeSticker" for a in doc.attributes):
+                media = InputDocument(
+                    id=doc.id,
+                    access_hash=doc.access_hash,
+                    file_reference=doc.file_reference
+                )
+                message_text = ""
+
+            elif doc and doc.mime_type == "image/webp":
+                temp_file = await reply.download_media()
+                media = temp_file
+            else:
+                media = reply.media
         else:
-            text2 = f"{utils.get_args_raw(message)}"
-            await message.delete()
-            await message.reply(text2)
+            media = message.media
+            
+        if message_text and "," in message_text:
+            lat_str, long_str = message_text.split(",", 1)
+            try:
+                gps_x = float(lat_str.strip())
+                gps_y = float(long_str.strip())
+                if -90 <= gps_x <= 90 and -180 <= gps_y <= 180:
+                    geo_point = types.InputGeoPoint(lat=gps_x, long=gps_y)
+                    media = types.InputMediaGeoPoint(geo_point)
+                    message_text = ""
+            except ValueError:
+                pass
+
+        if not message_text and not media:
+            await utils.answer(message, self.strings["error_send_2"])
+            return
+
+        await message.delete()
+        await message.reply(
+            message_text,
+            file=media if media else None,
+            parse_mode="html"
+        )
+
+        if temp_file:
+            import os
+            try:
+                os.remove(temp_file)
+            except:
+                pass
 
     @loader.command(
         ru_doc="[@UserName] [text or replay] - Написать сообщение в личные сообщения",
