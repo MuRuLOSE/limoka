@@ -12209,6 +12209,43 @@
       "Tools"
     ]
   },
+  "fajox1/famods/ptichki.py": {
+    "name": "Ptichki",
+    "description": "Генератор птиц",
+    "meta": {
+      "pic": null,
+      "banner": "https://github.com/FajoX1/FAmods/blob/main/assets/banners/ptichki.png?raw=true",
+      "developer": "@FAmods"
+    },
+    "commands": [
+      {
+        "ptichka": "[текст] - Сгенерировать стикер с птицей"
+      },
+      {
+        "ptichka_img": "[текст] - Сгенерировать фото с птицей"
+      }
+    ],
+    "new_commands": [
+      {
+        "ptichka": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "[текст] - Сгенерировать стикер с птицей"
+        }
+      },
+      {
+        "ptichka_img": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "[текст] - Сгенерировать фото с птицей"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Chat"
+    ]
+  },
   "fajox1/famods/fun.py": {
     "name": "Fun",
     "description": "Module for fun...",
@@ -22136,7 +22173,7 @@
         "send": "[text] - Write a message [text] - Написать сообщение"
       },
       {
-        "sendclosedtopic": "[text] - Write a message to a closed topic [text] - Написать сообщение в закрытую тему"
+        "sendclosedtopic": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic [text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему"
       },
       {
         "sendpm": "[@UserName] [text or replay] - Write a message to personal messages [@UserName] [text or replay] - Написать сообщение в личные сообщения"
@@ -22155,9 +22192,9 @@
       },
       {
         "sendclosedtopic": {
-          "ru_doc": "[text] - Написать сообщение в закрытую тему",
+          "ru_doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему",
           "en_doc": null,
-          "doc": "[text] - Write a message to a closed topic"
+          "doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic"
         }
       },
       {
