@@ -12209,6 +12209,43 @@
       "Tools"
     ]
   },
+  "fajox1/famods/ptichki.py": {
+    "name": "Ptichki",
+    "description": "Генератор птиц",
+    "meta": {
+      "pic": null,
+      "banner": "https://github.com/FajoX1/FAmods/blob/main/assets/banners/ptichki.png?raw=true",
+      "developer": "@FAmods"
+    },
+    "commands": [
+      {
+        "ptichka": "[текст] - Сгенерировать стикер с птицей"
+      },
+      {
+        "ptichka_img": "[текст] - Сгенерировать фото с птицей"
+      }
+    ],
+    "new_commands": [
+      {
+        "ptichka": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "[текст] - Сгенерировать стикер с птицей"
+        }
+      },
+      {
+        "ptichka_img": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "[текст] - Сгенерировать фото с птицей"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Chat"
+    ]
+  },
   "fajox1/famods/fun.py": {
     "name": "Fun",
     "description": "Module for fun...",
@@ -22136,7 +22173,7 @@
         "send": "[text] - Write a message [text] - Написать сообщение"
       },
       {
-        "sendclosedtopic": "[text] - Write a message to a closed topic [text] - Написать сообщение в закрытую тему"
+        "sendclosedtopic": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic [text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему"
       },
       {
         "sendpm": "[@UserName] [text or replay] - Write a message to personal messages [@UserName] [text or replay] - Написать сообщение в личные сообщения"
@@ -22155,9 +22192,9 @@
       },
       {
         "sendclosedtopic": {
-          "ru_doc": "[text] - Написать сообщение в закрытую тему",
+          "ru_doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Написать сообщение в закрытую тему",
           "en_doc": null,
-          "doc": "[text] - Write a message to a closed topic"
+          "doc": "[text or reply(media/file/sticker) or coordinates (<lat>, <long>)] - Write a message to a closed topic"
         }
       },
       {
@@ -39244,6 +39281,33 @@
       "Tools"
     ]
   },
+  "coddrago/modules/hardspam.py": {
+    "name": "HardSpam",
+    "description": null,
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@codrago_m"
+    },
+    "commands": [
+      {
+        "hspamcmd": "[-c|--clean] n text - Send n number of messages at the same time [-c|--clean] n text - Отправить n кол-во сообщений одновременно"
+      }
+    ],
+    "new_commands": [
+      {
+        "hspam": {
+          "ru_doc": "[-c|--clean] n text - Отправить n кол-во сообщений одновременно",
+          "en_doc": null,
+          "doc": "[-c|--clean] n text - Send n number of messages at the same time"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Chat"
+    ]
+  },
   "coddrago/modules/DoxTool.py": {
     "name": "dox",
     "description": "Maybe... doxing tool?",
@@ -39446,6 +39510,33 @@
       "Tools"
     ]
   },
+  "coddrago/modules/stats.py": {
+    "name": "Stats",
+    "description": "Показывает статистику твоего аккаунта",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@codrago_m"
+    },
+    "commands": [
+      {
+        "stats": "Получить статистику"
+      }
+    ],
+    "new_commands": [
+      {
+        "stats": {
+          "ru_doc": null,
+          "en_doc": null,
+          "doc": "Получить статистику"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Fun"
+    ]
+  },
   "coddrago/modules/modlist.py": {
     "name": "ModulesList",
     "description": "Модуль для быстрого доступа к каналам с модулями",
@@ -39491,6 +39582,33 @@
     "category": [
       "Chat",
       "Tools"
+    ]
+  },
+  "coddrago/modules/tagwatcher.py": {
+    "name": "TagWatcher",
+    "description": "Informs when you are tagged in chats and automatically reads pm.",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@codrago_m"
+    },
+    "commands": [
+      {
+        "tagwatcher": "Enable/Disable TagWatcher. Вкл/выкл TagWatcher."
+      }
+    ],
+    "new_commands": [
+      {
+        "tagwatcher": {
+          "ru_doc": "Вкл/выкл TagWatcher.",
+          "en_doc": null,
+          "doc": "Enable/Disable TagWatcher."
+        }
+      }
+    ],
+    "category": [
+      "Automation",
+      "Chat"
     ]
   },
   "coddrago/modules/id.py": {
@@ -39565,6 +39683,290 @@
     "category": [
       "Chat",
       "Media"
+    ]
+  },
+  "coddrago/modules/dbmod.py": {
+    "name": "DBMod",
+    "description": null,
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@codrago_m"
+    },
+    "commands": [
+      {
+        "mydb": "Viewing the database Просмотр базы данных"
+      }
+    ],
+    "new_commands": [
+      {
+        "mydb": {
+          "ru_doc": "Просмотр базы данных",
+          "en_doc": null,
+          "doc": "Viewing the database"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Info"
+    ]
+  },
+  "coddrago/modules/chatmodule.py": {
+    "name": "ChatModuleMod",
+    "description": null,
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@codrago_m"
+    },
+    "commands": [
+      {
+        "id": "[reply] - Get the ID [reply] - Узнать ID"
+      },
+      {
+        "rights": "[reply/-u username/id] - Check user's admin rights [reply/-u username/id] - Посмотреть права администратора пользователя"
+      },
+      {
+        "leave": "Leave chat Покинуть чат"
+      },
+      {
+        "d": "[a[1-100] b[1-100]] | [reply] - Delete messages [a[1-100] b[1-100]] | [reply] Удалить сообщения"
+      },
+      {
+        "pin": "[reply] - Pin a message [reply] - Закрепить сообщение"
+      },
+      {
+        "unpin": "Unpin a message Открепить сообщение"
+      },
+      {
+        "dgc": "[-c id] Delete chat/channel [-c id] Удаляет группу/канал"
+      },
+      {
+        "flush": "Removes deleted accounts from the chat/channel Очищает группу/канал от удаленных аккаунтов"
+      },
+      {
+        "admins": "Shows the admins in the chat/channel Показывает админов в группе/канале"
+      },
+      {
+        "bots": "Shows the bots in the chat/channel Показывает ботов в группе/канале"
+      },
+      {
+        "users": "Shows the users in the chat/channel Показывает простых участников чата/канала"
+      },
+      {
+        "ban": "[-u] [-t] [-r] Ban a participant temporarily or permanently [-u] [-t] [-r] Забанить участника"
+      },
+      {
+        "unban": "[-u] Unban a user Разбанить пользователя"
+      },
+      {
+        "kick": "[-u] [-r] Kick a participant [-u] [-r] Кикнуть участника"
+      },
+      {
+        "mute": "[-u] [-t] [-r] Mute a participant temporarily or permanently [-u] [-t] [-r] Замутить участника"
+      },
+      {
+        "unmute": "Unmute a participant Размутить участника"
+      },
+      {
+        "create": "[-g|--group name] [-c|--channel name] - Create group/channel [-g|--group name] [-c|--channel name] - Создать группу/канал"
+      },
+      {
+        "dnd": "Mutes and archives the current chat Отключает звук и архивирует чат"
+      },
+      {
+        "invite": "-u username/id - Invite a user to the chat (use -b to invite the inline bot) -u username/id - Пригласить пользователя в чат (-b пригласить инлайн бота)"
+      },
+      {
+        "inspect": "[-i] Get the info about the entity [-i] Получить информацию о сущности"
+      },
+      {
+        "requests": "[-a] [-d] Manage join requests [-a] [-d] Управлять заявками на вступление"
+      },
+      {
+        "owns": "Get all your chats/channels Получить все свои чаты/каналы"
+      },
+      {
+        "promote": "[-r] [-u] [-f] - Promote a participant [-r] [-u] [-f] - Выдать админку участнику"
+      },
+      {
+        "restrict": "[-t] [-u] - Restrict a participant [-t] [-u] - Ограничить участника"
+      }
+    ],
+    "new_commands": [
+      {
+        "id": {
+          "ru_doc": "[reply] - Узнать ID",
+          "en_doc": null,
+          "doc": "[reply] - Get the ID"
+        }
+      },
+      {
+        "rights": {
+          "ru_doc": "[reply/-u username/id] - Посмотреть права администратора пользователя",
+          "en_doc": null,
+          "doc": "[reply/-u username/id] - Check user's admin rights"
+        }
+      },
+      {
+        "leave": {
+          "ru_doc": "Покинуть чат",
+          "en_doc": null,
+          "doc": "Leave chat"
+        }
+      },
+      {
+        "d": {
+          "ru_doc": "[a[1-100] b[1-100]] | [reply] Удалить сообщения",
+          "en_doc": null,
+          "doc": "[a[1-100] b[1-100]] | [reply] - Delete messages"
+        }
+      },
+      {
+        "pin": {
+          "ru_doc": "[reply] - Закрепить сообщение",
+          "en_doc": null,
+          "doc": "[reply] - Pin a message"
+        }
+      },
+      {
+        "unpin": {
+          "ru_doc": "Открепить сообщение",
+          "en_doc": null,
+          "doc": "Unpin a message"
+        }
+      },
+      {
+        "dgc": {
+          "ru_doc": "[-c id] Удаляет группу/канал",
+          "en_doc": null,
+          "doc": "[-c id] Delete chat/channel"
+        }
+      },
+      {
+        "flush": {
+          "ru_doc": "Очищает группу/канал от удаленных аккаунтов",
+          "en_doc": null,
+          "doc": "Removes deleted accounts from the chat/channel"
+        }
+      },
+      {
+        "admins": {
+          "ru_doc": "Показывает админов в группе/канале",
+          "en_doc": null,
+          "doc": "Shows the admins in the chat/channel"
+        }
+      },
+      {
+        "bots": {
+          "ru_doc": "Показывает ботов в группе/канале",
+          "en_doc": null,
+          "doc": "Shows the bots in the chat/channel"
+        }
+      },
+      {
+        "users": {
+          "ru_doc": "Показывает простых участников чата/канала",
+          "en_doc": null,
+          "doc": "Shows the users in the chat/channel"
+        }
+      },
+      {
+        "ban": {
+          "ru_doc": "[-u] [-t] [-r] Забанить участника",
+          "en_doc": null,
+          "doc": "[-u] [-t] [-r] Ban a participant temporarily or permanently"
+        }
+      },
+      {
+        "unban": {
+          "ru_doc": "Разбанить пользователя",
+          "en_doc": null,
+          "doc": "[-u] Unban a user"
+        }
+      },
+      {
+        "kick": {
+          "ru_doc": "[-u] [-r] Кикнуть участника",
+          "en_doc": null,
+          "doc": "[-u] [-r] Kick a participant"
+        }
+      },
+      {
+        "mute": {
+          "ru_doc": "[-u] [-t] [-r] Замутить участника",
+          "en_doc": null,
+          "doc": "[-u] [-t] [-r] Mute a participant temporarily or permanently"
+        }
+      },
+      {
+        "unmute": {
+          "ru_doc": "Размутить участника",
+          "en_doc": null,
+          "doc": "Unmute a participant"
+        }
+      },
+      {
+        "create": {
+          "ru_doc": "[-g|--group name] [-c|--channel name] - Создать группу/канал",
+          "en_doc": null,
+          "doc": "[-g|--group name] [-c|--channel name] - Create group/channel"
+        }
+      },
+      {
+        "dnd": {
+          "ru_doc": "Отключает звук и архивирует чат",
+          "en_doc": null,
+          "doc": "Mutes and archives the current chat"
+        }
+      },
+      {
+        "invite": {
+          "ru_doc": "-u username/id - Пригласить пользователя в чат (-b пригласить инлайн бота)",
+          "en_doc": null,
+          "doc": "-u username/id - Invite a user to the chat (use -b to invite the inline bot)"
+        }
+      },
+      {
+        "inspect": {
+          "ru_doc": "[-i] Получить информацию о сущности",
+          "en_doc": null,
+          "doc": "[-i] Get the info about the entity"
+        }
+      },
+      {
+        "requests": {
+          "ru_doc": "[-a] [-d] Управлять заявками на вступление",
+          "en_doc": null,
+          "doc": "[-a] [-d] Manage join requests"
+        }
+      },
+      {
+        "owns": {
+          "ru_doc": "Получить все свои чаты/каналы",
+          "en_doc": null,
+          "doc": "Get all your chats/channels"
+        }
+      },
+      {
+        "promote": {
+          "ru_doc": "[-r] [-u] [-f] - Выдать админку участнику",
+          "en_doc": null,
+          "doc": "[-r] [-u] [-f] - Promote a participant"
+        }
+      },
+      {
+        "restrict": {
+          "ru_doc": "[-t] [-u] - Ограничить участника",
+          "en_doc": null,
+          "doc": "[-t] [-u] - Restrict a participant"
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Tools"
     ]
   },
   "coddrago/modules/compliments.py": {
