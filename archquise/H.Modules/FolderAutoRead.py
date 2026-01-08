@@ -23,8 +23,8 @@
 # meta developer: @hikka_mods
 # ---------------------------------------------------------------------------------
 
-import os
 import logging
+
 from telethon import functions
 from telethon.tl.types import DialogFilter, InputPeerChannel
 

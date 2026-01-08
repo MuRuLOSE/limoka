@@ -26,7 +26,12 @@
 # scope: Api Search 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
+import urllib.parse
+
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -39,6 +44,7 @@ class Search(loader.Module):
         "isearch": "🔎<b> I searched for information for you</b> ",
         "link": "🗂️ Link to your request",
         "close": "❌ Close",
+        "no_query": "<emoji document_id=5854929766146118183>❌</emoji> Please provide a search query.",
     }
 
     strings_ru = {
@@ -46,160 +52,136 @@ class Search(loader.Module):
         "isearch": "🔎<b> Я поискал информацию за тебя</b> ",
         "link": "🗂️ Ссылка на ваш запрос",
         "close": "❌ Закрыть",
+        "no_query": "<emoji document_id=5854929766146118183>❌</emoji> Пожалуйста, укажите поисковый запрос.",
     }
+
+    def __init__(self):
+        self.search_engines = {
+            "google": "https://google.com/search?q=",
+            "yandex": "https://yandex.ru/?q=",
+            "duckduckgo": "https://duckduckgo.com/?q=",
+            "bing": "https://bing.com/?q=",
+            "you": "https://you.com/?q=",
+        }
+
+    def _create_search_url(self, engine: str, query: str) -> str:
+        """Create search URL with proper encoding"""
+        if not query.strip():
+            return None
+
+        base_url = self.search_engines.get(engine)
+        if not base_url:
+            return None
+
+        encoded_query = urllib.parse.quote_plus(query.strip())
+        return f"{base_url}{encoded_query}"
+
+    def _create_inline_markup(self, search_url: str):
+        """Create inline keyboard markup"""
+        return [
+            [
+                {
+                    "text": self.strings("link"),
+                    "url": search_url,
+                }
+            ],
+            [{"text": self.strings("close"), "action": "close"}],
+        ]
+
+    async def _search_command(self, message, engine: str, inline: bool = False):
+        """Universal search command handler"""
+        query = utils.get_args_raw(message)
+
+        if not query.strip():
+            await utils.answer(message, self.strings("no_query"))
+            return
+
+        search_url = self._create_search_url(engine, query)
+        if not search_url:
+            await utils.answer(message, self.strings("no_query"))
+            return
+
+        if inline:
+            await self.inline.form(
+                text=self.strings("isearch"),
+                message=message,
+                reply_markup=self._create_inline_markup(search_url),
+                silent=True,
+            )
+        else:
+            await utils.answer(
+                message, self.strings("search") + f": <a href={search_url}>link</a>"
+            )
 
     @loader.command(
         ru_doc="Поискать в Google",
         en_doc="Search on Google",
     )
     async def google(self, message):
-        await self.search_engine(message, "https://google.com/search?q=")
+        await self._search_command(message, "google")
 
     @loader.command(
         ru_doc="Поискать в Yandex",
         en_doc="Search on Yandex",
     )
     async def yandex(self, message):
-        await self.search_engine(message, "https://yandex.ru/?q=")
+        await self._search_command(message, "yandex")
 
     @loader.command(
         ru_doc="Поискать в Duckduckgo",
         en_doc="Search on Duckduckgo",
     )
     async def duckduckgo(self, message):
-        await self.search_engine(message, "https://duckduckgo.com/?q=")
+        await self._search_command(message, "duckduckgo")
 
     @loader.command(
         ru_doc="Поискать в Bing",
         en_doc="Search on Bing",
     )
     async def bing(self, message):
-        await self.search_engine(message, "https://bing.com/?q=")
+        await self._search_command(message, "bing")
 
     @loader.command(
         ru_doc="Поискать в You",
         en_doc="Search on You",
     )
     async def you(self, message):
-        await self.search_engine(message, "https://you.com/?q=")
-
-    async def search_engine(self, message, base_url: str) -> None:
-        """Searches on a given search engine."""
-        query = utils.get_args_raw(message)
-        search_url = f"{base_url}{query}"
-        await utils.answer(
-            message, self.strings("search") + f": <a href={search_url}>link</a>"
-        )
+        await self._search_command(message, "you")
 
     @loader.command(
         ru_doc="Поискать в Google инлайн",
         en_doc="Search on Google inline",
     )
     async def igoogle(self, message):
-        g = utils.get_args_raw(message)
-        google = f"https://google.com/search?q={g}"
-        await self.inline.form(
-            text=self.strings("isearch"),
-            message=message,
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("link"),
-                        "url": google,
-                    }
-                ],
-                [{"text": self.strings("close"), "action": "close"}],
-            ],
-            silent=True,
-        )
+        await self._search_command(message, "google", inline=True)
 
     @loader.command(
         ru_doc="Поискать в Yandex инлайн",
         en_doc="Search on Yandex inline",
     )
     async def iyandex(self, message):
-        y = utils.get_args_raw(message)
-        yandex = f"https://yandex.ru/?q={y}"
-        await self.inline.form(
-            text=self.strings("isearch"),
-            message=message,
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("link"),
-                        "url": yandex,
-                    }
-                ],
-                [{"text": self.strings("close"), "action": "close"}],
-            ],
-            silent=True,
-        )
+        await self._search_command(message, "yandex", inline=True)
 
     @loader.command(
         ru_doc="Поискать в Duckduckgo инлайн",
         en_doc="Search on Duckduckgo inline",
     )
     async def iduckduckgo(self, message):
-        d = utils.get_args_raw(message)
-        duckduckgo = f"https://duckduckgo.com/?q={d}"
-        await self.inline.form(
-            text=self.strings("isearch"),
-            message=message,
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("link"),
-                        "url": duckduckgo,
-                    }
-                ],
-                [{"text": self.strings("close"), "action": "close"}],
-            ],
-            silent=True,
-        )
+        await self._search_command(message, "duckduckgo", inline=True)
 
     @loader.command(
         ru_doc="Поискать в Bing инлайн",
         en_doc="Search on Bing inline",
     )
     async def ibing(self, message):
-        b = utils.get_args_raw(message)
-        bing = f"https://bing.com/?q={b}"
-        await self.inline.form(
-            text=self.strings("isearch"),
-            message=message,
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("link"),
-                        "url": bing,
-                    }
-                ],
-                [{"text": self.strings("close"), "action": "close"}],
-            ],
-            silent=True,
-        )
+        await self._search_command(message, "bing", inline=True)
 
     @loader.command(
         ru_doc="Поискать в You инлайн",
         en_doc="Search on You inline",
     )
     async def iyou(self, message):
-        y = utils.get_args_raw(message)
-        you = f"https://you.com/?q={y}"
-        await self.inline.form(
-            text=self.strings("isearch"),
-            message=message,
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("link"),
-                        "url": you,
-                    }
-                ],
-                [{"text": self.strings("close"), "action": "close"}],
-            ],
-            silent=True,
-        )
+        await self._search_command(message, "you", inline=True)
 
     async def close(self, call):
         """Callback button"""

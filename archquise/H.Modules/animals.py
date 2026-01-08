@@ -27,10 +27,13 @@
 # requires: requests
 # ---------------------------------------------------------------------------------
 
+import logging
+
 import requests
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class animals(loader.Module):
@@ -38,13 +41,13 @@ class animals(loader.Module):
 
     strings = {
         "name": "animals",
-        "loading": "<b>Generation is underway</b>",
-        "done": "<b>Here is your salute</b>",
+        "loading": "<b>Generation is underway</b> <emoji document_id=5215484787325676090>🕐</emoji>",
+        "done": "<b>Here is your salute</b> <emoji document_id=5436246187944460315>❤️</emoji>",
     }
 
     strings_ru = {
-        "loading": "<b>Генерация идет полным ходом</b>",
-        "done": "<b>Вот ваш результат</b>",
+        "loading": "<b>Генерация идет полным ходом</b> <emoji document_id=5215484787325676090>🕐</emoji>",
+        "done": "<b>Вот ваш результат</b> <emoji document_id=5436246187944460315>❤️</emoji>",
     }
 
     # thanks https://github.com/C0dwiz/H.Modules/pull/1
@@ -58,7 +61,7 @@ class animals(loader.Module):
     )
     async def fcatcmd(self, message):
         await utils.answer(message, self.strings("loading"))
-        cat_url = await self.get_photo("thecat")
+        cat_url = await self.get_photo("thecatapi")
         await utils.answer_file(
             message, cat_url, self.strings("done"), force_document=True
         )
@@ -80,7 +83,7 @@ class animals(loader.Module):
     )
     async def catcmd(self, message):
         await utils.answer(message, self.strings("loading"))
-        cat_url = await self.get_photo("thecat")
+        cat_url = await self.get_photo("thecatapi")
         await utils.answer_file(
             message, cat_url, self.strings("done"), force_document=False
         )

@@ -26,10 +26,13 @@
 # scope: Api CryptoCurrency 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
+
 import aiohttp
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class CryptoCurrencyMod(loader.Module):

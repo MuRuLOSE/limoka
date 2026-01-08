@@ -27,12 +27,15 @@
 # scope: Meme 0.0.1
 # ---------------------------------------------------------------------------------
 
-from bs4 import BeautifulSoup
-import aiohttp
-import random
+import logging
+import random  # noqa: F401
+
+import aiohttp  # noqa: F401
+from bs4 import BeautifulSoup  # noqa: F401
 
 from .. import loader
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class MemesMod(loader.Module):

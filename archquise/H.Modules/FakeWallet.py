@@ -27,8 +27,11 @@
 # scope: hikka_min 1.4.2
 # -----------------------------------------------------------------------------------
 
+import logging
+
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class FakeWallet(loader.Module):

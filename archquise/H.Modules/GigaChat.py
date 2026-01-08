@@ -26,8 +26,11 @@
 # scope: Api GigaChat 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
+
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class GigaChatMod(loader.Module):

@@ -28,8 +28,10 @@
 
 import logging
 import re
+from typing import List, Optional
 
-from herokutl.types import Message
+from telethon.types import Message
+
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
@@ -43,50 +45,50 @@ class MessageMonitor(loader.Module):
 
     strings = {
         "name": "MessageMonitor",
-        "triggers_set": "Trigger words have been set: {}",
-        "triggers_not_set": "Trigger words have not been set",
-        "target_set": "Target chat for notifications has been set",
-        "target_not_set": "Target chat for notifications has not been set",
-        "monitoring_started": "Monitoring has started",
-        "monitoring_stopped": "Monitoring has stopped",
-        "monitoring_status": "Monitoring {}",
-        "triggers_example": "Example: <code>.triggers word1 word2</code>",
-        "monitoring_status_on": "enabled",
-        "monitoring_status_off": "disabled",
-        "ignore_set": "Ignored chats have been set: {}",
-        "ignore_none": "Ignored chats have not been set",
-        "ignore_example": "Example: <code>.ignore 123456789 -987654321</code> (chat IDs)",
-        "no_reply": "Reply to a message in the desired chat or specify its ID",
+        "triggers_set": "<emoji document_id=5854762571659218443>✅</emoji> Trigger words have been set: <code>{}</code>",
+        "triggers_not_set": "<emoji document_id=5854929766146118183>❌</emoji> Trigger words have not been set",
+        "target_set": "<emoji document_id=5854762571659218443>✅</emoji> Target chat for notifications has been set",
+        "target_not_set": "<emoji document_id=5854929766146118183>❌</emoji> Target chat for notifications has not been set",
+        "monitoring_started": "<emoji document_id=5188311512791393083>🌎</emoji> Monitoring has started",
+        "monitoring_stopped": "<emoji document_id=5854929766146118183>❌</emoji> Monitoring has stopped",
+        "monitoring_status": "<emoji document_id=5188311512791393083>🌎</emoji> Monitoring <b>{}</b>",
+        "triggers_example": "<emoji document_id=5854929766146118183>❌</emoji> Example: <code>.triggers word1 word2</code>",
+        "monitoring_status_on": "<emoji document_id=5854762571659218443>✅</emoji> enabled",
+        "monitoring_status_off": "<emoji document_id=5854929766146118183>❌</emoji> disabled",
+        "ignore_set": "<emoji document_id=5854762571659218443>✅</emoji> Ignored chats have been set: <code>{}</code>",
+        "ignore_none": "<emoji document_id=5854929766146118183>❌</emoji> Ignored chats have not been set",
+        "ignore_example": "<emoji document_id=5854929766146118183>❌</emoji> Example: <code>.ignore 123456789 -987654321</code> (chat IDs)",
+        "no_reply": "<emoji document_id=5854929766146118183>❌</emoji> Reply to a message in the desired chat or specify its ID",
         "monitoring_msg": (
-            "🚨 **Trigger word detected!** 🚨\n\n"
-            "**Chat:** {} (`{}`)\n"
-            "**User:** {}\n"
-            "**Link:** {}\n\n"
-            "**Messages:**\n{}"
+            "<emoji document_id=5854929766146118183>🚨</emoji> <b>Trigger word detected!</b> <emoji document_id=5854929766146118183>🚨</emoji>\n\n"
+            "<b>Chat:</b> <code>{}</code>\n"
+            "<b>User:</b> {}\n"
+            "<b>Link:</b> <a href='{}'>{}</a>\n\n"
+            "<b>Message:</b>\n{}"
         ),
     }
 
     strings_ru = {
-        "triggers_set": "Триггерные слова установлены: {}",
-        "triggers_not_set": "Триггерные слова не установлены",
-        "target_set": "Целевой чат для уведомлений установлен",
-        "target_not_set": "Целевой чат для уведомлений не установлен",
-        "monitoring_started": "Мониторинг запущен",
-        "monitoring_stopped": "Мониторинг остановлен",
-        "monitoring_status": "Мониторинг {}",
-        "triggers_example": "Пример: <code>.triggers слово1 слово2</code>",
-        "monitoring_status_on": "включен",
-        "monitoring_status_off": "выключен",
-        "ignore_set": "Игнорируемые чаты установлены: {}",
-        "ignore_none": "Игнорируемые чаты не установлены",
-        "ignore_example": "Пример: <code>.ignore 123456789 -987654321</code> (ID чатов)",
-        "no_reply": "Ответьте на сообщение в нужном чате или укажите его ID",
+        "triggers_set": "<emoji document_id=5854762571659218443>✅</emoji> Триггерные слова установлены: <code>{}</code>",
+        "triggers_not_set": "<emoji document_id=5854929766146118183>❌</emoji> Триггерные слова не установлены",
+        "target_set": "<emoji document_id=5854762571659218443>✅</emoji> Целевой чат для уведомлений установлен",
+        "target_not_set": "<emoji document_id=5854929766146118183>❌</emoji> Целевой чат для уведомлений не установлен",
+        "monitoring_started": "<emoji document_id=5188311512791393083>🌎</emoji> Мониторинг запущен",
+        "monitoring_stopped": "<emoji document_id=5854929766146118183>❌</emoji> Мониторинг остановлен",
+        "monitoring_status": "<emoji document_id=5188311512791393083>🌎</emoji> Мониторинг <b>{}</b>",
+        "triggers_example": "<emoji document_id=5854929766146118183>❌</emoji> Пример: <code>.triggers слово1 слово2</code>",
+        "monitoring_status_on": "<emoji document_id=5854762571659218443>✅</emoji> включен",
+        "monitoring_status_off": "<emoji document_id=5854929766146118183>❌</emoji> выключен",
+        "ignore_set": "<emoji document_id=5854762571659218443>✅</emoji> Игнорируемые чаты установлены: <code>{}</code>",
+        "ignore_none": "<emoji document_id=5854929766146118183>❌</emoji> Игнорируемые чаты не установлены",
+        "ignore_example": "<emoji document_id=5854929766146118183>❌</emoji> Пример: <code>.ignore 123456789 -987654321</code> (ID чатов)",
+        "no_reply": "<emoji document_id=5854929766146118183>❌</emoji> Ответьте на сообщение в нужном чате или укажите его ID",
         "monitoring_msg": (
-            "🚨 **Обнаружено триггерное слово!** 🚨\n\n"
-            "**Чат:** {} (`{}`)\n"
-            "**Пользователь:** {}\n"
-            "**Ссылка:** {}\n\n"
-            "**Сообщение:**\n{}"
+            "<emoji document_id=5854929766146118183>🚨</emoji> <b>Обнаружено триггерное слово!</b> <emoji document_id=5854929766146118183>🚨</emoji>\n\n"
+            "<b>Чат:</b> <code>{}</code>\n"
+            "<b>Пользователь:</b> {}\n"
+            "<b>Ссылка:</b> <a href='{}'>{}</a>\n\n"
+            "<b>Сообщение:</b>\n{}"
         ),
     }
 
@@ -95,35 +97,61 @@ class MessageMonitor(loader.Module):
             loader.ConfigValue(
                 "triggers",
                 [],
-                "Список триггерных слов",
+                "List of trigger words to monitor",
                 validator=loader.validators.Series(),
             ),
             loader.ConfigValue(
                 "target_chat",
                 None,
-                "ID целевого чата для отправки уведомлений",
+                "Target chat ID for notifications",
                 validator=loader.validators.Integer(),
             ),
             loader.ConfigValue(
                 "ignore_chats",
                 [],
-                "Список ID чатов, которые будут игнорироваться",
+                "List of chat IDs to ignore",
                 validator=loader.validators.Series(),
             ),
         )
-        self._triggers = []
-        self._target_chat = None
-        self._ignore_chats = []
+        self._triggers: List[str] = []
+        self._target_chat: Optional[int] = None
+        self._ignore_chats: List[int] = []
+        self._compiled_patterns: List[re.Pattern] = []
 
     async def client_ready(self, client, db):
-        self._triggers = self.config["triggers"]
+        """Initialize module when client is ready"""
+        await self._update_config()
+        self.client = client
+
+    async def _update_config(self):
+        """Update internal configuration and compile regex patterns"""
+        self._triggers = [trigger.lower() for trigger in self.config["triggers"]]
         self._target_chat = self.config["target_chat"]
         self._ignore_chats = [
-            int(i)
-            for i in self.config["ignore_chats"]
-            if str(i).isdigit() or str(i).startswith("-")
+            int(chat_id)
+            for chat_id in self.config["ignore_chats"]
+            if str(chat_id).lstrip("-").isdigit()
         ]
-        self.client = client
+
+        self._compiled_patterns = [
+            re.compile(r"\b" + re.escape(trigger) + r"\b", re.IGNORECASE)
+            for trigger in self._triggers
+        ]
+
+    @loader.command(
+        ru_doc="Показать статус мониторинга",
+        en_doc="Show monitoring status",
+    )
+    async def status(self, message: Message):
+        """Show current monitoring status"""
+        status_text = (
+            self.strings["monitoring_status_on"]
+            if self._target_chat and self._triggers
+            else self.strings["monitoring_status_off"]
+        )
+        await utils.answer(
+            message, self.strings["monitoring_status"].format(status_text)
+        )
 
     @loader.command(
         ru_doc="Установить триггерные слова. Пример: .triggers слово1 слово2",
@@ -138,6 +166,7 @@ class MessageMonitor(loader.Module):
 
         self._triggers = [arg.lower() for arg in args]
         self.config["triggers"] = self._triggers
+        await self._update_config()
         await utils.answer(
             message, self.strings["triggers_set"].format(", ".join(self._triggers))
         )
@@ -152,12 +181,10 @@ class MessageMonitor(loader.Module):
         chat_id = None
 
         if getattr(message, "is_reply", False):
-            get_reply_method = getattr(message, "get_reply_message", None)
-            if get_reply_method:
-                reply_message = await get_reply_method()
-                if reply_message and getattr(reply_message, "chat_id", None):
-                    chat_id = reply_message.chat_id
-        elif args and (args.isdigit() or args.startswith("-") and args[1:].isdigit()):
+            reply_message = await message.get_reply_message()
+            if reply_message and hasattr(reply_message, "chat_id"):
+                chat_id = reply_message.chat_id
+        elif args and (args.isdigit() or (args.startswith("-") and args[1:].isdigit())):
             chat_id = int(args)
 
         if chat_id:
@@ -184,7 +211,7 @@ class MessageMonitor(loader.Module):
                 valid_ids.append(int(arg))
 
         self.config["ignore_chats"] = valid_ids
-        self._ignore_chats = valid_ids
+        await self._update_config()
 
         if valid_ids:
             await utils.answer(
@@ -192,19 +219,15 @@ class MessageMonitor(loader.Module):
                 self.strings["ignore_set"].format(", ".join(map(str, valid_ids))),
             )
         else:
-            await utils.answer(
-                message, "Не удалось распознать ID чатов. Используйте только числа."
-            )
+            await utils.answer(message, self.strings["ignore_none"])
 
     @loader.watcher(out=False, only_messages=True)
     async def message_watcher(self, message: Message):
         """Watch for messages containing trigger words"""
-
         if not self._target_chat or not self._triggers:
             return
 
         chat_id = getattr(message, "chat_id", None)
-
         if chat_id and chat_id in self._ignore_chats:
             logger.debug(f"Message in ignored chat: {chat_id}. Skipping monitoring.")
             return
@@ -213,34 +236,27 @@ class MessageMonitor(loader.Module):
         if not text:
             return
 
-        text_lower = text.lower()
-
         found_triggers = [
             trigger
-            for trigger in self._triggers
-            if re.search(r"\b" + re.escape(trigger) + r"\b", text_lower)
+            for pattern, trigger in zip(self._compiled_patterns, self._triggers)
+            if pattern.search(text)
         ]
 
         if not found_triggers:
             return
 
         try:
-            get_chat_method = getattr(message, "get_chat", None)
-            if get_chat_method:
-                chat = await get_chat_method()
-                chat_title = getattr(
-                    chat,
-                    "title",
-                    "Личные сообщения"
-                    if getattr(message, "is_private", False)
-                    else "Чат с ID " + str(chat_id),
-                )
-            else:
-                chat_title = "Неизвестный чат"
+            chat = await message.get_chat()
+            chat_title = getattr(
+                chat,
+                "title",
+                "Личные сообщения"
+                if getattr(message, "is_private", False)
+                else f"Чат с ID {chat_id}",
+            )
 
-            get_sender_method = getattr(message, "get_sender", None)
-            if get_sender_method:
-                sender = await get_sender_method()
+            sender = await message.get_sender()
+            if sender:
                 sender_name = sender.first_name
                 if getattr(sender, "last_name", None):
                     sender_name += f" {sender.last_name}"
@@ -251,13 +267,7 @@ class MessageMonitor(loader.Module):
             else:
                 sender_name = "Неизвестный пользователь"
 
-            to_id_obj = getattr(message, "to_id", None)
-            if to_id_obj and getattr(to_id_obj, "channel_id", None):
-                link = f"https://t.me/c/{to_id_obj.channel_id}/{message.id}"
-            elif getattr(message, "is_private", False) and getattr(
-                sender, "username", None
-            ):
-                link = f"https://t.me/{sender.username}/{message.id}"
+            link = await self._get_message_link(message, sender)
 
             await self.client.send_message(
                 self._target_chat,
@@ -268,10 +278,28 @@ class MessageMonitor(loader.Module):
                     link,
                     text,
                 ),
-                parse_mode="Markdown",
+                parse_mode="HTML",
             )
             logger.debug(
                 f"Sent notification about trigger word(s) {found_triggers} to chat {self._target_chat}"
             )
         except Exception as e:
             logger.error(f"Error processing message: {e}")
+
+    async def _get_message_link(self, message: Message, sender) -> str:
+        """Generate message link based on message type"""
+        message_id = message.id
+
+        if getattr(message, "to_id", None):
+            to_id_obj = getattr(message, "to_id")
+            if getattr(to_id_obj, "channel_id", None):
+                return f"https://t.me/c/{to_id_obj.channel_id}/{message_id}"
+
+        if (
+            getattr(message, "is_private", False)
+            and sender
+            and getattr(sender, "username", None)
+        ):
+            return f"https://t.me/{sender.username}/{message_id}"
+
+        return f"https://t.me/c/{message_id}"

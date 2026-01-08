@@ -1,5 +1,5 @@
 # -- version --
-__version__ = (1, 2, 0)
+__version__ = (1, 2, 1)
 # -- version --
 
 
@@ -21,6 +21,7 @@ from herokutl.tl.functions.payments import GetPaymentFormRequest, SendStarsFormR
 from herokutl.tl.types import InputInvoiceStarGift, TextWithEntities
 from herokutl.errors.rpcerrorlist import BadRequestError
 import logging
+import herokutl
 
 @loader.tds
 class SenderGifts(loader.Module):
@@ -78,7 +79,7 @@ class SenderGifts(loader.Module):
     @loader.command()
     async def sendgift(self, message):
         """- <username> <text*> - отправить подарок пользователю (* - необязательный параметр.) Поддерживается реплай режим."""
-        args = utils.get_args_raw(message)
+        args = utils.get_args_html(message)
         reply = await message.get_reply_message()
         if reply:
             user = reply.sender
@@ -221,12 +222,17 @@ class SenderGifts(loader.Module):
                 self.strings["sending_gift"],
                 reply_markup=None
             )
-            
+
+            parse_mode = herokutl.utils.sanitize_parse_mode(
+                self.client.parse_mode,
+            )
+            text, entities = parse_mode.parse(text)
+
             user = await self.client.get_input_entity(user_id)
             inv = InputInvoiceStarGift(
                 user,
                 gift_id,
-                message=TextWithEntities(text, []) if text else TextWithEntities("", [])
+                message=TextWithEntities(text, entities) if text else TextWithEntities("", [])
             )
             form = await self.client(GetPaymentFormRequest(inv))
             result = await self.client(SendStarsFormRequest(form.form_id, inv))

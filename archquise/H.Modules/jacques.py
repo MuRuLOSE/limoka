@@ -27,13 +27,16 @@
 # scope: Жаконизатор 0.0.1
 # ---------------------------------------------------------------------------------
 
-import aiohttp
 import io
-from PIL import Image, ImageDraw, ImageFont
+import logging
 from textwrap import wrap
+
+import aiohttp
+from PIL import Image, ImageDraw, ImageFont
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class JacquesMod(loader.Module):

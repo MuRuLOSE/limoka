@@ -27,10 +27,14 @@
 # requires: zipfile
 # ---------------------------------------------------------------------------------
 
-import zipfile
+import logging
 import os
+import zipfile
 from datetime import datetime
+
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -64,7 +68,7 @@ class SMArchiver(loader.Module):
             await utils.answer(message, self.strings["no_messages"])
             return
 
-        archive_path = self.create_archive(saved_messages)
+        archive_path = await self.create_archive(saved_messages)
 
         try:
             await message.client.send_file(
@@ -79,7 +83,7 @@ class SMArchiver(loader.Module):
         finally:
             self.cleanup(archive_path)
 
-    def create_archive(self, saved_messages):
+    async def create_archive(self, saved_messages):
         current_month = datetime.now().strftime("%B %Y")
         archive_path = "saved_messages.zip"
 

@@ -26,49 +26,67 @@
 # scope: InlineCoin 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
 import random
+from typing import Dict
 
-from ..inline.types import InlineQuery
 from .. import loader
+from ..inline.types import InlineQuery
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
-class CoinSexMod(loader.Module):
-    """Mini game heads or tails"""
+class CoinFlipMod(loader.Module):
+    """Mini coin flip game"""
 
     strings = {
         "name": "InlineCoin",
-        "titles": "Heads or tails?",
-        "description": "Let's find out!",
-        "heads": "🌚 An eagle fell out!",
-        "tails": "🌝 Tails fell out!",
-        "edge": "🙀 Miraculously, the coin remained on the edge!",
+        "titles": "🪙 Heads or Tails?",
+        "description": "🎲 Let's find out!",
+        "heads": "🦅 An eagle fell out!",
+        "tails": "🪙 Tails fell out!",
+        "edge": "🙀 Miraculously, the coin remained on its edge!",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Please provide a command to flip.",
+        "error_general": "<emoji document_id=5854929766146118183>❌</emoji> An error occurred: {error}",
     }
 
     strings_ru = {
-        "titles": "Орёл или решка?",
-        "description": "Давай узнаем!",
-        "heads": "🌚 Выпал орёл!",
-        "tails": "🌝 Выпала решка!",
+        "titles": "🪙 Орёл или решка?",
+        "description": "🎲 Давай узнаем!",
+        "heads": "🦅 Выпал орёл!",
+        "tails": "🪙 Выпала решка!",
         "edge": "🙀 Чудо, монетка осталась на ребре!",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Укажите команду для подбрасывания монетки.",
+        "error_general": "<emoji document_id=5854929766146118183>❌</emoji> Произошла ошибка: {error}",
     }
 
-    def get_coin_flip_result(self) -> dict:
-        results = [self.strings("heads"), self.strings("tails")]
-        if random.random() < 0.1:
-            return self.strings("edge")
-        else:
-            return random.choice(results)
+    def get_coin_flip_result(self) -> Dict[str, str]:
+        """Get coin flip result with better formatting"""
+        return {
+            "title": self.strings["titles"],
+            "description": self.strings["description"],
+            "message": f"<b>{random.choice([self.strings['heads'], self.strings['tails']])}</b>",
+            "thumb": "https://github.com/Codwizer/ReModules/blob/main/assets/images.png",
+        }
 
     @loader.command(
-        ru_doc="Подбросит монетку ",
+        ru_doc="Подбросить монетку",
         en_doc="Flip a coin",
     )
     async def coin_inline_handler(self, query: InlineQuery):
+        """Handle coin flip inline query"""
+        if not query.args:
+            return {
+                "title": self.strings["titles"],
+                "description": self.strings["no_args"],
+                "message": self.strings["no_args"],
+            }
+
         result = self.get_coin_flip_result()
         return {
-            "title": self.strings("titles"),
-            "description": self.strings("description"),
-            "message": f"<b>{result}</b>",
-            "thumb": "https://github.com/Codwizer/ReModules/blob/main/assets/images.png",
+            "title": self.strings["titles"],
+            "description": self.strings["description"],
+            "message": result["message"],
+            "thumb": result["thumb"],
         }

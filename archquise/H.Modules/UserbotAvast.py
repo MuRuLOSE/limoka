@@ -26,14 +26,13 @@
 # scope: UserbotAvast 0.0.1
 # ---------------------------------------------------------------------------------
 
-import logging
 import ast
-import astor
-import requests
 import base64
-import zlib
+import logging
 import re
-import urllib.parse
+import zlib
+
+import requests
 
 from .. import loader, utils
 
@@ -697,7 +696,7 @@ class SecurityAnalyzer:
         for node in ast.walk(tree):
             if isinstance(node, ast.For):
                 for send_method in send_methods:
-                    if send_method in astor.to_source(node):
+                    if send_method in ast.unparse(node):
                         issue_key = (
                             f"Mass {send_method}",
                             node.lineno,
@@ -715,8 +714,8 @@ class SecurityAnalyzer:
                             )
                             self.reported_issues.add(issue_key)
 
-        if "time.sleep(" in astor.to_source(tree):
-            sleep_calls = re.findall(r"time\.sleep\((.*?)\)", astor.to_source(tree))
+        if "time.sleep(" in ast.unparse(tree):
+            sleep_calls = re.findall(r"time\.sleep\((.*?)\)", ast.unparse(tree))
             for sleep_time in sleep_calls:
                 try:
                     sleep_value = float(sleep_time)

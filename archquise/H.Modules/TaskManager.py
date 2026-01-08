@@ -26,11 +26,12 @@
 # scope: TaskManager 0.0.1
 # ---------------------------------------------------------------------------------
 
+import asyncio
 import datetime
 import json
 import logging
-import os
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, List, Optional
 
 from .. import loader, utils
@@ -46,103 +47,138 @@ class Task:
     due_date: Optional[datetime.datetime] = None
     completed: bool = False
     created_at: datetime.datetime = field(default_factory=datetime.datetime.now)
+    id: str = field(default_factory=lambda: f"{datetime.datetime.now().timestamp()}")
+
+    def to_dict(self) -> dict:
+        """Convert task to dictionary for JSON serialization."""
+        return {
+            "id": self.id,
+            "description": self.description,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "completed": self.completed,
+            "created_at": self.created_at.isoformat(),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Task":
+        """Create task from dictionary."""
+        return cls(
+            id=data.get("id", f"{datetime.datetime.now().timestamp()}"),
+            description=data["description"],
+            due_date=datetime.datetime.fromisoformat(data["due_date"])
+            if data.get("due_date")
+            else None,
+            completed=data["completed"],
+            created_at=datetime.datetime.fromisoformat(data["created_at"]),
+        )
 
 
 class TaskManager:
     """Manages tasks, storing them in a JSON file."""
 
     def __init__(self, data_file: str):
-        self.data_file = data_file
+        self.data_file = Path(data_file)
         self.tasks: Dict[int, List[Task]] = {}
+        self._lock = asyncio.Lock()
         self.load_data()
 
     def load_data(self):
         """Loads task data from the JSON file."""
-        if os.path.exists(self.data_file):
-            try:
-                with open(self.data_file, "r") as f:
-                    data = json.load(f)
-                    self.tasks = {
-                        int(user_id): [
-                            Task(
-                                description=task["description"],
-                                due_date=datetime.datetime.fromisoformat(
-                                    task["due_date"]
-                                )
-                                if task["due_date"]
-                                else None,
-                                completed=task["completed"],
-                                created_at=datetime.datetime.fromisoformat(
-                                    task["created_at"]
-                                ),
-                            )
-                            for task in task_list
-                        ]
-                        for user_id, task_list in data.items()
-                    }
-            except (FileNotFoundError, json.JSONDecodeError) as e:
-                logger.warning(f"Failed to load task data: {e}. Starting empty.")
-                self.tasks = {}
-        else:
+        if not self.data_file.exists():
             self.tasks = {}
             logger.info("Task data file not found. Starting empty.")
+            return
 
-    def save_data(self):
-        """Saves task data to the JSON file."""
         try:
-            with open(self.data_file, "w") as f:
+            with open(self.data_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                self.tasks = {
+                    int(user_id): [Task.from_dict(task) for task in task_list]
+                    for user_id, task_list in data.items()
+                }
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            logger.warning(f"Failed to load task data: {e}. Starting empty.")
+            self.tasks = {}
+        except Exception as e:
+            logger.error(f"Unexpected error loading task data: {e}")
+            self.tasks = {}
+
+    async def save_data(self):
+        """Saves task data to the JSON file."""
+        async with self._lock:
+            try:
+                self.data_file.parent.mkdir(parents=True, exist_ok=True)
                 data = {
-                    user_id: [
-                        {
-                            "description": task.description,
-                            "due_date": task.due_date.isoformat()
-                            if task.due_date
-                            else None,
-                            "completed": task.completed,
-                            "created_at": task.created_at.isoformat(),
-                        }
-                        for task in task_list
-                    ]
+                    str(user_id): [task.to_dict() for task in task_list]
                     for user_id, task_list in self.tasks.items()
                 }
-                json.dump(data, f, indent=4, default=str)
-        except IOError as e:
-            logger.error(f"Failed to save task data: {e}")
+                with open(self.data_file, "w", encoding="utf-8") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+            except IOError as e:
+                logger.error(f"Failed to save task data: {e}")
+            except Exception as e:
+                logger.error(f"Unexpected error saving task data: {e}")
 
-    def add_task(self, user_id: int, task: Task):
+    async def add_task(self, user_id: int, task: Task):
         self.tasks.setdefault(user_id, []).append(task)
-        self.save_data()
+        await self.save_data()
 
-    def remove_task(self, user_id: int, index: int):
+    async def remove_task(self, user_id: int, index: int) -> bool:
         if user_id in self.tasks and 0 <= index < len(self.tasks[user_id]):
             del self.tasks[user_id][index]
-            self.save_data()
-        else:
-            logger.warning(f"Invalid index for removal: {index}, user: {user_id}")
+            await self.save_data()
+            return True
+        logger.warning(f"Invalid index for removal: {index}, user: {user_id}")
+        return False
 
-    def complete_task(self, user_id: int, index: int):
+    async def complete_task(self, user_id: int, index: int) -> bool:
         if user_id in self.tasks and 0 <= index < len(self.tasks[user_id]):
             self.tasks[user_id][index].completed = True
-            self.save_data()
-        else:
-            logger.warning(f"Invalid index for completion: {index}, user: {user_id}")
+            await self.save_data()
+            return True
+        logger.warning(f"Invalid index for completion: {index}, user: {user_id}")
+        return False
 
-    def get_tasks(self, user_id: int) -> List[Task]:
-        return self.tasks.get(user_id, [])
+    def get_tasks(self, user_id: int, include_completed: bool = True) -> List[Task]:
+        tasks = self.tasks.get(user_id, [])
+        if not include_completed:
+            tasks = [task for task in tasks if not task.completed]
+        return tasks
 
-    def clear_tasks(self, user_id: int):
+    async def clear_tasks(self, user_id: int) -> bool:
         if user_id in self.tasks:
             self.tasks[user_id] = []
-            self.save_data()
-        else:
-            logger.info(f"No tasks to clear for user: {user_id}")
+            await self.save_data()
+            return True
+        logger.info(f"No tasks to clear for user: {user_id}")
+        return False
 
     def get_task(self, user_id: int, index: int) -> Optional[Task]:
-        return (
-            self.tasks[user_id][index]
-            if user_id in self.tasks and 0 <= index < len(self.tasks[user_id])
-            else None
-        )
+        if user_id in self.tasks and 0 <= index < len(self.tasks[user_id]):
+            return self.tasks[user_id][index]
+        return None
+
+    def get_overdue_tasks(self, user_id: int) -> List[Task]:
+        """Get overdue tasks for a user."""
+        now = datetime.datetime.now()
+        return [
+            task
+            for task in self.get_tasks(user_id)
+            if task.due_date and task.due_date < now and not task.completed
+        ]
+
+    async def update_task(self, user_id: int, index: int, **kwargs) -> bool:
+        """Update task properties."""
+        task = self.get_task(user_id, index)
+        if not task:
+            return False
+
+        for key, value in kwargs.items():
+            if hasattr(task, key):
+                setattr(task, key, value)
+
+        await self.save_data()
+        return True
 
 
 @loader.tds
@@ -198,7 +234,9 @@ class TaskManagerModule(loader.Module):
         self.task_manager: Optional[TaskManager] = None
 
     async def client_ready(self, client, db):
-        self.task_manager = TaskManager(os.path.join(os.getcwd(), "tasks.json"))
+        data_dir = Path.cwd() / "data"
+        data_dir.mkdir(exist_ok=True)
+        self.task_manager = TaskManager(str(data_dir / "tasks.json"))
 
     @loader.command(
         ru_doc="Добавить задачу:\n.taskadd <описание> | <дата (необязательно)>",
@@ -230,7 +268,7 @@ class TaskManagerModule(loader.Module):
             return
 
         task = Task(description=description, due_date=due_date)
-        self.task_manager.add_task(message.sender_id, task)
+        await self.task_manager.add_task(message.sender_id, task)
         await utils.answer(message, self.strings("task_added"))
 
     @loader.command(ru_doc="[index] - удалить задачу", en_doc="[index] - remove task")
@@ -246,12 +284,10 @@ class TaskManagerModule(loader.Module):
             await utils.answer(message, self.strings("invalid_index"))
             return
 
-        if self.task_manager.get_task(message.sender_id, index) is None:
+        if await self.task_manager.remove_task(message.sender_id, index):
+            await utils.answer(message, self.strings("task_removed"))
+        else:
             await utils.answer(message, self.strings("task_not_found"))
-            return
-
-        self.task_manager.remove_task(message.sender_id, index)
-        await utils.answer(message, self.strings("task_removed"))
 
     @loader.command(
         ru_doc="[index] - Завершите задачу", en_doc="[index] - Complete task"
@@ -268,12 +304,10 @@ class TaskManagerModule(loader.Module):
             await utils.answer(message, self.strings("invalid_index"))
             return
 
-        if self.task_manager.get_task(message.sender_id, index) is None:
+        if await self.task_manager.complete_task(message.sender_id, index):
+            await utils.answer(message, self.strings("task_completed"))
+        else:
             await utils.answer(message, self.strings("task_not_found"))
-            return
-
-        self.task_manager.complete_task(message.sender_id, index)
-        await utils.answer(message, self.strings("task_completed"))
 
     @loader.command(ru_doc="Список задач", en_doc="List tasks")
     async def tasklist(self, message):
@@ -342,8 +376,10 @@ class TaskManagerModule(loader.Module):
 
     async def clear_confirm(self, call):
         """Callback for confirming task clearing."""
-        self.task_manager.clear_tasks(call.from_user.id)
-        await call.edit(self.strings("tasks_cleared"))
+        if await self.task_manager.clear_tasks(call.from_user.id):
+            await call.edit(self.strings("tasks_cleared"))
+        else:
+            await call.edit(self.strings("no_tasks"))
 
     async def clear_cancel(self, call):
         """Callback for canceling task clearing."""

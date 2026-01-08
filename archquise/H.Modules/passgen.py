@@ -17,8 +17,8 @@
 # For any inquiries or requests for permissions, please contact codwiz@yandex.ru.
 
 # ---------------------------------------------------------------------------------
-# Name: SafetyMod
-# Description: generate random password
+# Name: PassgenMod
+# Description: Generates random password
 # Author: @hikka_mods
 # ---------------------------------------------------------------------------------
 # meta developer: @hikka_mods
@@ -26,11 +26,13 @@
 # scope: Api SafetyMod 0.0.1
 # ---------------------------------------------------------------------------------
 
-import random
+import secrets
 import string
+import logging
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 def generate_password(
     length: int, letters: bool = True, numbers: bool = True, symbols: bool = True
@@ -61,16 +63,16 @@ def generate_password(
         raise ValueError("At least one of letters, numbers, or symbols must be True")
 
     combined_characters = "".join(character_sets)
-    password = "".join(random.choice(combined_characters) for _ in range(length))
+    password = "".join(secrets.choice(combined_characters) for _ in range(length))
     return password
 
 
 @loader.tds
-class SafetyMod(loader.Module):
+class PassgenMod(loader.Module):
     """generate random password"""
 
     strings = {
-        "name": "Safety",
+        "name": "Passgen",
         "pass": "<emoji document_id=5472287483318245416>*⃣</emoji> <b>Here is your secure password:</b> <code>{}</code>",
     }
     strings_ru = {

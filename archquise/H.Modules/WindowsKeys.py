@@ -28,109 +28,108 @@
 # ---------------------------------------------------------------------------------
 
 import logging
-import json
-import requests
+import time
 
-from .. import loader, utils
+import aiohttp
+
+from .. import loader
 
 logger = logging.getLogger(__name__)
 
 
 @loader.tds
-class WindowsKeys(loader.Module):
-    """Provides you Windows activation keys"""
+class WindowsKeysMod(loader.Module):
+    """Windows activation keys"""
 
     strings = {
         "name": "WindowsKeys",
-        "winkey": "✅ Your key: <code>{}</code>\n\n⚠ Warning! This key is not a pirate key. It is taken from the official Microsoft site and is intended for further activation via KMS-server",
-        "error": "❌ An error occurred while retrieving the key. Please try again later.",
+        "winkey": "✅ Key: <code>{}</code>\n\n⚠ For KMS activation only",
+        "error": "❌ Failed to get key",
+        "select": "🔓 Select version:",
+        "close": "🎈 Close",
+        "loading": "⌛ Loading...",
     }
 
     strings_ru = {
-        "winkey": "✅ Ваш ключ: <code>{}</code>\n\n⚠ Внимание! Указанный ключ не является пиратским. Он взят с официального сайта Microsoft и предназначен для дальнейшей активации посредством KMS-сервера",
-        "error": "❌ Произошла ошибка при получении ключа. Попробуйте позже.",
+        "winkey": "✅ Ключ: <code>{}</code>\n\n⚠ Только для KMS активации",
+        "error": "❌ Ошибка получения",
+        "select": "🔓 Выберите версию:",
+        "close": "🎈 Закрыть",
+        "loading": "⌛ Загрузка...",
     }
 
-    @loader.command(
-        ru_doc="Открывает выбор ключа для активации Windows",
-        en_doc="Opens the Windows activation key selection",
-    )
+    def __init__(self):
+        self.cache = None
+        self.cache_time = 0
+        self.CACHE_TTL = 3600
+
+    async def client_ready(self, client, db):
+        self.client = client
+        self.db = db
+
+    @loader.command(ru_doc="Меню ключей Windows", en_doc="Windows keys menu")
     async def winkey(self, message):
         await self.inline.form(
-            text="🔓 Выберите версию и издание Windows, для которой вам необходим ключ",
+            self.strings["select"],
             message=message,
             reply_markup=[
                 [
                     {
-                        "text": "Windows 10/11 Pro",
-                        "callback": self._inline__give_key,
-                        "args": ["win10_11pro"],
+                        "text": "Win 10/11 Pro",
+                        "callback": self._key,
+                        "args": ("win10_11pro",),
                     }
                 ],
                 [
                     {
-                        "text": "Windows 10/11 Enterprise LTSC",
-                        "callback": self._inline__give_key,
-                        "args": ["win10_11enterpriseLTSC"],
+                        "text": "Win 10/11 LTSC",
+                        "callback": self._key,
+                        "args": ("win10_11enterpriseLTSC",),
                     }
                 ],
                 [
                     {
-                        "text": "Windows 8.1 Pro",
-                        "callback": self._inline__give_key,
-                        "args": ["win8.1pro"],
+                        "text": "Win 8.1 Pro",
+                        "callback": self._key,
+                        "args": ("win8.1pro",),
                     }
                 ],
+                [{"text": "Win 8 Pro", "callback": self._key, "args": ("win8pro",)}],
+                [{"text": "Win 7 Pro", "callback": self._key, "args": ("win7pro",)}],
                 [
                     {
-                        "text": "Windows 8 Pro",
-                        "callback": self._inline__give_key,
-                        "args": ["win8pro"],
+                        "text": "Vista Business",
+                        "callback": self._key,
+                        "args": ("winvistabusiness",),
                     }
                 ],
-                [
-                    {
-                        "text": "Windows 7 Pro",
-                        "callback": self._inline__give_key,
-                        "args": ["win7pro"],
-                    }
-                ],
-                [
-                    {
-                        "text": "Windows Vista Business",
-                        "callback": self._inline__give_key,
-                        "args": ["winvistabusiness"],
-                    }
-                ],
-                [
-                    {
-                        "text": "🎈 Закрыть",
-                        "action": "close",
-                    }
-                ],
+                [{"text": self.strings["close"], "action": "close"}],
             ],
-            force_me=False,
-            silent=True,
         )
 
-    async def _inline__give_key(self, call, winver):
-        url = "https://files.archquise.ru/winkeys.json"
+    async def _key(self, call, version):
+        await call.edit(self.strings["loading"])
+        keys = await self._get_keys()
+        key = keys.get(version) if keys else None
+        await call.edit(
+            self.strings["winkey"].format(key) if key else self.strings["error"],
+            reply_markup=[
+                [{"text": "← Back", "callback": self.winkey}],
+                [{"text": self.strings["close"], "action": "close"}],
+            ],
+        )
+
+    async def _get_keys(self):
+        if time.time() - self.cache_time < self.CACHE_TTL:
+            return self.cache
+
         try:
-            response = requests.get(url)
-            response.raise_for_status()
-            data = response.json()
-            await call.edit(self.strings["winkey"].format(data[winver]))
-
-        except requests.exceptions.RequestException as e:
-            logger.error("Request error: %e", e)
-            await call.answer(self.strings("error"), show_alert=True)
-        except json.JSONDecodeError as e:
-            logger.error("JSON decode error: %e", e)
-            await call.answer(self.strings("error"), show_alert=True)
-        except KeyError as e:
-            logger.error("Key error: %e", e)
-            await call.answer(self.strings("error"), show_alert=True)
-
-        except Exception as e:
-            logger.exception("An unexpected error occurred: %e", e)
-            await call.answer(self.strings("error"), show_alert=True)
+            async with aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(10)
+            ) as session:
+                async with session.get("https://files.archquise.ru/winkeys.json") as r:
+                    self.cache = await r.json()
+                    self.cache_time = time.time()
+                    return self.cache
+        except Exception:  # noqa: E722
+            return None
