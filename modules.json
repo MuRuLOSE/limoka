@@ -16194,6 +16194,33 @@
       "Chat"
     ]
   },
+  "fiksofficial/python-modules/aigenuser.py": {
+    "name": "AiUsernameGen",
+    "description": "AI-powered username generation and automatic creation of public channels with available usernames. (Before you begin, set up the config: .config AiUsernameGen)",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@pymodule"
+    },
+    "commands": [
+      {
+        "genusercmd": "— <request> Generates usernames and optionally creates channels — <запрос> Генерирует username по запросу и (опционально) создаёт каналы"
+      }
+    ],
+    "new_commands": [
+      {
+        "genuser": {
+          "ru_doc": "— <запрос> Генерирует username по запросу и (опционально) создаёт каналы",
+          "en_doc": null,
+          "doc": "— <request> Generates usernames and optionally creates channels"
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Automation"
+    ]
+  },
   "fiksofficial/python-modules/randomizer.py": {
     "name": "RandomizerMod",
     "description": "Randomly selects one of the comma-separated values.",
@@ -30582,6 +30609,123 @@
       "Chat"
     ]
   },
+  "archquise/H.Modules/mediatools.py": {
+    "name": "MediaToolsMod",
+    "description": "Powerful tools for working with media files",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "convert": "<формат> - конвертировать медиа в указанный формат <format> - convert media to specified format"
+      },
+      {
+        "voicedl": "Скачать голосовое сообщение как файл Download voice message as file"
+      },
+      {
+        "gif": "Преобразовать видео в GIF Convert video to GIF"
+      },
+      {
+        "cut": "<начало:конец> - обрезать медиа по времени <start:end> - trim media by time"
+      },
+      {
+        "vircle": "[начало:конец] - Видео в кружок [start:end] - Convert video to circle"
+      },
+      {
+        "vsound": "[начало:конец] - Извлечь аудио из видео [start:end] - Extract audio from video"
+      },
+      {
+        "compress": "<качество> - Сжать видео <quality> - Compress video"
+      },
+      {
+        "split": "<время/размер> - Разделить медиа на части <time/size> - Split media into parts"
+      },
+      {
+        "merge": "Объединить несколько медиафайлов Merge multiple media files"
+      },
+      {
+        "removemetadata": "Удалить метаданные из медиа Remove metadata from media"
+      }
+    ],
+    "new_commands": [
+      {
+        "convert": {
+          "ru_doc": "<формат> - конвертировать медиа в указанный формат",
+          "en_doc": "<format> - convert media to specified format",
+          "doc": null
+        }
+      },
+      {
+        "voicedl": {
+          "ru_doc": "Скачать голосовое сообщение как файл",
+          "en_doc": "Download voice message as file",
+          "doc": null
+        }
+      },
+      {
+        "gif": {
+          "ru_doc": "Преобразовать видео в GIF",
+          "en_doc": "Convert video to GIF",
+          "doc": null
+        }
+      },
+      {
+        "cut": {
+          "ru_doc": "<начало:конец> - обрезать медиа по времени",
+          "en_doc": "<start:end> - trim media by time",
+          "doc": null
+        }
+      },
+      {
+        "vircle": {
+          "ru_doc": "[начало:конец] - Видео в кружок",
+          "en_doc": "[start:end] - Convert video to circle",
+          "doc": null
+        }
+      },
+      {
+        "vsound": {
+          "ru_doc": "[начало:конец] - Извлечь аудио из видео",
+          "en_doc": "[start:end] - Extract audio from video",
+          "doc": null
+        }
+      },
+      {
+        "compress": {
+          "ru_doc": "<качество> - Сжать видео",
+          "en_doc": "<quality> - Compress video",
+          "doc": null
+        }
+      },
+      {
+        "split": {
+          "ru_doc": "<время/размер> - Разделить медиа на части",
+          "en_doc": "<time/size> - Split media into parts",
+          "doc": null
+        }
+      },
+      {
+        "merge": {
+          "ru_doc": "Объединить несколько медиафайлов",
+          "en_doc": "Merge multiple media files",
+          "doc": null
+        }
+      },
+      {
+        "removemetadata": {
+          "ru_doc": "Удалить метаданные из медиа",
+          "en_doc": "Remove metadata from media",
+          "doc": null
+        }
+      }
+    ],
+    "category": [
+      "Media",
+      "Tools"
+    ]
+  },
   "archquise/H.Modules/Text2File.py": {
     "name": "Text2File",
     "description": "Module for convertation your text to file",
@@ -30611,7 +30755,7 @@
   },
   "archquise/H.Modules/IrisSimpleMod.py": {
     "name": "IrisSimpleMod",
-    "description": "Модуль для базового взаимодействия с Ирисом",
+    "description": "Module for basic interaction with Iris bot",
     "meta": {
       "pic": null,
       "banner": null,
@@ -30619,45 +30763,35 @@
     },
     "commands": [
       {
-        "bag": "Check bag Проверить мешок"
+        "bag": "Check bag Проверить мешок Check bag"
       },
       {
-        "farm": "Farm iris-coins Зафармить ирис-коины"
+        "farm": "Farm iris-coins Зафармить ирис-коины Farm iris-coins"
       },
       {
-        "irisstats": "Display user stats Вывести анкету"
-      },
-      {
-        "irisping": "Display bot stats Вывести статистику ботов"
+        "irisstats": "Display user stats Вывести анкету Display user stats"
       }
     ],
     "new_commands": [
       {
         "bag": {
           "ru_doc": "Проверить мешок",
-          "en_doc": null,
+          "en_doc": "Check bag",
           "doc": "Check bag"
         }
       },
       {
         "farm": {
           "ru_doc": "Зафармить ирис-коины",
-          "en_doc": null,
+          "en_doc": "Farm iris-coins",
           "doc": "Farm iris-coins"
         }
       },
       {
         "irisstats": {
           "ru_doc": "Вывести анкету",
-          "en_doc": null,
+          "en_doc": "Display user stats",
           "doc": "Display user stats"
-        }
-      },
-      {
-        "irisping": {
-          "ru_doc": "Вывести статистику ботов",
-          "en_doc": null,
-          "doc": "Display bot stats"
         }
       }
     ],
@@ -30676,21 +30810,21 @@
     },
     "commands": [
       {
-        "nsfwartcmd": "Отправьте симпатичный nsfw-арт Send cute nsfw-art"
+        "nsfwartcmd": "Send NSFW art based on configured tags Отправить симпатичный NSFW-арт Send cute NSFW-art"
       }
     ],
     "new_commands": [
       {
         "nsfwart": {
-          "ru_doc": "Отправьте симпатичный nsfw-арт",
-          "en_doc": "Send cute nsfw-art",
-          "doc": null
+          "ru_doc": "Отправить симпатичный NSFW-арт",
+          "en_doc": "Send cute NSFW-art",
+          "doc": "Send NSFW art based on configured tags"
         }
       }
     ],
     "category": [
       "Tools",
-      "Fun"
+      "Chat"
     ]
   },
   "archquise/H.Modules/CryptoCurrency.py": {
@@ -30795,8 +30929,8 @@
     ]
   },
   "archquise/H.Modules/VoiceDL.py": {
-    "name": "VoiceDL",
-    "description": "Voice Downloader module",
+    "name": "VoiceDLMod",
+    "description": "Download voice messages as MP3",
     "meta": {
       "pic": null,
       "banner": null,
@@ -30804,21 +30938,21 @@
     },
     "commands": [
       {
-        "voicedl": " [reply] — загружает выбранное голосовое сообщение в виде файла mp3 и кидает его в чат.  [reply] — downloads the selected voice message as an MP3 file and sends it in the chat."
+        "voicedl": "[ответ] - скачать голосовое как MP3 [reply] - download voice as MP3"
       }
     ],
     "new_commands": [
       {
         "voicedl": {
-          "ru_doc": " [reply] — загружает выбранное голосовое сообщение в виде файла mp3 и кидает его в чат.",
-          "en_doc": " [reply] — downloads the selected voice message as an MP3 file and sends it in the chat.",
+          "ru_doc": "[ответ] - скачать голосовое как MP3",
+          "en_doc": "[reply] - download voice as MP3",
           "doc": null
         }
       }
     ],
     "category": [
-      "Chat",
-      "Tools"
+      "Tools",
+      "Media"
     ]
   },
   "archquise/H.Modules/FakeWallet.py": {
@@ -30868,13 +31002,13 @@
     },
     "commands": [
       {
-        "namecmd": "для того, чтобы сменить свое имя/отчество for change your first/second name"
+        "namecmd": "Change first name and last name для того, чтобы сменить свое имя/отчество for change your first/second name"
       },
       {
-        "aboutcmd": "чтобы изменить свою биографию for change your bio"
+        "aboutcmd": "Change profile bio для изменения вашего имени пользователя. Введите значение без '@' for change your username. Enter value without '@'"
       },
       {
-        "usercmd": "- for change your username. Enter value without \"@\". для изменения вашего имени пользователя. Введите значение без '@' for change your username. Enter value without '@'"
+        "usercmd": "Change username для изменения вашего имени пользователя. Введите значение без '@' for change your username. Enter value without '@'"
       }
     ],
     "new_commands": [
@@ -30882,21 +31016,21 @@
         "name": {
           "ru_doc": "для того, чтобы сменить свое имя/отчество",
           "en_doc": "for change your first/second name",
-          "doc": null
+          "doc": "Change first name and last name"
         }
       },
       {
         "about": {
-          "ru_doc": "чтобы изменить свою биографию",
-          "en_doc": "for change your bio",
-          "doc": null
+          "ru_doc": "для изменения вашего имени пользователя. Введите значение без '@'",
+          "en_doc": "for change your username. Enter value without '@'",
+          "doc": "Change profile bio"
         }
       },
       {
         "user": {
           "ru_doc": "для изменения вашего имени пользователя. Введите значение без '@'",
           "en_doc": "for change your username. Enter value without '@'",
-          "doc": "- for change your username. Enter value without \"@\"."
+          "doc": "Change username"
         }
       }
     ],
@@ -30960,6 +31094,113 @@
     "category": [
       "Tools",
       "Fun"
+    ]
+  },
+  "archquise/H.Modules/silenttr.py": {
+    "name": "SilentTRMod",
+    "description": "Silent tags and reactions",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "sreacts": "Toggle global silent reactions [on/off] - тихие реакции во всех чатах [on/off] - silent reactions in all chats"
+      },
+      {
+        "stags": "Toggle global silent tags [on/off] - тихие упоминания во всех чатах [on/off] - silent tags in all chats"
+      },
+      {
+        "sall": "Toggle global silent reactions and tags [on/off] - тихие реакции и упоминания во всех чатах [on/off] - silent reactions and tags in all chats"
+      },
+      {
+        "hsreacts": "Toggle silent reactions in this chat [on/off] - тихие реакции в этом чате [on/off] - silent reactions in this chat"
+      },
+      {
+        "hstags": "Toggle silent tags in this chat [on/off] - тихие упоминания в этом чате [on/off] - silent tags in this chat"
+      },
+      {
+        "hsall": "Toggle silent reactions and tags in this chat [on/off] - тихие реакции и упоминания в этом чате [on/off] - silent reactions and tags in this chat"
+      },
+      {
+        "ignore": "Toggle ignore user globally [ответ/username] - игнорировать пользователя глобально [reply/username] - ignore user globally"
+      },
+      {
+        "hignore": "Toggle ignore user in this chat [ответ/username] - игнорировать пользователя в этом чате [reply/username] - ignore user in this chat"
+      },
+      {
+        "strstatus": "Show status Показать статус Silent T&R Show Silent T&R status"
+      }
+    ],
+    "new_commands": [
+      {
+        "sreacts": {
+          "ru_doc": "[on/off] - тихие реакции во всех чатах",
+          "en_doc": "[on/off] - silent reactions in all chats",
+          "doc": "Toggle global silent reactions"
+        }
+      },
+      {
+        "stags": {
+          "ru_doc": "[on/off] - тихие упоминания во всех чатах",
+          "en_doc": "[on/off] - silent tags in all chats",
+          "doc": "Toggle global silent tags"
+        }
+      },
+      {
+        "sall": {
+          "ru_doc": "[on/off] - тихие реакции и упоминания во всех чатах",
+          "en_doc": "[on/off] - silent reactions and tags in all chats",
+          "doc": "Toggle global silent reactions and tags"
+        }
+      },
+      {
+        "hsreacts": {
+          "ru_doc": "[on/off] - тихие реакции в этом чате",
+          "en_doc": "[on/off] - silent reactions in this chat",
+          "doc": "Toggle silent reactions in this chat"
+        }
+      },
+      {
+        "hstags": {
+          "ru_doc": "[on/off] - тихие упоминания в этом чате",
+          "en_doc": "[on/off] - silent tags in this chat",
+          "doc": "Toggle silent tags in this chat"
+        }
+      },
+      {
+        "hsall": {
+          "ru_doc": "[on/off] - тихие реакции и упоминания в этом чате",
+          "en_doc": "[on/off] - silent reactions and tags in this chat",
+          "doc": "Toggle silent reactions and tags in this chat"
+        }
+      },
+      {
+        "ignore": {
+          "ru_doc": "[ответ/username] - игнорировать пользователя глобально",
+          "en_doc": "[reply/username] - ignore user globally",
+          "doc": "Toggle ignore user globally"
+        }
+      },
+      {
+        "hignore": {
+          "ru_doc": "[ответ/username] - игнорировать пользователя в этом чате",
+          "en_doc": "[reply/username] - ignore user in this chat",
+          "doc": "Toggle ignore user in this chat"
+        }
+      },
+      {
+        "strstatus": {
+          "ru_doc": "Показать статус Silent T&R",
+          "en_doc": "Show Silent T&R status",
+          "doc": "Show status"
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Tools"
     ]
   },
   "archquise/H.Modules/FakeActions.py": {
@@ -31096,6 +31337,93 @@
       "Chat"
     ]
   },
+  "archquise/H.Modules/EmojiStickerBlocker.py": {
+    "name": "EmojiStickerBlocker",
+    "description": "Block emojis, stickers and sticker packs with enhanced functionality",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "packblock": "Block emoji pack/sticker pack [link/название пака] — блокирует эмодзипак/стикерпак в личных сообщениях [link/pack name] — block emoji pack/sticker pack in private messages"
+      },
+      {
+        "stickblock": "Block sticker from reply [reply] — блокирует определенный стикер [reply] — block specific sticker"
+      },
+      {
+        "emojiblock": "Block emoji from reply or input [reply/enter] — блокирует определенное эмодзи [reply/enter] — block specific emoji"
+      },
+      {
+        "ublpack": "Unblock emoji pack/sticker pack — снимает блокировку с эмодзипака/стикерпака — unblock emoji pack/sticker pack"
+      },
+      {
+        "ublthis": "Unblock emoji/sticker from reply or input [reply/enter] — снимает блокировку с определенного эмодзи/стикера [reply/enter] — unblock specific emoji/sticker"
+      },
+      {
+        "blocklist": "Show blocklist — показать список заблокированных паков/стикеров/эмодзи — show list of blocked packs/stickers/emojis"
+      },
+      {
+        "clearblocks": "Clear all blocks — очистить все блокировки — clear all blocks"
+      }
+    ],
+    "new_commands": [
+      {
+        "packblock": {
+          "ru_doc": "[link/название пака] — блокирует эмодзипак/стикерпак в личных сообщениях",
+          "en_doc": "[link/pack name] — block emoji pack/sticker pack in private messages",
+          "doc": "Block emoji pack/sticker pack"
+        }
+      },
+      {
+        "stickblock": {
+          "ru_doc": "[reply] — блокирует определенный стикер",
+          "en_doc": "[reply] — block specific sticker",
+          "doc": "Block sticker from reply"
+        }
+      },
+      {
+        "emojiblock": {
+          "ru_doc": "[reply/enter] — блокирует определенное эмодзи",
+          "en_doc": "[reply/enter] — block specific emoji",
+          "doc": "Block emoji from reply or input"
+        }
+      },
+      {
+        "ublpack": {
+          "ru_doc": "— снимает блокировку с эмодзипака/стикерпака",
+          "en_doc": "— unblock emoji pack/sticker pack",
+          "doc": "Unblock emoji pack/sticker pack"
+        }
+      },
+      {
+        "ublthis": {
+          "ru_doc": "[reply/enter] — снимает блокировку с определенного эмодзи/стикера",
+          "en_doc": "[reply/enter] — unblock specific emoji/sticker",
+          "doc": "Unblock emoji/sticker from reply or input"
+        }
+      },
+      {
+        "blocklist": {
+          "ru_doc": "— показать список заблокированных паков/стикеров/эмодзи",
+          "en_doc": "— show list of blocked packs/stickers/emojis",
+          "doc": "Show blocklist"
+        }
+      },
+      {
+        "clearblocks": {
+          "ru_doc": "— очистить все блокировки",
+          "en_doc": "— clear all blocks",
+          "doc": "Clear all blocks"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Games"
+    ]
+  },
   "archquise/H.Modules/BirthdayTime.py": {
     "name": "DaysToMyBirthday",
     "description": "Counting down to your birthday",
@@ -31158,6 +31486,53 @@
     "category": [
       "Tools",
       "Fun"
+    ]
+  },
+  "archquise/H.Modules/TimedEmojiStatus.py": {
+    "name": "TimedEmojiStatusMod",
+    "description": "Temporary emoji status with auto-revert using scheduler",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "setmoji": "Set timed emoji status <время> <эмодзи/document_id> [финальный_эмодзи/document_id] - установить временный статус <time> <emoji/document_id> [final_emoji/document_id] - set temporary status"
+      },
+      {
+        "showmoji": "Show current emoji status Показать текущий статус Show current status"
+      },
+      {
+        "removemoji": "Remove emoji status Удалить статус Remove status"
+      }
+    ],
+    "new_commands": [
+      {
+        "setmoji": {
+          "ru_doc": "<время> <эмодзи/document_id> [финальный_эмодзи/document_id] - установить временный статус",
+          "en_doc": "<time> <emoji/document_id> [final_emoji/document_id] - set temporary status",
+          "doc": "Set timed emoji status"
+        }
+      },
+      {
+        "showmoji": {
+          "ru_doc": "Показать текущий статус",
+          "en_doc": "Show current status",
+          "doc": "Show current emoji status"
+        }
+      },
+      {
+        "removemoji": {
+          "ru_doc": "Удалить статус",
+          "en_doc": "Remove status",
+          "doc": "Remove emoji status"
+        }
+      }
+    ],
+    "category": [
+      "Tools",
+      "Chat"
     ]
   },
   "archquise/H.Modules/HAFK.py": {
@@ -31293,7 +31668,7 @@
   },
   "archquise/H.Modules/InlineButton.py": {
     "name": "InlineButtonMod",
-    "description": "Create inline button",
+    "description": "Create inline buttons with enhanced functionality",
     "meta": {
       "pic": null,
       "banner": null,
@@ -31314,8 +31689,35 @@
       }
     ],
     "category": [
-      "Tools",
-      "Chat"
+      "Chat",
+      "Tools"
+    ]
+  },
+  "archquise/H.Modules/passgen.py": {
+    "name": "PassgenMod",
+    "description": "generate random password",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "password": "random password\n-n - numbers\n-s - symbols \n -l - letters Случайный пароль\n-n - цифры\n-s - символы \n -l - буквы Random password\n-n - numbers\n-s - symbols \n -l - letters"
+      }
+    ],
+    "new_commands": [
+      {
+        "password": {
+          "ru_doc": "Случайный пароль\n-n - цифры\n-s - символы \n -l - буквы",
+          "en_doc": "Random password\n-n - numbers\n-s - symbols \n -l - letters",
+          "doc": "random password\n-n - numbers\n-s - symbols \n -l - letters"
+        }
+      }
+    ],
+    "category": [
+      "Security",
+      "Tools"
     ]
   },
   "archquise/H.Modules/Memes.py": {
@@ -31373,8 +31775,8 @@
     ]
   },
   "archquise/H.Modules/WindowsKeys.py": {
-    "name": "WindowsKeys",
-    "description": "Provides you Windows activation keys",
+    "name": "WindowsKeysMod",
+    "description": "Windows activation keys",
     "meta": {
       "pic": null,
       "banner": null,
@@ -31382,14 +31784,14 @@
     },
     "commands": [
       {
-        "winkey": "Открывает выбор ключа для активации Windows Opens the Windows activation key selection"
+        "winkey": "Меню ключей Windows Windows keys menu"
       }
     ],
     "new_commands": [
       {
         "winkey": {
-          "ru_doc": "Открывает выбор ключа для активации Windows",
-          "en_doc": "Opens the Windows activation key selection",
+          "ru_doc": "Меню ключей Windows",
+          "en_doc": "Windows keys menu",
           "doc": null
         }
       }
@@ -31399,31 +31801,19 @@
       "Fun"
     ]
   },
-  "archquise/H.Modules/AniLibria.py": {
-    "name": "AniLibriaMod",
-    "description": "Searches and gives random agtme on the AniLibria database.",
+  "archquise/H.Modules/HInstall.py": {
+    "name": "HInstallMod",
+    "description": "Provides H:Mods modules installation trough buttons",
     "meta": {
       "pic": null,
       "banner": null,
       "developer": "@hikka_mods"
     },
-    "commands": [
-      {
-        "arandom": "Возвращает случайный тайтл из базы Returns a random title from the database"
-      }
-    ],
-    "new_commands": [
-      {
-        "arandom": {
-          "ru_doc": "Возвращает случайный тайтл из базы",
-          "en_doc": "Returns a random title from the database",
-          "doc": null
-        }
-      }
-    ],
+    "commands": [],
+    "new_commands": [],
     "category": [
-      "Tools",
-      "Fun"
+      "Fun",
+      "Tools"
     ]
   },
   "archquise/H.Modules/hikkahost.py": {
@@ -31474,8 +31864,8 @@
     ]
   },
   "archquise/H.Modules/Video2GIF.py": {
-    "name": "Video2GIF",
-    "description": "Converts video to GIF",
+    "name": "Video2GIFMod",
+    "description": "Convert video to high quality GIF",
     "meta": {
       "pic": null,
       "banner": null,
@@ -31483,15 +31873,15 @@
     },
     "commands": [
       {
-        "gifc": "[reply | в одном сообщении с видео] — конвертирует видео в GIF. [reply | in one message with video] — Converts video to GIF."
+        "gifc": "Convert video to GIF [ответ] [fps] [ширина] - конвертировать видео в GIF [reply] [fps] [width] - convert video to GIF"
       }
     ],
     "new_commands": [
       {
         "gifc": {
-          "ru_doc": "[reply | в одном сообщении с видео] — конвертирует видео в GIF.",
-          "en_doc": "[reply | in one message with video] — Converts video to GIF.",
-          "doc": null
+          "ru_doc": "[ответ] [fps] [ширина] - конвертировать видео в GIF",
+          "en_doc": "[reply] [fps] [width] - convert video to GIF",
+          "doc": "Convert video to GIF"
         }
       }
     ],
@@ -31618,33 +32008,6 @@
       "Fun"
     ]
   },
-  "archquise/H.Modules/EnvsSH.py": {
-    "name": "EnvsMod",
-    "description": "Module for reuploading files to envs.sh",
-    "meta": {
-      "pic": null,
-      "banner": null,
-      "developer": "@hikka_mods"
-    },
-    "commands": [
-      {
-        "envcmd": "Reupload to envs.sh."
-      }
-    ],
-    "new_commands": [
-      {
-        "env": {
-          "ru_doc": null,
-          "en_doc": null,
-          "doc": "Reupload to envs.sh."
-        }
-      }
-    ],
-    "category": [
-      "Chat",
-      "Tools"
-    ]
-  },
   "archquise/H.Modules/SMAcrhiver.py": {
     "name": "SMArchiver",
     "description": "unloads all messages from Favorites",
@@ -31707,23 +32070,11 @@
       "banner": null,
       "developer": "@hikka_mods"
     },
-    "commands": [
-      {
-        "autobannertoggle": "Включить или выключить модуль"
-      }
-    ],
-    "new_commands": [
-      {
-        "autobannertoggle": {
-          "ru_doc": "Включить или выключить модуль",
-          "en_doc": null,
-          "doc": null
-        }
-      }
-    ],
+    "commands": [],
+    "new_commands": [],
     "category": [
-      "Tools",
-      "Chat"
+      "Chat",
+      "Tools"
     ]
   },
   "archquise/H.Modules/ASCIIArt.py": {
@@ -31763,10 +32114,10 @@
     },
     "commands": [
       {
-        "shortencmd": "Сократить ссылку через bit.ly Shorten the link via bit.ly"
+        "shortencmd": "Shorten URL using bit.ly API Сократить ссылку через bit.ly Shorten the link via bit.ly"
       },
       {
-        "statclcmd": "Посмотреть статистику ссылки через bit.ly View link statistics via bit.ly"
+        "statclcmd": "Get click statistics for shortened URL Посмотреть статистику ссылки через bit.ly View link statistics via bit.ly"
       }
     ],
     "new_commands": [
@@ -31774,14 +32125,14 @@
         "shorten": {
           "ru_doc": "Сократить ссылку через bit.ly",
           "en_doc": "Shorten the link via bit.ly",
-          "doc": null
+          "doc": "Shorten URL using bit.ly API"
         }
       },
       {
         "statcl": {
           "ru_doc": "Посмотреть статистику ссылки через bit.ly",
           "en_doc": "View link statistics via bit.ly",
-          "doc": null
+          "doc": "Get click statistics for shortened URL"
         }
       }
     ],
@@ -31800,7 +32151,7 @@
     },
     "commands": [
       {
-        "terminal_inline_handler": ""
+        "terminal_inline_handler": "Execute terminal command safely"
       }
     ],
     "new_commands": [
@@ -31808,7 +32159,7 @@
         "terminal_inline_handler": {
           "ru_doc": null,
           "en_doc": null,
-          "doc": null
+          "doc": "Execute terminal command safely"
         }
       }
     ],
@@ -31827,15 +32178,15 @@
     },
     "commands": [
       {
-        "past": "Заливает код в Pastebin Uploads the code to Pastebin"
+        "past": "Upload text to Pastebin with configurable options Загрузить текст в Pastebin Upload text to Pastebin"
       }
     ],
     "new_commands": [
       {
         "past": {
-          "ru_doc": "Заливает код в Pastebin",
-          "en_doc": "Uploads the code to Pastebin",
-          "doc": null
+          "ru_doc": "Загрузить текст в Pastebin",
+          "en_doc": "Upload text to Pastebin",
+          "doc": "Upload text to Pastebin with configurable options"
         }
       }
     ],
@@ -31957,7 +32308,7 @@
   },
   "archquise/H.Modules/VirusTotal.py": {
     "name": "VirusTotalMod",
-    "description": "Checks files for viruses using VirusTotal.",
+    "description": "Professional file scanning with VirusTotal",
     "meta": {
       "pic": null,
       "banner": null,
@@ -31965,21 +32316,21 @@
     },
     "commands": [
       {
-        "vt": "<ответ на файл> - Проверяет файлы на наличие вирусов с использованием VirusTotal <file response> - Checks files for viruses using VirusTotal"
+        "vt": "Scan file with VirusTotal [ответ] - просканировать файл через VirusTotal [reply] - scan file with VirusTotal"
       }
     ],
     "new_commands": [
       {
         "vt": {
-          "ru_doc": "<ответ на файл> - Проверяет файлы на наличие вирусов с использованием VirusTotal",
-          "en_doc": "<file response> - Checks files for viruses using VirusTotal",
-          "doc": null
+          "ru_doc": "[ответ] - просканировать файл через VirusTotal",
+          "en_doc": "[reply] - scan file with VirusTotal",
+          "doc": "Scan file with VirusTotal"
         }
       }
     ],
     "category": [
-      "Security",
-      "Chat"
+      "Chat",
+      "Tools"
     ]
   },
   "archquise/H.Modules/search.py": {
@@ -32243,7 +32594,7 @@
     },
     "commands": [
       {
-        "num": "Дает интересный факт про число или дату\nНапример: .num 10 math или .num 01.01 date Gives an interesting fact about a number or date\nexample: .num 10 math or .num 01.01 date"
+        "num": "Get interesting fact about number or date Дает интересный факт про число или дату\nНапример: .num 10 math или .num 01.01 date Gives an interesting fact about a number or date\nexample: .num 10 math or .num 01.01 date"
       }
     ],
     "new_commands": [
@@ -32251,13 +32602,13 @@
         "num": {
           "ru_doc": "Дает интересный факт про число или дату\nНапример: .num 10 math или .num 01.01 date",
           "en_doc": "Gives an interesting fact about a number or date\nexample: .num 10 math or .num 01.01 date",
-          "doc": null
+          "doc": "Get interesting fact about number or date"
         }
       }
     ],
     "category": [
       "Tools",
-      "Social"
+      "Chat"
     ]
   },
   "archquise/H.Modules/TikTokDownloader.py": {
@@ -32298,8 +32649,8 @@
     ]
   },
   "archquise/H.Modules/InlineCoin.py": {
-    "name": "CoinSexMod",
-    "description": "Mini game heads or tails",
+    "name": "CoinFlipMod",
+    "description": "Mini coin flip game",
     "meta": {
       "pic": null,
       "banner": null,
@@ -32307,21 +32658,21 @@
     },
     "commands": [
       {
-        "coin_inline_handler": "Подбросит монетку  Flip a coin"
+        "coin_inline_handler": "Handle coin flip inline query Подбросить монетку Flip a coin"
       }
     ],
     "new_commands": [
       {
         "coin_inline_handler": {
-          "ru_doc": "Подбросит монетку ",
+          "ru_doc": "Подбросить монетку",
           "en_doc": "Flip a coin",
-          "doc": null
+          "doc": "Handle coin flip inline query"
         }
       }
     ],
     "category": [
-      "Tools",
-      "Fun"
+      "Chat",
+      "Tools"
     ]
   },
   "archquise/H.Modules/AccountData.py": {
@@ -32361,6 +32712,9 @@
     },
     "commands": [
       {
+        "status": "Show current monitoring status Показать статус мониторинга Show monitoring status"
+      },
+      {
         "triggers": "Set trigger words Установить триггерные слова. Пример: .triggers слово1 слово2 Set trigger words. Example: .triggers word1 word2"
       },
       {
@@ -32371,6 +32725,13 @@
       }
     ],
     "new_commands": [
+      {
+        "status": {
+          "ru_doc": "Показать статус мониторинга",
+          "en_doc": "Show monitoring status",
+          "doc": "Show current monitoring status"
+        }
+      },
       {
         "triggers": {
           "ru_doc": "Установить триггерные слова. Пример: .triggers слово1 слово2",
@@ -32450,33 +32811,6 @@
     "category": [
       "Tools",
       "Chat"
-    ]
-  },
-  "archquise/H.Modules/SafetyMod.py": {
-    "name": "SafetyMod",
-    "description": "generate random password",
-    "meta": {
-      "pic": null,
-      "banner": null,
-      "developer": "@hikka_mods"
-    },
-    "commands": [
-      {
-        "password": "random password\n-n - numbers\n-s - symbols \n -l - letters Случайный пароль\n-n - цифры\n-s - символы \n -l - буквы Random password\n-n - numbers\n-s - symbols \n -l - letters"
-      }
-    ],
-    "new_commands": [
-      {
-        "password": {
-          "ru_doc": "Случайный пароль\n-n - цифры\n-s - символы \n -l - буквы",
-          "en_doc": "Random password\n-n - numbers\n-s - symbols \n -l - letters",
-          "doc": "random password\n-n - numbers\n-s - symbols \n -l - letters"
-        }
-      }
-    ],
-    "category": [
-      "Security",
-      "Tools"
     ]
   },
   "archquise/H.Modules/novoice.py": {
