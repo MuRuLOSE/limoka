@@ -28,8 +28,11 @@
 # ---------------------------------------------------------------------------------
 
 import pyshorteners
-
+import logging
+import re
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -41,12 +44,18 @@ class Shortener(loader.Module):
         "no_api": "<emoji document_id=5854929766146118183>❌</emoji> You have not specified an API token from the site <a href='https://app.bitly.com/settings/api/'>bit.ly</a>",
         "statclcmd": "<emoji document_id=5787384838411522455>📊</emoji> <b>Statistics on clicks for this link:</b> {c}",
         "shortencmd": "<emoji document_id=5854762571659218443>✅</emoji> <b>Your shortened link is ready:</b> <code>{c}</code>",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Please provide a URL to shorten.",
+        "invalid_url": "<emoji document_id=5854929766146118183>❌</emoji> Invalid URL format.",
+        "api_error": "<emoji document_id=5854929766146118183>❌</emoji> API error: {error}",
     }
 
     strings_ru = {
         "no_api": "<emoji document_id=5854929766146118183>❌</emoji> Вы не указали api токен с сайта <a href='https://app.bitly.com/settings/api/'>bit.ly</a>",
         "statclcmd": "<emoji document_id=5787384838411522455>📊</emoji> <b>Статистика о переходе по этой ссылке:</b> {c}",
         "shortencmd": "<emoji document_id=5854762571659218443>✅</emoji> <b>Ваша сокращённая ссылка готова:</b> <code>{c}</code>",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Пожалуйста, укажите URL для сокращения.",
+        "invalid_url": "<emoji document_id=5854929766146118183>❌</emoji> Неверный формат URL.",
+        "api_error": "<emoji document_id=5854929766146118183>❌</emoji> Ошибка API: {error}",
     }
 
     def __init__(self):
@@ -58,33 +67,85 @@ class Shortener(loader.Module):
                 validator=loader.validators.Hidden(),
             )
         )
+        self._shortener = None
+
+    @property
+    def shortener(self):
+        """Lazy initialization of pyshorteners instance"""
+        if self._shortener is None:
+            self._shortener = pyshorteners.Shortener(api_key=self.config["token"])
+        return self._shortener
+
+    def _validate_url(self, url: str) -> bool:
+        """Validate URL format"""
+        if not url:
+            return False
+
+        url_pattern = re.compile(
+            r"^https?://"
+            r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|"
+            r"localhost|"
+            r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+            r"(?::\d+)?"
+            r"(?:/?|[/?]\S+)$",
+            re.IGNORECASE,
+        )
+
+        return url_pattern.match(url) is not None
 
     @loader.command(
         ru_doc="Сократить ссылку через bit.ly",
         en_doc="Shorten the link via bit.ly",
     )
     async def shortencmd(self, message):
+        """Shorten URL using bit.ly API"""
         if self.config["token"] is None:
             await utils.answer(message, self.strings("no_api"))
             return
 
-        s = pyshorteners.Shortener(api_key=self.config["token"])
         args = utils.get_args_raw(message)
-        await utils.answer(
-            message, self.strings("shortencmd").format(c=s.bitly.short(args))
-        )
+        if not args:
+            await utils.answer(message, self.strings("no_args"))
+            return
+
+        if not self._validate_url(args):
+            await utils.answer(message, self.strings("invalid_url"))
+            return
+
+        try:
+            short_url = self.shortener.bitly.short(args)
+            await utils.answer(message, self.strings("shortencmd").format(c=short_url))
+        except Exception as e:
+            logger.error(f"Error shortening URL: {e}")
+            await utils.answer(message, self.strings("api_error").format(error=str(e)))
 
     @loader.command(
         ru_doc="Посмотреть статистику ссылки через bit.ly",
         en_doc="View link statistics via bit.ly",
     )
     async def statclcmd(self, message):
+        """Get click statistics for shortened URL"""
         if self.config["token"] is None:
             await utils.answer(message, self.strings("no_api"))
             return
 
-        s = pyshorteners.Shortener(api_key=self.config["token"])
         args = utils.get_args_raw(message)
-        await utils.answer(
-            message, self.strings("statclcmd").format(c=s.bitly.total_clicks(args))
-        )
+        if not args:
+            await utils.answer(message, self.strings("no_args"))
+            return
+
+        try:
+            if not args.startswith("bit.ly/"):
+                if self._validate_url(args):
+                    short_url = self.shortener.bitly.short(args)
+                else:
+                    await utils.answer(message, self.strings("invalid_url"))
+                    return
+            else:
+                short_url = args
+
+            clicks = self.shortener.bitly.total_clicks(short_url)
+            await utils.answer(message, self.strings("statclcmd").format(c=clicks))
+        except Exception as e:
+            logger.error(f"Error getting statistics: {e}")
+            await utils.answer(message, self.strings("api_error").format(error=str(e)))

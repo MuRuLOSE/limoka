@@ -38,6 +38,7 @@
 # scope: Api GlobalRestrict 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
 import re
 import time
 import typing
@@ -50,6 +51,8 @@ from telethon.tl.types import (
 )
 
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 BANNED_RIGHTS = {
     "view_messages": False,

@@ -26,10 +26,13 @@
 # scope: VowelReplacer 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
+
 from telethon.tl.types import Message
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class VowelReplacer(loader.Module):

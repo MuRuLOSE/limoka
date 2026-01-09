@@ -27,10 +27,15 @@
 # requires: aiohttp
 # ---------------------------------------------------------------------------------
 
+import logging
+
 import aiohttp
+import re
+import random
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class face(loader.Module):
@@ -64,15 +69,16 @@ class face(loader.Module):
     async def rfacecmd(self, message):
         await utils.answer(message, self.strings("loading"))
 
-        url = "https://vsecoder.dev/api/faces"
+        url = "https://files.archquise.ru/kaomoji.txt"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 if response.status == 200:
-                    data = await response.json()
-                    random_face = data["data"]
+                    data = await response.text()
+                    kaomoji_list = [s.strip() for s in re.split(r'[\t\r\n]+', data) if s.strip()]
+                    kaomoji = random.choice(kaomoji_list)
                     await utils.answer(
-                        message, self.strings("random_face").format(random_face)
+                        message, self.strings("random_face").format(kaomoji)
                     )
                 else:
                     await utils.answer(message, self.strings("error"))

@@ -27,99 +27,92 @@
 # requires: tempfile
 # ---------------------------------------------------------------------------------
 
+import asyncio
+import logging
 import os
-import subprocess
+import shutil
 import tempfile
-import time
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
+
 
 @loader.tds
-class VoiceDL(loader.Module):
-    """Voice Downloader module"""
+class VoiceDLMod(loader.Module):
+    """Download voice messages as MP3"""
 
     strings = {
         "name": "VoiceDL",
-        "download_success": "Voice message downloaded in MP3 format.",
-        "download_error": "Error downloading voice message.",
-        "no_voice_message": "Please reply to a voice message.",
-        "conversion_error": "Error converting to MP3.",
-        "file_not_found": "File not found.",
-        "unsupported_format": "The file format is not supported.",
+        "success": "✅ Voice downloaded as MP3",
+        "error": "❌ Error downloading voice",
+        "no_voice": "❌ Reply to a voice message",
+        "no_ffmpeg": "❌ FFmpeg not found. Install: apt install ffmpeg",
     }
 
     strings_ru = {
-        "download_success": "Голосовое сообщение загружено в формате MP3.",
-        "download_error": "Ошибка при загрузке голосового сообщения.",
-        "no_voice_message": "Пожалуйста, ответьте на голосовое сообщение.",
-        "conversion_error": "Ошибка при конвертации в MP3.",
-        "file_not_found": "Файл не найден.",
-        "unsupported_format": "Формат файла не поддерживается.",
+        "success": "✅ Голосовое скачано как MP3",
+        "error": "❌ Ошибка скачивания",
+        "no_voice": "❌ Ответьте на голосовое",
+        "no_ffmpeg": "❌ FFmpeg не установлен. Установите: apt install ffmpeg",
     }
 
+    def __init__(self):
+        self._ffmpeg_check = None
+
+    async def client_ready(self, client, db):
+        self._client = client
+        self._db = db
+        self._check_ffmpeg()
+
+    def _check_ffmpeg(self):
+        self._ffmpeg_check = shutil.which("ffmpeg") is not None
+
     @loader.command(
-        ru_doc=" [reply] — загружает выбранное голосовое сообщение в виде файла mp3 и кидает его в чат.",
-        en_doc=" [reply] — downloads the selected voice message as an MP3 file and sends it in the chat.",
+        ru_doc="[ответ] - скачать голосовое как MP3",
+        en_doc="[reply] - download voice as MP3",
     )
     async def voicedl(self, message):
+        if not self._ffmpeg_check:
+            return await utils.answer(message, self.strings["no_ffmpeg"])
+
         reply = await message.get_reply_message()
+        if not reply or not reply.voice:
+            return await utils.answer(message, self.strings["no_voice"])
 
-        if reply:
-            if reply.voice:
-                try:
-                    with tempfile.NamedTemporaryFile(
-                        delete=False, suffix=".ogg"
-                    ) as temp_voice_file:
-                        voice_file_path = temp_voice_file.name
-                        await message.client.download_file(reply.voice, voice_file_path)
+        await self._process_voice(message, reply)
 
-                    timestamp = int(time.time())
-                    mp3_file_path = f"voice_message_{timestamp}.mp3"
+    async def _process_voice(self, message, reply):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            try:
+                ogg_path = os.path.join(tmpdir, "voice.ogg")
+                mp3_path = os.path.join(tmpdir, "voice.mp3")
 
-                    await self.convert_to_mp3(voice_file_path, mp3_file_path)
+                await reply.download_media(file=ogg_path)
 
-                    await message.client.send_file(
-                        message.chat.id,
-                        mp3_file_path,
-                        caption=self.strings("download_success"),
-                    )
+                proc = await asyncio.create_subprocess_exec(
+                    "ffmpeg",
+                    "-i",
+                    ogg_path,
+                    "-codec:a",
+                    "libmp3lame",
+                    "-q:a",
+                    "2",
+                    mp3_path,
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+                await proc.communicate()
 
-                    os.remove(voice_file_path)
-                    os.remove(mp3_file_path)
+                if proc.returncode != 0:
+                    raise Exception("FFmpeg error")
 
-                except FileNotFoundError:
-                    await utils.answer(
-                        message,
-                        self.strings("download_error")
-                        + " "
-                        + self.strings("file_not_found"),
-                    )
-                except subprocess.CalledProcessError as e:
-                    await utils.answer(
-                        message,
-                        self.strings("conversion_error") + f" {e.stderr.decode()}",
-                    )
-                except Exception as e:
-                    await utils.answer(
-                        message, self.strings("download_error") + f" {str(e)}"
-                    )
-            else:
-                await utils.answer(message, self.strings("no_voice_message"))
-        else:
-            await utils.answer(message, self.strings("no_voice_message"))
+                await message.client.send_file(
+                    message.chat.id,
+                    mp3_path,
+                    caption=self.strings["success"],
+                    reply_to=reply.id,
+                )
 
-    async def convert_to_mp3(self, input_file: str, output_file: str):
-        """Convert audio file to MP3 format using FFmpeg."""
-        command = ["ffmpeg", "-i", input_file, output_file]
-        process = subprocess.run(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-
-        if process.returncode != 0:
-            raise subprocess.CalledProcessError(
-                process.returncode,
-                command,
-                output=process.stdout,
-                stderr=process.stderr,
-            )
+            except Exception:
+                await utils.answer(message, self.strings["error"])

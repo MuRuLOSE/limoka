@@ -26,136 +26,214 @@
 # requires: json aiohttp tempfile
 # ---------------------------------------------------------------------------------
 
+import asyncio
+import logging
 import os
 import tempfile
-import logging
+from typing import Any, Dict, Optional
+
+import aiohttp
 
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
-
 @loader.tds
 class VirusTotalMod(loader.Module):
-    """Checks files for viruses using VirusTotal."""
+    """Professional file scanning with VirusTotal"""
 
     strings = {
         "name": "VirusTotal",
-        "no_file": "<emoji document_id=5210952531676504517>🚫</emoji> <b>You haven't selected a file.</b>",
-        "download": "<emoji document_id=5334677912270415274>😑</emoji> <b>Downloading...</b>",
-        "scan": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Scanning...</b>",
-        "link": "🦠 VirusTotal Link",
-        "no_virus": "✅ File is clean.",
-        "error": "<emoji document_id=5463193238393274687>⚠️</emoji> Scan error.",
-        "no_format": "This format is not supported.",
-        "no_apikey": "<emoji document_id=5260342697075416641>🚫</emoji> You have not specified an API Key",
-        "config": "Need a token with www.virustotal.com/gui/my-apikey",
-        "scanning": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Waiting for scan results...</b>",
-        "getting_upload_url": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Getting upload URL...</b>",
-        "analysis_failed": "<emoji document_id=5463193238393274687>⚠️</emoji> Analysis failed after multiple retries.",
+        "no_file": "🚫 Reply to a file",
+        "downloading": "📥 Downloading file...",
+        "uploading": "📤 Uploading to VirusTotal...",
+        "scanning": "🔍 Scanning in progress...",
+        "waiting": "⏳ Waiting for analysis...",
+        "no_key": "🚫 Set VirusTotal API key in config",
+        "error": "❌ Error during scan",
+        "size_limit": "📁 File exceeds 32MB limit",
+        "timeout": "⏰ Scan timeout",
+        "clean": "✅ File is clean",
+        "suspicious": "⚠️ Suspicious file",
+        "malicious": "⛔ Malicious file",
+        "view_report": "📊 View full report",
+        "close": "❌ Close",
+        "engines": "Scan engines",
+        "detections": "Detections",
+        "status": "Status",
+        "completed": "Completed",
+        "queued": "Queued",
+        "scan_date": "Scan date",
     }
 
     strings_ru = {
-        "no_file": "<emoji document_id=5210952531676504517>🚫</emoji> </b>Вы не выбрали файл.</b>",
-        "download": "<emoji document_id=5334677912270415274>😑</emoji> </b>Скачивание...</b>",
-        "scan": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Сканирую...</b>",
-        "link": "🦠 Ссылка на VirusTotal",
-        "no_virus": "✅ Файл чист.",
-        "error": "<emoji document_id=5463193238393274687>⚠️</emoji> Ошибка сканирования.",
-        "no_format": "Этот формат не поддерживается.",
-        "no_apikey": "<emoji document_id=5260342697075416641>🚫</emoji> Вы не указали Api Key",
-        "config": "Need a token with www.virustotal.com/gui/my-apikey",
-        "scanning": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Ожидание результатов сканирования...</b>",
-        "getting_upload_url": "<emoji document_id=5325792861885570739>🫥</emoji>  <b>Получение URL для загрузки...</b>",
-        "analysis_failed": "<emoji document_id=5463193238393274687>⚠️</emoji> Анализ не удался после нескольких попыток.",
+        "no_file": "🚫 Ответьте на файл",
+        "downloading": "📥 Скачиваю файл...",
+        "uploading": "📤 Загружаю на VirusTotal...",
+        "scanning": "🔍 Сканирую...",
+        "waiting": "⏳ Жду анализа...",
+        "no_key": "🚫 Укажите API ключ в конфиге",
+        "error": "❌ Ошибка при сканировании",
+        "size_limit": "📁 Файл больше 32МБ",
+        "timeout": "⏰ Таймаут сканирования",
+        "clean": "✅ Файл чистый",
+        "suspicious": "⚠️ Подозрительный файл",
+        "malicious": "⛔ Вредоносный файл",
+        "view_report": "📊 Полный отчёт",
+        "close": "❌ Закрыть",
+        "engines": "Антивирусов",
+        "detections": "Обнаружено",
+        "status": "Статус",
+        "completed": "Завершён",
+        "queued": "В очереди",
+        "scan_date": "Дата сканирования",
     }
 
     def __init__(self):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
-                "token-vt",
+                "api_key",
                 None,
-                lambda: "Need a token with www.virustotal.com/gui/my-apikey",
+                "VirusTotal API key from https://virustotal.com",
                 validator=loader.validators.Hidden(),
             )
         )
+        self.session: Optional[aiohttp.ClientSession] = None
+        self.MAX_SIZE = 32 * 1024 * 1024  # 32MB
+        self.TIMEOUT = 120  # seconds
 
     async def client_ready(self, client, db):
-        self.hmodslib = await self.import_lib(
-            "https://files.archquise.ru/HModsLibrary.py"
-        )
+        self._client = client
+        self._db = db
+
+    async def on_unload(self):
+        if self.session:
+            await self.session.close()
+
+    def _get_session(self) -> aiohttp.ClientSession:
+        """Get or create aiohttp session with API key"""
+        if not self.session:
+            headers = {"x-apikey": self.config["api_key"]}
+            self.session = aiohttp.ClientSession(headers=headers)
+        return self.session
 
     @loader.command(
-        ru_doc="<ответ на файл> - Проверяет файлы на наличие вирусов с использованием VirusTotal",
-        en_doc="<file response> - Checks files for viruses using VirusTotal",
+        ru_doc="[ответ] - просканировать файл через VirusTotal",
+        en_doc="[reply] - scan file with VirusTotal",
     )
     async def vt(self, message):
-        if not message.is_reply:
-            await utils.answer(message, self.strings("no_file"))
-            return
+        """Scan file with VirusTotal"""
+        api_key = self.config["api_key"]
+        if not api_key:
+            return await utils.answer(message, self.strings["no_key"])
 
         reply = await message.get_reply_message()
-        if not reply.document:
-            await utils.answer(message, self.strings("no_file"))
-            return
+        if not reply or not reply.document:
+            return await utils.answer(message, self.strings["no_file"])
 
-        api_key = self.config.get("token-vt")
-        if not api_key:
-            await utils.answer(message, self.strings("no_apikey"))
-            return
+        async with self._get_session() as session:
+            try:
+                msg = await utils.answer(message, self.strings["downloading"])
 
-        file_extension = os.path.splitext(reply.file.name)[1].lower()
-        allowed_extensions = (".jpg", ".png", ".ico", ".mp3", ".mp4", ".gif", ".txt")
-        if file_extension in allowed_extensions:
-            await utils.answer(message, self.strings("no_format"))
-            return
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    file_path = os.path.join(tmpdir, reply.file.name)
+                    await reply.download_media(file_path)
 
-        try:
-            await utils.answer(message, self.strings("download"))
-            with tempfile.TemporaryDirectory() as temp_dir:
-                file_path = os.path.join(temp_dir, reply.file.name)
-                await reply.download_media(file_path)
+                    file_size = os.path.getsize(file_path)
+                    if file_size > self.MAX_SIZE:
+                        return await msg.edit(self.strings["size_limit"])
 
-                file_size = os.path.getsize(file_path)
-                is_large_file = file_size > 32 * 1024 * 1024
+                    await msg.edit(self.strings["uploading"])
+                    analysis_id = await self._upload_file(session, file_path)
 
-                if is_large_file:
-                    await utils.answer(message, self.strings("getting_upload_url"))
-                await utils.answer(message, self.strings("scan"))
+                    await msg.edit(self.strings["waiting"])
+                    result = await self._wait_for_analysis(session, analysis_id)
 
-                analysis_results = await self.hmodslib.scan_file_virustotal(
-                    file_path, api_key, is_large_file
-                )
+                    await self._show_results(msg, analysis_id, result)
 
-                if analysis_results:
-                    formatted_results = self.hmodslib.format_analysis_results(
-                        analysis_results
-                    )
-                    try:
-                        await self.inline.form(
-                            text=formatted_results["text"],
-                            message=message,
-                            reply_markup={
-                                "text": self.strings("link"),
-                                "url": formatted_results["url"],
-                            }
-                            if formatted_results["url"]
-                            else None,
-                        )
-                    except Exception as e:
-                        logger.error(f"Error displaying inline results: {e}")
-                        await utils.answer(
-                            message,
-                            self.strings("error_report").format(
-                                formatted_results["url"]
-                            ),
-                        )
+            except asyncio.TimeoutError:
+                await utils.answer(message, self.strings["timeout"])
+            except Exception as e:
+                error_text = f"{self.strings['error']}: {str(e)[:100]}"
+                await utils.answer(message, error_text)
 
-                else:
-                    await utils.answer(message, self.strings("analysis_failed"))
+    async def _upload_file(self, session: aiohttp.ClientSession, path: str) -> str:
+        """Upload file to VirusTotal and return analysis ID"""
+        with open(path, "rb") as f:
+            form = aiohttp.FormData()
+            form.add_field("file", f, filename=os.path.basename(path))
 
-        except Exception as e:
-            logger.exception("An error occurred during the VT scan process.")
-            await utils.answer(
-                message, self.strings("error") + f"\n\n{type(e).__name__}: {str(e)}"
-            )
+            async with session.post(
+                "https://www.virustotal.com/api/v3/files", data=form
+            ) as response:
+                response.raise_for_status()
+                data = await response.json()
+                return data["data"]["id"]
+
+    async def _wait_for_analysis(
+        self, session: aiohttp.ClientSession, analysis_id: str
+    ) -> Dict[str, Any]:
+        """Poll analysis results until completion"""
+        url = f"https://www.virustotal.com/api/v3/analyses/{analysis_id}"
+
+        for _ in range(20):
+            async with session.get(url) as response:
+                response.raise_for_status()
+                data = await response.json()
+
+                status = data["data"]["attributes"]["status"]
+                if status == "completed":
+                    return data
+
+                await asyncio.sleep(3)
+
+        raise asyncio.TimeoutError()
+
+    async def _show_results(self, message, analysis_id: str, result: Dict[str, Any]):
+        """Display scan results in inline form"""
+        stats = result["data"]["attributes"]["stats"]
+        date = result["data"]["attributes"]["date"]
+
+        malicious = stats.get("malicious", 0)
+        suspicious = stats.get("suspicious", 0)
+        undetected = stats.get("undetected", 0)
+        harmless = stats.get("harmless", 0)
+        total = malicious + suspicious + undetected + harmless
+
+        if malicious > 0:
+            verdict = self.strings["malicious"]
+            emoji = "⛔"
+        elif suspicious > 0:
+            verdict = self.strings["suspicious"]
+            emoji = "⚠️"
+        else:
+            verdict = self.strings["clean"]
+            emoji = "✅"
+
+        from datetime import datetime
+
+        scan_date = datetime.fromtimestamp(date).strftime("%Y-%m-%d %H:%M:%S")
+
+        text = (
+            f"{emoji} <b>VirusTotal Scan Results</b>\n\n"
+            f"<b>{self.strings['status']}:</b> {verdict}\n"
+            f"<b>{self.strings['detections']}:</b> {malicious}\n"
+            f"<b>{self.strings['engines']}:</b> {total}\n"
+            f"<b>{self.strings['scan_date']}:</b> {scan_date}\n\n"
+            f"<code>Malicious:  {malicious}/{total}</code>\n"
+            f"<code>Suspicious: {suspicious}/{total}</code>\n"
+            f"<code>Harmless:   {harmless}/{total}</code>\n"
+            f"<code>Undetected: {undetected}/{total}</code>"
+        )
+
+        vt_url = f"https://www.virustotal.com/gui/file-analysis/{analysis_id}"
+
+        await self.inline.form(
+            text=text,
+            message=message,
+            reply_markup=[
+                [{"text": f"🔗 {self.strings['view_report']}", "url": vt_url}],
+                [{"text": self.strings["close"], "action": "close"}],
+            ],
+            ttl=300,  # 5 minutes timeout
+        )

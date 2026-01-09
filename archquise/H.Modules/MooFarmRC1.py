@@ -27,22 +27,19 @@
 # requires: aioredis
 # ---------------------------------------------------------------------------------
 
-__version__ = (0, 1, 4, 10)
-
-import os
-import re
-import typing
 import asyncio
 import base64
+import json
+import re
+
 import aioredis
-from typing import Optional
-from telethon.tl.types import Message
-from telethon.tl.types import InputDocument
-from telethon.tl.types import User
 from telethon import events
+from telethon.tl.types import InputDocument, Message
+
 from .. import loader, utils
 from ..inline.types import InlineCall
-import json
+
+__version__ = (0, 1, 4, 10)
 
 
 class DebugLogger:
@@ -127,7 +124,7 @@ class AutoFarmbotMod(loader.Module):
 
     """
 
-    # Todo: Автокрафт и Автолес готовы на 95%, автохавка на 45%
+    # NOTE: Автокрафт и Автолес готовы на 95%, автохавка на 45%
     strings = {
         "name": "AutoFarmbot",
         # Inline keys
@@ -1112,7 +1109,7 @@ class AutoFarmbotMod(loader.Module):
 
         try:
             self.config[config_key] = current
-        except Exception as e:
+        except Exception:
             await call.answer("❌ Ошибка валидации")
             return
 
@@ -1122,7 +1119,7 @@ class AutoFarmbotMod(loader.Module):
         await call.answer("🔄 Синхронизация началась...")
 
         chat_id = self.get_chat_id
-        bot_id = self.config["config_bot_used_bot"]
+        self.config["config_bot_used_bot"]
 
         msg = await self.client.send_message(chat_id, "/cow")
         start_id = msg.id
@@ -1198,7 +1195,6 @@ class AutoFarmbotMod(loader.Module):
 
     async def eating_handler(self, event):
         chat_id = self.get_chat_id
-        user_id = self.tg_id
         food = self.config["config_bot_eat_lvl"]
         if event.chat_id != chat_id:
             return
@@ -1662,7 +1658,7 @@ class AutoFarmbotMod(loader.Module):
         :param action:
         :return:
         """
-        chat_id = self.config["config_bot_used_chat_id"]
+        self.config["config_bot_used_chat_id"]
         user_id = self.tg_id
         key = f"forest_task:{user_id}:{action}"
         await self.redis.set(key, "pending", ex=wait_time)

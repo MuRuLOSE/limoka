@@ -27,13 +27,16 @@
 # requires: requests
 # ---------------------------------------------------------------------------------
 
-import requests
 import json
+import logging
 import random
 from typing import Dict
 
+import requests
+
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class ArticleMod(loader.Module):

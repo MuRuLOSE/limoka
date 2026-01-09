@@ -27,11 +27,11 @@
 # ---------------------------------------------------------------------------------
 
 import logging
-import requests
-
-from datetime import datetime
-from typing import Union, Dict, List
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Dict, List, Union
+
+import requests
 
 from .. import loader, utils
 

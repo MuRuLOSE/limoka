@@ -26,11 +26,12 @@
 # scope: KBSwapper 0.0.1
 # ---------------------------------------------------------------------------------
 
-
+import logging
 import string
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 EN_TO_RU = str.maketrans(
     "qwertyuiop[]asdfghjkl;'zxcvbnm,./`" + 'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?~',
@@ -74,18 +75,55 @@ class KBSwapperMod(loader.Module):
             return
 
         original_text = reply.text
-        if not original_text:
+        if not original_text or original_text.isspace():
             await utils.answer(message, self.strings("no_text"))
             return
 
         try:
-            first_char = original_text[0].lower()
-            if first_char in string.ascii_lowercase:
-                fixed_text = original_text.translate(EN_TO_RU)
-            elif first_char in "йцукенгшщзхъфывапролджэячсмитьбю.ё":
+            trimmed_text = original_text.strip()
+
+            has_russian = any(
+                char
+                in "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ"
+                for char in trimmed_text
+            )
+            has_english = any(char in string.ascii_letters for char in trimmed_text)
+
+            logger.debug(
+                f"Text analysis - Russian: {has_russian}, English: {has_english}, Text: {trimmed_text[:50]}..."
+            )
+
+            if has_russian and not has_english:
                 fixed_text = original_text.translate(RU_TO_EN)
+                logger.debug("Detected Russian text, translating to English")
+            elif has_english and not has_russian:
+                fixed_text = original_text.translate(EN_TO_RU)
+                logger.debug("Detected English text, translating to Russian")
             else:
-                fixed_text = original_text
+                first_char = (
+                    trimmed_text[0].lower()
+                    if trimmed_text
+                    else original_text[0].lower()
+                )
+                logger.debug(
+                    f"Mixed/other characters detected, first char: {first_char}"
+                )
+                if first_char in string.ascii_lowercase:
+                    fixed_text = original_text.translate(EN_TO_RU)
+                    logger.debug("Using first char detection: English to Russian")
+                elif first_char in "йцукенгшщзхъфывапролджэячсмитьбюё":
+                    fixed_text = original_text.translate(RU_TO_EN)
+                    logger.debug("Using first char detection: Russian to English")
+                else:
+                    fixed_text = original_text
+                    logger.debug("No recognizable letters, returning as is")
+
+            if fixed_text != original_text:
+                logger.debug(
+                    f"Text changed: {original_text[:30]}... → {fixed_text[:30]}..."
+                )
+            else:
+                logger.debug("Text unchanged")
 
             if message.sender_id == reply.sender_id:
                 await reply.edit(fixed_text)
@@ -96,5 +134,5 @@ class KBSwapperMod(loader.Module):
                     f"{self.strings('fixed_message').format(fixed=fixed_text)}",
                 )
         except Exception as e:
-            print(f"Error during swap: {e}")
+            logger.error(f"Error during swap: {e}")
             await utils.answer(message, self.strings("error"))

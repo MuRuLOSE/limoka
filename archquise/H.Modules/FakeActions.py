@@ -27,9 +27,11 @@
 # ---------------------------------------------------------------------------------
 
 import asyncio
+import logging
 
 from .. import loader, utils
 
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class FakeActionsMod(loader.Module):

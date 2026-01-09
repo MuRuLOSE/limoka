@@ -26,7 +26,11 @@
 # scope: Api TelegramStatusCodes 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
+
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 responses = {
     300: (
@@ -74,6 +78,52 @@ If a client receives a 500 error, or you believe this error should not have occu
     ),
 }
 
+responses_ru = {
+    300: (
+        "⛔ SEE_OTHER",
+        "Запрос должен быть повторен, но направлен в другой дата-центр.",
+    ),
+    400: (
+        "⛔ BAD_REQUEST",
+        "Запрос содержит ошибки. В случае, если запрос был создан с помощью формы и содержит данные, введенные пользователем, пользователю следует сообщить, что данные должны быть исправлены перед повторным выполнением запроса.",
+    ),
+    401: (
+        "⛔ UNAUTHORIZED",
+        "Была совершена неавторизованная попытка использовать функциональность, доступную только авторизованным пользователям.",
+    ),
+    403: (
+        "⛔ FORBIDDEN",
+        "Нарушение конфиденциальности. Например, попытка написать сообщение пользователю, который добавил текущего пользователя в черный список.",
+    ),
+    404: (
+        "⛔ NOT_FOUND",
+        "Попытка обращения к несуществующему объекту, например, к методу.",
+    ),
+    406: (
+        "⛔ NOT_ACCEPTABLE",
+        """
+Аналогично <b>400 BAD_REQUESTS</b>, но приложение должно отображать ошибку пользователю немного иначе.
+Не показывайте пользователю видимую ошибку при получении конструктора <b>rpc_error</b>: вместо этого дождитесь обновления <a href="https://core.telegram.org/constructor/updateServiceNotification">updateServiceNotification</a> и обработайте его как обычно.
+По сути, обновление-всплывающее окно <b>updateServiceNotification</b> будет отправлено независимо (т.е. НЕ как конструктор <b>Updates</b> внутри <b>rpc_result</b>, а как обычное обновление) сразу после выдачи 406 <b>rpc_error</b>: обновление будет содержать актуальное локализованное сообщение об ошибке для показа пользователю в интерфейсе.
+
+Исключением является ошибка <b>AUTH_KEY_DUPLICATED</b>, которая возникает только в том случае, если любой из не-медиа DC обнаруживает, что авторизованная сессия отправляет запросы параллельно из двух отдельных TCP-соединений с одного или разных IP-адресов.
+Обратите внимание, что параллельные соединения по-прежнему разрешены и фактически рекомендуются для медиа-DC.
+Также обратите внимание, что под сессией понимается авторизованная сессия, идентифицируемая конструктором <a href="https://core.telegram.org/constructor/authorization">authorization</a>, которую можно получить с помощью <a href="https://core.telegram.org/method/account.getAuthorizations">account.getAuthorizations</a>, а не сессия MTProto.
+
+Если клиент получает ошибку <b>AUTH_KEY_DUPLICATED</b>, сессия уже была аннулирована сервером, и пользователю необходимо сгенерировать новый ключ авторизации и войти снова.""",
+    ),
+    420: (
+        "⛔ FLOOD",
+        "Превышено максимально допустимое количество попыток вызова данного метода с указанными входными параметрами. Например, при попытке запросить большое количество текстовых сообщений (SMS) для одного и того же номера телефона.",
+    ),
+    500: (
+        "⛔ INTERNAL",
+        """Произошла внутренняя ошибка сервера во время обработки запроса; например, произошел сбой при доступе к базе данных или файловому хранилищу.
+
+Если клиент получает ошибку 500 или вы считаете, что эта ошибка не должна была возникнуть, пожалуйста, соберите как можно больше информации о запросе и ошибке и отправьте ее разработчикам.""",
+    ),
+}
+
 
 @loader.tds
 class TelegramStatusCodes(loader.Module):
@@ -91,20 +141,28 @@ class TelegramStatusCodes(loader.Module):
         "args_incorrect": "<b>Неверные аргументы</b>",
         "not_found": "<b>Код не найден</b>",
         "syntax_error": "<b>Аргументы обязательны</b>",
-        "_cmd_doc_httpsc": "<код> - Получить информацию о Telegram error",
+        "_cmd_doc_httpsc": "<код> - Получить информацию о статус-коде",
         "_cmd_doc_httpscs": "Показать все доступные коды",
-        "_cls_doc": "Словарь telegram error",
+        "_cls_doc": "Словарь статус-кодов Telegram",
+        "scode": "<b>{} {}</b>\n⚜️ Описание статус-кода: <i>{}</i>",
     }
+
+    async def client_ready(self, client, db):
+        self.ub_lang = self._db.get("hikka.translations", "lang")
+        if not self.ub_lang:
+            self.ub_lang = self._db.get("heroku.translations", "lang")
 
     @loader.unrestricted
     @loader.command(
-        ru_doc="<код состояния> - Получение информации о коде состояния",
+        ru_doc="<код состояния> - Получение информации о статус-коде",
         en_doc="<statuscode> - Get status code info",
     )
     async def tgccmd(self, message):
+
         args = utils.get_args(message)
         if not args:
             await utils.answer(message, self.strings("syntax_error", message))
+            return
 
         try:
             if int(args[0]) not in responses:
@@ -112,17 +170,26 @@ class TelegramStatusCodes(loader.Module):
         except ValueError:
             await utils.answer(message, self.strings("args_incorrect", message))
 
-        await utils.answer(
-            message,
-            self.strings("scode", message).format(
-                responses[int(args[0])][0], args[0], responses[int(args[0])][1]
-            ),
-        )
+        if self.ub_lang != "ru":
+            await utils.answer(
+                message,
+                self.strings("scode", message).format(
+                    responses[int(args[0])][0], args[0], responses[int(args[0])][1]
+                ),
+            )
+        else:
+            await utils.answer(
+                message,
+                self.strings("scode", message).format(
+                    responses[int(args[0])][0], args[0], responses_ru[int(args[0])][1]
+                ),
+            )
+
 
     @loader.unrestricted
     @loader.command(
-        ru_doc="Получите все коды статуса telegram",
-        en_doc="Get all telegram status codes",
+        ru_doc="Получите все статус-коды Telegram",
+        en_doc="Get all Telegram status codes",
     )
     async def tgcscmd(self, message):
         await utils.answer(

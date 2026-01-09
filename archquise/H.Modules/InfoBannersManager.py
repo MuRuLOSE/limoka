@@ -1,6 +1,6 @@
 # Proprietary License Agreement
 
-# Copyright (c) 2024-29 Archquise
+# Copyright (c) 2024-29 CodWiz
 
 # Permission is hereby granted to any person obtaining a copy of this software and associated documentation files (the "Software"), to use the Software for personal and non-commercial purposes, subject to the following conditions:
 
@@ -23,11 +23,10 @@
 # ---------------------------------------------------------------------------------
 # meta developer: @hikka_mods
 
-from .. import loader, utils
-
 import logging
 import random
-import asyncio
+
+from .. import loader
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +38,13 @@ class InfoBannersManagerMod(loader.Module):
     strings = {"name": "InfoBannersManager"}
 
     def __init__(self):
-        self.changer_instance = None
         self.config = loader.ModuleConfig(
+            loader.ConfigValue(
+                "enabled",
+                False,
+                "Включить автоматическую смену баннеров",
+                validator=loader.validators.Boolean(),
+            ),
             loader.ConfigValue(
                 "delay",
                 60,
@@ -56,49 +60,49 @@ class InfoBannersManagerMod(loader.Module):
         )
 
     async def banner_changer(self):
-        while True:
-            try:
-                if not self.config["bannerslist"]:
-                    logger.warning("Banners list is empty!")
-                    await asyncio.sleep(10)
-                    return
+        """Change banner periodically"""
+        try:
+            if not self.config["bannerslist"]:
+                logger.warning("Banners list is empty!")
+                return
 
-                banner = random.choice(self.config["bannerslist"])
-                instance = self.lookup("HerokuInfo")
-                if not instance:
-                    instance = self.lookup("HikkaInfo")
+            banner = random.choice(self.config["bannerslist"])
+            instance = self.lookup("HerokuInfo")
+            if not instance:
+                instance = self.lookup("HikkaInfo")
+            
+            if instance:
                 instance.config["banner_url"] = banner
+                logger.info(f"Banner changed to: {banner}")
+            else:
+                logger.warning("Info module not found!")
 
-            except Exception as e:
-                logger.exception(f"Caught exception: {e}")
-                await asyncio.sleep(10)
-            await asyncio.sleep(self.config["delay"])
+        except Exception as e:
+            logger.exception(f"Error changing banner: {e}")
 
-    async def on_unload(self):
-        if self.changer_instance:
-            self.changer_instance.cancel()
-            self.changer_instance = None
+    @loader.loop(interval=60, autostart=False)
+    async def banner_loop(self):
+        """Main banner changing loop"""
+        if not self.config["enabled"]:
+            return
+            
+        await self.banner_changer()
+        
+        # Update interval from config
+        self.banner_loop.set_interval(self.config["delay"])
 
-    @loader.command(
-        ru_doc="Включить или выключить модуль",
-    )
-    async def autobannertoggle(self, message):
-        if not self.db.get(__name__, "enabled", False):
-            try:
-                if self.changer_instance:
-                    self.changer_instance.cancel()
+    async def client_ready(self):
+        """Initialize the banner changer loop"""
+        if self.config["enabled"]:
+            self.banner_loop.start()
 
-                self.db.set(__name__, "enabled", True)
-                self.changer_instance = asyncio.create_task(self.banner_changer())
-                await utils.answer(message, "Модуль запущен!")
-            except Exception as e:
-                logger.exception(f"Caught exception: {e}")
-        else:
-            try:
-                self.db.set(__name__, "enabled", False)
-                await utils.answer(message, "Модуль остановлен!")
-                if self.changer_instance:
-                    self.changer_instance.cancel()
-                    self.changer_instance = None
-            except Exception as e:
-                logger.exception(f"Caught exception: {e}")
+    def on_config_update(self, config_key, new_value):
+        """Handle config updates"""
+        if config_key == "enabled":
+            if new_value:
+                self.banner_loop.start()
+            else:
+                self.banner_loop.stop()
+        elif config_key == "delay":
+            # Update interval immediately
+            self.banner_loop.set_interval(new_value)

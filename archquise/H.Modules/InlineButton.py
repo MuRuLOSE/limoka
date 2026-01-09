@@ -26,28 +26,35 @@
 # scope: InlineButton 0.0.1
 # ---------------------------------------------------------------------------------
 
-from ..inline.types import InlineQuery
+import logging
 
 from .. import loader, utils
+from ..inline.types import InlineQuery
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
 class InlineButtonMod(loader.Module):
-    """Create inline button"""
+    """Create inline buttons with enhanced functionality"""
 
     strings = {
         "name": "InlineButton",
-        "titles": "Create a message with the Inline Button",
-        "error_title": "Error",
-        "error_description": "Invalid input format. Please provide exactly three comma-separated values.",
-        "error_message": "Make sure your input is formatted as: message, name, url.",
+        "titles": "🔘 Create message with Inline Button",
+        "error_title": "<emoji document_id=5854929766146118183>❌</emoji> Error",
+        "error_description": "<emoji document_id=5854929766146118183>❌</emoji> Invalid input format. Please provide exactly three comma-separated values: message, name, url.",
+        "error_message": "<emoji document_id=5854929766146118183>❌</emoji> Make sure your input is formatted as: message, name, url.",
+        "button_created": "<emoji document_id=5854762571659218443>✅</emoji> Button created successfully!",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Please provide arguments: message, name, url.",
     }
 
     strings_ru = {
-        "titles": "Создай сообщение с Inline Кнопкой",
-        "error_title": "Ошибка",
-        "error_description": "Неверный формат ввода. Пожалуйста, укажите ровно три значения, разделенных запятыми.",
-        "error_message": "Убедитесь, что ваш ввод имеет следующий формат: сообщение, имя, url.",
+        "titles": "🔘 Создать сообщение с Inline Кнопкой",
+        "error_title": "<emoji document_id=5854929766146118183>❌</emoji> Ошибка",
+        "error_description": "<emoji document_id=5854929766146118183>❌</emoji> Неверный формат ввода. Пожалуйста, укажите ровно три значения, разделенных запятыми: сообщение, имя, url.",
+        "error_message": "<emoji document_id=5854929766146118183>❌</emoji> Убедитесь, что ваш ввод имеет следующий формат: сообщение, имя, url.",
+        "button_created": "<emoji document_id=5854762571659218443>✅</emoji> Кнопка успешно создана!",
+        "no_args": "<emoji document_id=5854929766146118183>❌</emoji> Укажите аргументы: сообщение, имя, url.",
     }
 
     @loader.command(
@@ -57,21 +64,25 @@ class InlineButtonMod(loader.Module):
     async def crinl_inline_handler(self, query: InlineQuery):
         args = utils.get_args_raw(query.query)
 
-        if args:
-            args_list = [arg.strip() for arg in args.split(",")]
+        if not args:
+            return {
+                "title": self.strings("error_title"),
+                "description": self.strings("error_description"),
+                "message": self.strings("no_args"),
+            }
 
-            if len(args_list) == 3:
-                message, name, url = args_list
+        args_list = [arg.strip() for arg in args.split(",")]
 
-                return {
-                    "title": self.strings("titles"),
-                    "description": f"{message}, {name}, {url}",
-                    "message": message,
-                    "reply_markup": [{"text": name, "url": url}],
-                }
+        if len(args_list) != 3:
+            return {
+                "title": self.strings("error_title"),
+                "description": self.strings("error_description"),
+                "message": self.strings("error_message"),
+            }
 
-        return {
-            "title": self.strings("error_title"),
-            "description": self.strings("error_description"),
-            "message": self.strings("error_message"),
+        message, name, url = args_list
+        return True, {
+            "message": message,
+            "reply_markup": [{"text": name, "url": url}],
+            "description": self.strings("button_created"),
         }

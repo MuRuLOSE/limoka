@@ -27,7 +27,6 @@
 # ---------------------------------------------------------------------------------
 
 import logging
-import asyncio
 
 from hikkatl import functions
 from datetime import datetime as dt

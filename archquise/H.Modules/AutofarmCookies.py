@@ -26,15 +26,17 @@
 # scope: AutofarmCookies 0.0.1
 # ---------------------------------------------------------------------------------
 
+import logging
 import random
-
 from datetime import timedelta
+
 from telethon import functions
+from telethon.tl.custom import Message
 
 from .. import loader, utils
 
 __version__ = (1, 0, 0)
-
+logger = logging.getLogger(__name__)
 
 @loader.tds
 class AutofarmCookiesMod(loader.Module):
@@ -197,8 +199,7 @@ class AutofarmCookiesMod(loader.Module):
     async def ckies(self, message):
         chelp = """
             🍀| <b>Помощь по командам:</b>
-            .cookon - Включает авто фарм.
-            .cookoff - Выключает авто фарм.
-            .farm - Показывает сколько вы нафармили.
-            .me - Показывает ваш ммешок"""
+            .cookon - Включает авто-фарм.
+            .cookoff - Выключает авто-фарм.
+            .me - Показывает ваш мешок"""
         await utils.answer(message, chelp)

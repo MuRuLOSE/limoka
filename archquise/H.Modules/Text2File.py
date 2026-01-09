@@ -27,8 +27,11 @@
 # ---------------------------------------------------------------------------------
 
 import io
+import logging
 
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -63,13 +66,15 @@ class Text2File(loader.Module):
         args = utils.get_args_raw(message)
         if not args:
             await utils.answer(message, self.strings("no_args"))
-        else:
-            text = args
-            by = io.BytesIO(text.encode("utf-8"))
-            by.name = self.config["name"]
+            return
 
-            await utils.answer_file(
-                message,
-                by,
-                reply_to=getattr(message, "reply_to_msg_id", None),
-            )
+        text = args
+        by = io.BytesIO(text.encode("utf-8"))
+        by.name = self.config["name"]
+
+        await utils.send_file(
+            message.chat_id,
+            by,
+            caption=None,
+            reply_to=message.reply_to_msg_id,
+        )

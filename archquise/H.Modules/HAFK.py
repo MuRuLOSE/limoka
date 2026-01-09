@@ -26,10 +26,10 @@
 # scope: HAFK 0.0.1
 # ---------------------------------------------------------------------------------
 
+import asyncio
 import datetime
 import logging
 import time
-import asyncio
 
 from telethon import types
 from telethon.utils import get_peer_id
@@ -135,7 +135,6 @@ class HAFK(loader.Module):
 
     async def _afk_toggle(self, message, global_afk: bool):
         chat_id = utils.get_chat_id(message)
-        db_key = "afk" if global_afk else f"afk_here_{chat_id}"
         already_afk_string = "already_afk" if global_afk else "already_afk_here"
         afk_on_string = "afk_on" if global_afk else "afk_here_on"
         afk_on_reason_string = "afk_on_reason" if global_afk else "afk_here_on_reason"

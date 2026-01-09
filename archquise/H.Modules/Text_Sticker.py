@@ -30,13 +30,15 @@
 # ---------------------------------------------------------------------------------
 
 import io
+import logging
 from textwrap import wrap
 
 import requests
-from PIL import Image, ImageColor, ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageColor, ImageDraw, ImageFont
 
 from .. import loader, utils
+
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -68,39 +70,53 @@ class TextinstickerMod(loader.Module):
     @loader.owner
     async def stcmd(self, message):
         await message.delete()
+
         text = utils.get_args_raw(message)
         reply = await message.get_reply_message()
+
         if not text:
-            if not reply:
-                text = self.strings("error")
-            elif not reply.message:
-                text = self.strings("error")
-            else:
-                text = reply.raw_text
-        color_name = text.split(" ", 1)[0].lower()
-        color = None
-        if len(text.split(" ", 1)) > 1:
-            text = text.split(" ", 1)[1]
-        else:
             if reply and reply.message:
                 text = reply.raw_text
+            else:
+                text = self.strings("error")
+
+        parts = text.split(" ", 1)
+        color_name = parts[0].lower()
+
+        if len(parts) > 1:
+            text = parts[1]
+        elif reply and reply.message:
+            text = reply.raw_text
+
         try:
             color = ImageColor.getrgb(color_name)
         except ValueError:
             color = (255, 255, 255)
-        txt = []
+
+        wrapped_lines = []
         for line in text.split("\n"):
-            txt.append("\n".join(wrap(line, 30)))
-        text = "\n".join(txt)
-        bytes_font = requests.get(self.config["font"]).content
-        font = io.BytesIO(bytes_font)
-        font = ImageFont.truetype(font, 100)
-        image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(image)
-        w, h = draw.multiline_textsize(text=text, font=font)
+            wrapped_lines.extend(wrap(line, 30))
+        wrapped_text = "\n".join(wrapped_lines)
+
+        if not hasattr(self, "_font_cache") or self._font_url != self.config["font"]:
+            response = requests.get(self.config["font"])
+            response.raise_for_status()
+            self._font_cache = io.BytesIO(response.content)
+            self._font_url = self.config["font"]
+
+        font = ImageFont.truetype(self._font_cache, 100)
+
+        temp_image = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
+        temp_draw = ImageDraw.Draw(temp_image)
+        bbox = temp_draw.multiline_textbbox((0, 0), wrapped_text, font=font)
+        w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
         image = Image.new("RGBA", (w + 100, h + 100), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
-        draw.multiline_text((50, 50), text=text, font=font, fill=color, align="center")
+        draw.multiline_text(
+            (50, 50), wrapped_text, font=font, fill=color, align="center"
+        )
+
         output = io.BytesIO()
         output.name = f"{color_name}.webp"
         image.save(output, "WEBP")
