@@ -29726,355 +29726,6 @@
       "Chat"
     ]
   },
-  "unneyon/hikka-mods/warpigs.py": {
-    "name": "WarPigsMod",
-    "description": "Some auto-functions for your pig in @warpigs_bot",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/warpigs.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/warpigs.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "afightcmd": "👉 Enable/disable autofight 👉 Включить/отключить автобой"
-      },
-      {
-        "agrowcmd": "👉 Enable/disable autogrow 👉 Включить/отключить автокормёжку"
-      },
-      {
-        "setnamecmd": "<name> 👉 Changes your pig's name <имя> 👉 Меняет имя вашего хряка"
-      }
-    ],
-    "new_commands": [
-      {
-        "afight": {
-          "ru_doc": "👉 Включить/отключить автобой",
-          "en_doc": null,
-          "doc": "👉 Enable/disable autofight"
-        }
-      },
-      {
-        "agrow": {
-          "ru_doc": "👉 Включить/отключить автокормёжку",
-          "en_doc": null,
-          "doc": "👉 Enable/disable autogrow"
-        }
-      },
-      {
-        "setname": {
-          "ru_doc": "<имя> 👉 Меняет имя вашего хряка",
-          "en_doc": null,
-          "doc": "<name> 👉 Changes your pig's name"
-        }
-      }
-    ],
-    "category": [
-      "Chat",
-      "Tools"
-    ]
-  },
-  "unneyon/hikka-mods/tidal.py": {
-    "name": "TidalMod",
-    "description": "API wrapper over TIDAL Hi-Fi music streaming service\nThanks @hikarimods for original module: t.me/hikarimods/764",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/tidal.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/tidal.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "tlogincmd": "👉 Open OAuth window to login into TIDAL 👉 Авторизация в TIDAL"
-      },
-      {
-        "tidalcmd": "<query> 👉 Search track in TIDAL <запрос> 👉 Поиск трека в TIDAL"
-      },
-      {
-        "turlcmd": "<ID/url> 👉 Search track in TIDAL by ID or url <ID/ссылка> 👉 Поиск трека в TIDAL по ID или ссылке"
-      }
-    ],
-    "new_commands": [
-      {
-        "tlogin": {
-          "ru_doc": "👉 Авторизация в TIDAL",
-          "en_doc": null,
-          "doc": "👉 Open OAuth window to login into TIDAL"
-        }
-      },
-      {
-        "tidal": {
-          "ru_doc": "<запрос> 👉 Поиск трека в TIDAL",
-          "en_doc": null,
-          "doc": "<query> 👉 Search track in TIDAL"
-        }
-      },
-      {
-        "turl": {
-          "ru_doc": "<ID/ссылка> 👉 Поиск трека в TIDAL по ID или ссылке",
-          "en_doc": null,
-          "doc": "<ID/url> 👉 Search track in TIDAL by ID or url"
-        }
-      }
-    ],
-    "category": [
-      "Tools",
-      "Games"
-    ]
-  },
-  "unneyon/hikka-mods/sdsaver.py": {
-    "name": "SDSaverMod",
-    "description": "The module for automatically saving self-destructing media",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/sdsaver.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/sdsaver.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "sdmodecmd": "👉 Enable/Disable automatic saving self-destructing media 👉 Включить/Выключить автоматическое сохранение самоуничтожающихся медиа"
-      }
-    ],
-    "new_commands": [
-      {
-        "sdmode": {
-          "ru_doc": "👉 Включить/Выключить автоматическое сохранение самоуничтожающихся медиа",
-          "en_doc": null,
-          "doc": "👉 Enable/Disable automatic saving self-destructing media"
-        }
-      }
-    ],
-    "category": [
-      "Chat",
-      "Tools"
-    ]
-  },
-  "unneyon/hikka-mods/yamusic.py": {
-    "name": "YaMusicMod",
-    "description": "The module for Yandex.Music streaming service",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/yamusic.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/yamusic.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "yguidecmd": "👉 Guide for obtaining a Yandex.Music token 👉 Гайд по получению токена Яндекс.Музыки"
-      },
-      {
-        "ybiocmd": "👉 Enable/disable autobio 👉 Включить/выключить автобио"
-      },
-      {
-        "ysearchcmd": "👉 Searching tracks in Yandex.Music 👉 Поиск треков в Яндекс.Музыке"
-      },
-      {
-        "ynowcmd": "👉 Get the banner of the track playing right now 👉 Получить баннер трека, который играет сейчас"
-      },
-      {
-        "ynowtcmd": "👉 Get the track playing right now 👉 Получить трек, который играет сейчас"
-      },
-      {
-        "ylikecmd": "👉 Like the track playing right now 👉 Лайкнуть играющий сейчас трек"
-      },
-      {
-        "yunlikecmd": "👉 Unlike the track playing right now 👉 Снять лайк с играющего сейчас трека"
-      },
-      {
-        "ydislikecmd": "👉 Dislike the track playing right now 👉 Дизлайкнуть играющий сейчас трек"
-      },
-      {
-        "ylyricscmd": "👉 Get the lyrics of the track playing right now 👉 Получить текст играющего сейчас трека"
-      }
-    ],
-    "new_commands": [
-      {
-        "yguide": {
-          "ru_doc": "👉 Гайд по получению токена Яндекс.Музыки",
-          "en_doc": null,
-          "doc": "👉 Guide for obtaining a Yandex.Music token"
-        }
-      },
-      {
-        "ybio": {
-          "ru_doc": "👉 Включить/выключить автобио",
-          "en_doc": null,
-          "doc": "👉 Enable/disable autobio"
-        }
-      },
-      {
-        "ysearch": {
-          "ru_doc": "👉 Поиск треков в Яндекс.Музыке",
-          "en_doc": null,
-          "doc": "👉 Searching tracks in Yandex.Music"
-        }
-      },
-      {
-        "ynow": {
-          "ru_doc": "👉 Получить баннер трека, который играет сейчас",
-          "en_doc": null,
-          "doc": "👉 Get the banner of the track playing right now"
-        }
-      },
-      {
-        "ynowt": {
-          "ru_doc": "👉 Получить трек, который играет сейчас",
-          "en_doc": null,
-          "doc": "👉 Get the track playing right now"
-        }
-      },
-      {
-        "ylike": {
-          "ru_doc": "👉 Лайкнуть играющий сейчас трек",
-          "en_doc": null,
-          "doc": "👉 Like the track playing right now"
-        }
-      },
-      {
-        "yunlike": {
-          "ru_doc": "👉 Снять лайк с играющего сейчас трека",
-          "en_doc": null,
-          "doc": "👉 Unlike the track playing right now"
-        }
-      },
-      {
-        "ydislike": {
-          "ru_doc": "👉 Дизлайкнуть играющий сейчас трек",
-          "en_doc": null,
-          "doc": "👉 Dislike the track playing right now"
-        }
-      },
-      {
-        "ylyrics": {
-          "ru_doc": "👉 Получить текст играющего сейчас трека",
-          "en_doc": null,
-          "doc": "👉 Get the lyrics of the track playing right now"
-        }
-      }
-    ],
-    "category": [
-      "Tools",
-      "Fun"
-    ]
-  },
-  "unneyon/hikka-mods/privacy.py": {
-    "name": "PrivacyMod",
-    "description": "Module for fastly changing privacy settings",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/privacy.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/privacy.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "privacytypescmd": "👉 List of setting types to pass it in commands 👉 Список типов настроек для указания их в командах"
-      },
-      {
-        "allowusercmd": "<user> [setting (optional)] 👉 Add user to includes for some setting <пользователь> [настройка (необязательно)] 👉 Добавить пользователя в разрешённых для какой-либо настройки"
-      },
-      {
-        "disallowusercmd": "<user> [setting (optional)] 👉 Add user to excludes for some setting <пользователь> [настройка (необязательно)] 👉 Добавить пользователя в запрещённых для какой-либо настройки"
-      }
-    ],
-    "new_commands": [
-      {
-        "privacytypes": {
-          "ru_doc": "👉 Список типов настроек для указания их в командах",
-          "en_doc": null,
-          "doc": "👉 List of setting types to pass it in commands"
-        }
-      },
-      {
-        "allowuser": {
-          "ru_doc": "<пользователь> [настройка (необязательно)] 👉 Добавить пользователя в разрешённых для какой-либо настройки",
-          "en_doc": null,
-          "doc": "<user> [setting (optional)] 👉 Add user to includes for some setting"
-        }
-      },
-      {
-        "disallowuser": {
-          "ru_doc": "<пользователь> [настройка (необязательно)] 👉 Добавить пользователя в запрещённых для какой-либо настройки",
-          "en_doc": null,
-          "doc": "<user> [setting (optional)] 👉 Add user to excludes for some setting"
-        }
-      }
-    ],
-    "category": [
-      "Chat",
-      "Tools"
-    ]
-  },
-  "unneyon/hikka-mods/caliases.py": {
-    "name": "CustomAliasesMod",
-    "description": "Module for custom aliases",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/caliases.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/caliases.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "caliasescmd": "👉 Get all aliases 👉 Получить список всех алиасов"
-      },
-      {
-        "rmcaliascmd": "<name> 👉 Remove alias <имя> 👉 Удалить алиас"
-      },
-      {
-        "caliascmd": "<name> <command> [args] 👉 Add new alias (may contain {args} keyword) <имя> <команда> [аргументы] 👉 Добавить новый алиас (может содержать ключевое слово {args})"
-      }
-    ],
-    "new_commands": [
-      {
-        "caliases": {
-          "ru_doc": "👉 Получить список всех алиасов",
-          "en_doc": null,
-          "doc": "👉 Get all aliases"
-        }
-      },
-      {
-        "rmcalias": {
-          "ru_doc": "<имя> 👉 Удалить алиас",
-          "en_doc": null,
-          "doc": "<name> 👉 Remove alias"
-        }
-      },
-      {
-        "calias": {
-          "ru_doc": "<имя> <команда> [аргументы] 👉 Добавить новый алиас (может содержать ключевое слово {args})",
-          "en_doc": null,
-          "doc": "<name> <command> [args] 👉 Add new alias (may contain {args} keyword)"
-        }
-      }
-    ],
-    "category": [
-      "Chat",
-      "Info"
-    ]
-  },
-  "unneyon/hikka-mods/deleter.py": {
-    "name": "DeleterMod",
-    "description": "Module for delete your messages",
-    "meta": {
-      "pic": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/icons/deleter.png",
-      "banner": "https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/deleter.png",
-      "developer": "@kamekuro_hmods"
-    },
-    "commands": [
-      {
-        "delmsgcmd": "[count] 👉 Delete messages (you can use your trigger from config: «{value}{count}» and write them only together!) [число] 👉 Удалить сообщения (можно использовать значение из конфига: «{значение}{число}», без пробела!)"
-      }
-    ],
-    "new_commands": [
-      {
-        "delmsg": {
-          "ru_doc": "[число] 👉 Удалить сообщения (можно использовать значение из конфига: «{значение}{число}», без пробела!)",
-          "en_doc": null,
-          "doc": "[count] 👉 Delete messages (you can use your trigger from config: «{value}{count}» and write them only together!)"
-        }
-      }
-    ],
-    "category": [
-      "Tools",
-      "Chat"
-    ]
-  },
   "N3rcy/modules/whisper.py": {
     "name": "WhisperMod",
     "description": "Module for speech recognition",
@@ -31133,95 +30784,115 @@
     },
     "commands": [
       {
-        "sreacts": "Toggle global silent reactions [on/off] - тихие реакции во всех чатах [on/off] - silent reactions in all chats"
+        "_toggle_setting": "[on/off] - тихие реакции во всех чатах [on/off] - silent reactions in all chats"
       },
       {
-        "stags": "Toggle global silent tags [on/off] - тихие упоминания во всех чатах [on/off] - silent tags in all chats"
+        "sreacts": "[on/off] - тихие реакции во всех чатах [on/off] - silent reactions in all chats"
       },
       {
-        "sall": "Toggle global silent reactions and tags [on/off] - тихие реакции и упоминания во всех чатах [on/off] - silent reactions and tags in all chats"
+        "stags": "[on/off] - тихие упоминания во всех чатах [on/off] - silent tags in all chats"
       },
       {
-        "hsreacts": "Toggle silent reactions in this chat [on/off] - тихие реакции в этом чате [on/off] - silent reactions in this chat"
+        "sall": "[on/off] - тихие реакции и упоминания во всех чатах [on/off] - silent reactions and tags in all chats"
       },
       {
-        "hstags": "Toggle silent tags in this chat [on/off] - тихие упоминания в этом чате [on/off] - silent tags in this chat"
+        "hsreacts": "[on/off] - тихие реакции в этом чате [on/off] - silent reactions in this chat"
       },
       {
-        "hsall": "Toggle silent reactions and tags in this chat [on/off] - тихие реакции и упоминания в этом чате [on/off] - silent reactions and tags in this chat"
+        "hstags": "[on/off] - тихие упоминания в этом чате [on/off] - silent tags in this chat"
       },
       {
-        "ignore": "Toggle ignore user globally [ответ/username] - игнорировать пользователя глобально [reply/username] - ignore user globally"
+        "hsall": "[on/off] - тихие реакции и упоминания в этом чате [on/off] - silent reactions and tags in this chat"
       },
       {
-        "hignore": "Toggle ignore user in this chat [ответ/username] - игнорировать пользователя в этом чате [reply/username] - ignore user in this chat"
+        "_get_user_id": "[ответ/username] - игнорировать пользователя глобально [reply/username] - ignore user globally"
       },
       {
-        "strstatus": "Show status Показать статус Silent T&R Show Silent T&R status"
+        "ignore": "[ответ/username] - игнорировать пользователя в этом чате [reply/username] - ignore user in this chat"
+      },
+      {
+        "hignore": "Показать статус Silent T&R Show Silent T&R status"
+      },
+      {
+        "strstatus": "Показать статус Silent T&R Show Silent T&R status"
       }
     ],
     "new_commands": [
       {
+        "_toggle_setting": {
+          "ru_doc": "[on/off] - тихие реакции во всех чатах",
+          "en_doc": "[on/off] - silent reactions in all chats",
+          "doc": null
+        }
+      },
+      {
         "sreacts": {
           "ru_doc": "[on/off] - тихие реакции во всех чатах",
           "en_doc": "[on/off] - silent reactions in all chats",
-          "doc": "Toggle global silent reactions"
+          "doc": null
         }
       },
       {
         "stags": {
           "ru_doc": "[on/off] - тихие упоминания во всех чатах",
           "en_doc": "[on/off] - silent tags in all chats",
-          "doc": "Toggle global silent tags"
+          "doc": null
         }
       },
       {
         "sall": {
           "ru_doc": "[on/off] - тихие реакции и упоминания во всех чатах",
           "en_doc": "[on/off] - silent reactions and tags in all chats",
-          "doc": "Toggle global silent reactions and tags"
+          "doc": null
         }
       },
       {
         "hsreacts": {
           "ru_doc": "[on/off] - тихие реакции в этом чате",
           "en_doc": "[on/off] - silent reactions in this chat",
-          "doc": "Toggle silent reactions in this chat"
+          "doc": null
         }
       },
       {
         "hstags": {
           "ru_doc": "[on/off] - тихие упоминания в этом чате",
           "en_doc": "[on/off] - silent tags in this chat",
-          "doc": "Toggle silent tags in this chat"
+          "doc": null
         }
       },
       {
         "hsall": {
           "ru_doc": "[on/off] - тихие реакции и упоминания в этом чате",
           "en_doc": "[on/off] - silent reactions and tags in this chat",
-          "doc": "Toggle silent reactions and tags in this chat"
+          "doc": null
+        }
+      },
+      {
+        "_get_user_id": {
+          "ru_doc": "[ответ/username] - игнорировать пользователя глобально",
+          "en_doc": "[reply/username] - ignore user globally",
+          "doc": null
         }
       },
       {
         "ignore": {
-          "ru_doc": "[ответ/username] - игнорировать пользователя глобально",
-          "en_doc": "[reply/username] - ignore user globally",
-          "doc": "Toggle ignore user globally"
+          "ru_doc": "[ответ/username] - игнорировать пользователя в этом чате",
+          "en_doc": "[reply/username] - ignore user in this chat",
+          "doc": null
         }
       },
       {
         "hignore": {
-          "ru_doc": "[ответ/username] - игнорировать пользователя в этом чате",
-          "en_doc": "[reply/username] - ignore user in this chat",
-          "doc": "Toggle ignore user in this chat"
+          "ru_doc": "Показать статус Silent T&R",
+          "en_doc": "Show Silent T&R status",
+          "doc": null
         }
       },
       {
         "strstatus": {
           "ru_doc": "Показать статус Silent T&R",
           "en_doc": "Show Silent T&R status",
-          "doc": "Show status"
+          "doc": null
         }
       }
     ],
@@ -31498,7 +31169,10 @@
     },
     "commands": [
       {
-        "btname": "Выставить таймер дней в ник (нестабильно) Set the timer of days in the nickname (unstable)"
+        "btnameon": "Включить таймер дней в ник (нестабильно) Enable timer of days in nickname (unstable)"
+      },
+      {
+        "btnameoff": "Выключить таймер дней в ник Disable timer of days in nickname"
       },
       {
         "bt": "Вывести таймер Display the timer"
@@ -31506,9 +31180,16 @@
     ],
     "new_commands": [
       {
-        "btname": {
-          "ru_doc": "Выставить таймер дней в ник (нестабильно)",
-          "en_doc": "Set the timer of days in the nickname (unstable)",
+        "btnameon": {
+          "ru_doc": "Включить таймер дней в ник (нестабильно)",
+          "en_doc": "Enable timer of days in nickname (unstable)",
+          "doc": null
+        }
+      },
+      {
+        "btnameoff": {
+          "ru_doc": "Выключить таймер дней в ник",
+          "en_doc": "Disable timer of days in nickname",
           "doc": null
         }
       },
@@ -31690,6 +31371,33 @@
     ],
     "category": [
       "Productivity",
+      "Tools"
+    ]
+  },
+  "archquise/H.Modules/TelegraphComic.py": {
+    "name": "TelegraphComicMod",
+    "description": "Create comics on Telegraph from ZIP/CBZ/RAR archives",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "telegraphcomicscmd": "Создать комикс на Telegraph из ZIP/CBZ/RAR архива\nАргументы: <название> | <ссылка_на_обложку>(необязательно)\nИспользование: .telegraphcomics <title> | <cover_url>(optional) Create Telegraph comic from ZIP/CBZ/RAR archive\nArguments: <title> | <cover_url>(optional)\nUsage: .telegraphcomics <title> | <cover_url>(optional)"
+      }
+    ],
+    "new_commands": [
+      {
+        "telegraphcomics": {
+          "ru_doc": "Создать комикс на Telegraph из ZIP/CBZ/RAR архива\nАргументы: <название> | <ссылка_на_обложку>(необязательно)\nИспользование: .telegraphcomics <title> | <cover_url>(optional)",
+          "en_doc": "Create Telegraph comic from ZIP/CBZ/RAR archive\nArguments: <title> | <cover_url>(optional)\nUsage: .telegraphcomics <title> | <cover_url>(optional)",
+          "doc": null
+        }
+      }
+    ],
+    "category": [
+      "Chat",
       "Tools"
     ]
   },
@@ -32045,6 +31753,33 @@
       "Tools"
     ]
   },
+  "archquise/H.Modules/sdsaver.py": {
+    "name": "SDSaverMod",
+    "description": "The module for automatically saving self-destructing media",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "sdmodecmd": "Включить/Выключить автоматическое сохранение самоуничтожающихся медиа Enable/Disable automatic saving self-destructing media"
+      }
+    ],
+    "new_commands": [
+      {
+        "sdmode": {
+          "ru_doc": "Включить/Выключить автоматическое сохранение самоуничтожающихся медиа",
+          "en_doc": "Enable/Disable automatic saving self-destructing media",
+          "doc": null
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Tools"
+    ]
+  },
   "archquise/H.Modules/Weather.py": {
     "name": "Weather",
     "description": "Advanced weather module with detailed information",
@@ -32351,6 +32086,100 @@
     "category": [
       "Tools",
       "Chat"
+    ]
+  },
+  "archquise/H.Modules/privacy.py": {
+    "name": "PrivacyMod",
+    "description": "Module for fast privacy settings management",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "privacytypescmd": "Show available privacy types Список типов настроек приватности List of privacy types"
+      },
+      {
+        "allowusercmd": "Add user to privacy exceptions <user> Добавить в разрешённые <user> Add to allowed list"
+      },
+      {
+        "disallowuser": "Add user to privacy restrictions <user> Добавить в запрещённые <user> Add to forbidden list"
+      }
+    ],
+    "new_commands": [
+      {
+        "privacytypes": {
+          "ru_doc": "Список типов настроек приватности",
+          "en_doc": "List of privacy types",
+          "doc": "Show available privacy types"
+        }
+      },
+      {
+        "allowuser": {
+          "ru_doc": "<user> Добавить в разрешённые",
+          "en_doc": "<user> Add to allowed list",
+          "doc": "Add user to privacy exceptions"
+        }
+      },
+      {
+        "disallowuser": {
+          "ru_doc": "<user> Добавить в запрещённые",
+          "en_doc": "<user> Add to forbidden list",
+          "doc": "Add user to privacy restrictions"
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Tools"
+    ]
+  },
+  "archquise/H.Modules/caliases.py": {
+    "name": "CustomAliasesMod",
+    "description": "Module for custom aliases",
+    "meta": {
+      "pic": null,
+      "banner": null,
+      "developer": "@hikka_mods"
+    },
+    "commands": [
+      {
+        "caliasescmd": "Get all aliases Получить список всех алиасов  Get list of all aliases"
+      },
+      {
+        "rmcaliascmd": "Remove alias <имя> Удалить алиас <name> Remove alias"
+      },
+      {
+        "caliascmd": "Add new alias (may contain {args} keyword) <имя> <команда> [аргументы] Добавить новый алиас (может содержать ключевое слово {args}) <name> <command> [arguments] Add new alias (may contain {args} keyword)"
+      }
+    ],
+    "new_commands": [
+      {
+        "caliases": {
+          "ru_doc": "Получить список всех алиасов",
+          "en_doc": " Get list of all aliases",
+          "doc": "Get all aliases"
+        }
+      },
+      {
+        "rmcalias": {
+          "ru_doc": "<имя> Удалить алиас",
+          "en_doc": "<name> Remove alias",
+          "doc": "Remove alias"
+        }
+      },
+      {
+        "calias": {
+          "ru_doc": "<имя> <команда> [аргументы] Добавить новый алиас (может содержать ключевое слово {args})",
+          "en_doc": "<name> <command> [arguments] Add new alias (may contain {args} keyword)",
+          "doc": "Add new alias (may contain {args} keyword)"
+        }
+      }
+    ],
+    "category": [
+      "Chat",
+      "Info"
     ]
   },
   "archquise/H.Modules/VirusTotal.py": {
