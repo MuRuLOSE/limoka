@@ -168,10 +168,10 @@ class DaysToMyBirthday(loader.Module):
                 await asyncio.sleep(60)
 
     @loader.command(
-        ru_doc="Выставить таймер дней в ник (нестабильно)",
-        en_doc="Set the timer of days in the nickname (unstable)",
+        ru_doc="Включить таймер дней в ник (нестабильно)",
+        en_doc="Enable timer of days in nickname (unstable)",
     )
-    async def btname(self, message):
+    async def btnameon(self, message):
         try:
             user = await self.client(GetFullUserRequest(self.client.hikka_me.id))
             name = user.users[0].last_name or ""
@@ -181,25 +181,32 @@ class DaysToMyBirthday(loader.Module):
             return
 
         self.db.set(__name__, "last_name", name)
+        self.db.set(__name__, "change_name", True)
+        await utils.answer(message, self.strings("btname_yes"))
+
+    @loader.command(
+        ru_doc="Выключить таймер дней в ник",
+        en_doc="Disable timer of days in nickname",
+    )
+    async def btnameoff(self, message):
         change_name = self.db.get(__name__, "change_name", False)
 
-        if change_name:
-            self.db.set(__name__, "change_name", False)
+        if not change_name:
             await utils.answer(message, self.strings("btname_no"))
-            try:
-                await self.client(
-                    UpdateProfileRequest(last_name=self.db.get(__name__, "last_name"))
-                )
-                await utils.answer(message, self.strings("name_not_changed"))
-            except UserPrivacyRestrictedError:
-                await utils.answer(message, self.strings("name_privacy_error"))
-            except Exception as e:
-                logger.error(f"Error removing name: {e}")
-                await utils.answer(message, self.strings("error"))
+            return
 
-        else:
-            self.db.set(__name__, "change_name", True)
-            await utils.answer(message, self.strings("btname_yes"))
+        self.db.set(__name__, "change_name", False)
+        await utils.answer(message, self.strings("btname_no"))
+        try:
+            await self.client(
+                UpdateProfileRequest(last_name=self.db.get(__name__, "last_name"))
+            )
+            await utils.answer(message, self.strings("name_not_changed"))
+        except UserPrivacyRestrictedError:
+            await utils.answer(message, self.strings("name_privacy_error"))
+        except Exception as e:
+            logger.error(f"Error removing name: {e}")
+            await utils.answer(message, self.strings("error"))
 
     @loader.command(
         ru_doc="Вывести таймер",
