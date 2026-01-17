@@ -31,7 +31,6 @@ import re
 from typing import Optional, Set
 
 from telethon.errors import FloodWaitError, MessageDeleteForbiddenError
-from telethon.tl.functions.messages import DeleteMessagesRequest
 from telethon.tl.types import Message, MessageMediaDocument
 
 from .. import loader, utils
@@ -82,17 +81,20 @@ class EmojiStickerBlocker(loader.Module):
         self.blocked_packs: Set[str] = set()
         self.blocked_stickers: Set[str] = set()
         self.blocked_emojis: Set[str] = set()
+        self._client = None
+        self._db = None
 
+    async def client_ready(self, client, db):
+        self._client = client
+        self._db = db
         self._load_blocklists()
 
     def _load_blocklists(self):
-        """Load blocklists from database"""
         self.blocked_packs = set(self._db.get(__name__, "blocked_packs", []))
         self.blocked_stickers = set(self._db.get(__name__, "blocked_stickers", []))
         self.blocked_emojis = set(self._db.get(__name__, "blocked_emojis", []))
 
     def _save_blocklists(self):
-        """Save blocklists to database"""
         self._db.set(__name__, "blocked_packs", list(self.blocked_packs))
         self._db.set(__name__, "blocked_stickers", list(self.blocked_stickers))
         self._db.set(__name__, "blocked_emojis", list(self.blocked_emojis))
@@ -107,9 +109,15 @@ class EmojiStickerBlocker(loader.Module):
                 return message.sticker.set_name.lower()
 
         if isinstance(message.media, MessageMediaDocument):
-            if hasattr(message.media.document, "attributes"):
+            if hasattr(message.media, "document") and hasattr(
+                message.media.document, "attributes"
+            ):
                 for attr in message.media.document.attributes:
-                    if hasattr(attr, "stickerset") and attr.stickerset:
+                    if (
+                        hasattr(attr, "stickerset")
+                        and hasattr(attr.stickerset, "title")
+                        and attr.stickerset.title
+                    ):
                         return attr.stickerset.title.lower()
 
         return None
@@ -126,19 +134,18 @@ class EmojiStickerBlocker(loader.Module):
 
         if emojis:
             return emojis[0]
-        else:
-            return None
+        return None
 
     async def _delete_message(self, message: Message) -> bool:
         """Delete message with error handling"""
         try:
-            await self._client(DeleteMessagesRequest([message.id]))
+            await self._client.delete_messages(message.to_id, [message.id])
             return True
         except MessageDeleteForbiddenError:
-            await utils.answer(message, self.strings["no_permission"])
+            logger.warning("No permission to delete message")
             return False
         except FloodWaitError as e:
-            logger.warning(f"Flood wait when deleting message: {e}")
+            logger.warning(f"Flood wait when deleting message: {e.seconds}s")
             return False
         except Exception as e:
             logger.error(f"Error deleting message: {e}")
@@ -146,19 +153,23 @@ class EmojiStickerBlocker(loader.Module):
 
     async def _should_block_message(self, message: Message) -> tuple[bool, str]:
         """Check if message should be blocked and return reason"""
-        pack_name = self._extract_pack_name(message)
-        emoji_text = self._extract_emoji_text(message)
+        try:
+            pack_name = self._extract_pack_name(message)
+            emoji_text = self._extract_emoji_text(message)
 
-        if pack_name and pack_name in self.blocked_packs:
-            return True, f"pack: {pack_name}"
+            if pack_name and pack_name in self.blocked_packs:
+                return True, f"pack: {pack_name}"
 
-        if message.sticker:
-            sticker_id = str(message.sticker.id)
-            if sticker_id in self.blocked_stickers:
-                return True, f"sticker: {sticker_id}"
+            if message.sticker:
+                sticker_id = str(message.sticker.id)
+                if sticker_id in self.blocked_stickers:
+                    return True, f"sticker: {sticker_id}"
 
-        if emoji_text and emoji_text in self.blocked_emojis:
-            return True, f"emoji: {emoji_text}"
+            if emoji_text and emoji_text in self.blocked_emojis:
+                return True, f"emoji: {emoji_text}"
+
+        except Exception as e:
+            logger.error(f"Error checking message: {e}")
 
         return False, ""
 
@@ -174,7 +185,9 @@ class EmojiStickerBlocker(loader.Module):
 
         pack_name = args.lower().strip()
 
-        # Add to blocked packs
+        if pack_name in self.blocked_packs:
+            return await utils.answer(message, self.strings["not_found"])
+
         self.blocked_packs.add(pack_name)
         self._save_blocklists()
 
@@ -194,6 +207,10 @@ class EmojiStickerBlocker(loader.Module):
             return await utils.answer(message, self.strings["no_reply"])
 
         sticker_id = str(reply_msg.sticker.id)
+
+        if sticker_id in self.blocked_stickers:
+            return await utils.answer(message, self.strings["not_found"])
+
         self.blocked_stickers.add(sticker_id)
         self._save_blocklists()
 
@@ -206,6 +223,7 @@ class EmojiStickerBlocker(loader.Module):
     async def emojiblock(self, message: Message):
         """Block emoji from reply or input"""
         args = utils.get_args_raw(message)
+        emoji_text = None
 
         if args:
             emoji_text = args.strip()
@@ -222,6 +240,9 @@ class EmojiStickerBlocker(loader.Module):
             emoji_text = self._extract_emoji_text(reply_msg)
             if not emoji_text:
                 return await utils.answer(message, self.strings["no_reply"])
+
+        if emoji_text in self.blocked_emojis:
+            return await utils.answer(message, self.strings["not_found"])
 
         self.blocked_emojis.add(emoji_text)
         self._save_blocklists()
@@ -326,6 +347,8 @@ class EmojiStickerBlocker(loader.Module):
 
     async def watcher(self, message: Message):
         """Monitor messages and block unwanted content"""
+        if not self._client or not self._db:
+            return
 
         if message.is_group or message.is_channel:
             return

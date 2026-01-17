@@ -27,6 +27,7 @@
 # ---------------------------------------------------------------------------------
 
 from telethon.types import Message
+from telethon import events
 
 from .. import loader, utils
 
@@ -79,6 +80,7 @@ class SilentTRMod(loader.Module):
     async def client_ready(self, client, db):
         self._client = client
         self._db = db
+        self._me = await client.get_me()
 
         self._global_settings = self._db.get(
             __name__, "global_settings", {"reactions": False, "tags": False}
@@ -87,27 +89,22 @@ class SilentTRMod(loader.Module):
         self._global_ignore = self._db.get(__name__, "global_ignore", [])
         self._chat_ignore = self._db.get(__name__, "chat_ignore", {})
 
-        client.add_event_handler(self._on_message_reaction_updated)
-        client.add_event_handler(self._on_new_message)
+        client.add_event_handler(
+            self._on_message_reaction_updated, events.MessageReactionsUpdated
+        )
+        client.add_event_handler(self._on_new_message, events.NewMessage)
 
     async def on_unload(self):
         self._client.remove_event_handler(self._on_message_reaction_updated)
         self._client.remove_event_handler(self._on_new_message)
 
-    def _save_global_settings(self):
+    def _save_settings(self):
         self._db.set(__name__, "global_settings", self._global_settings)
-
-    def _save_chat_settings(self):
         self._db.set(__name__, "chat_settings", self._chat_settings)
-
-    def _save_global_ignore(self):
         self._db.set(__name__, "global_ignore", self._global_ignore)
-
-    def _save_chat_ignore(self):
         self._db.set(__name__, "chat_ignore", self._chat_ignore)
 
     async def _on_message_reaction_updated(self, event):
-        """Обработчик обновления реакций"""
         try:
             message = await self._client.get_messages(
                 event.chat_id, ids=event.message_id
@@ -115,226 +112,180 @@ class SilentTRMod(loader.Module):
         except Exception:
             return
 
-        if message.sender_id != (await self._client.get_me()).id:
+        if message.sender_id != self._me.id:
             return
 
         chat_id = str(event.chat_id)
         user_id = event.user_id
 
-        if user_id in self._global_ignore:
-            return
-
-        if chat_id in self._chat_ignore and user_id in self._chat_ignore[chat_id]:
+        if user_id in self._global_ignore or (
+            chat_id in self._chat_ignore and user_id in self._chat_ignore[chat_id]
+        ):
             return
 
         chat_settings = self._chat_settings.get(
             chat_id, {"reactions": None, "tags": None}
         )
-        if chat_settings["reactions"] is None:
-            if not self._global_settings["reactions"]:
-                return
-        else:
-            if not chat_settings["reactions"]:
-                return
+        reactions_enabled = (
+            chat_settings["reactions"]
+            if chat_settings["reactions"] is not None
+            else self._global_settings["reactions"]
+        )
 
-        await self._client.read_messages(event.chat_id, event.message_id)
+        if reactions_enabled:
+            await self._client.read_messages(event.chat_id, event.message_id)
 
     async def _on_new_message(self, event):
-        """Обработчик новых сообщений для упоминаний"""
-
-        if event.out:
-            return
-
-        me = await self._client.get_me()
-        mentioned = False
-        if event.mentioned:
-            mentioned = True
-        else:
-            if event.entities:
-                for entity in event.entities:
-                    if entity.type == "mentionName" and entity.user_id == me.id:
-                        mentioned = True
-                        break
-                    elif entity.type == "textMention" and entity.user_id == me.id:
-                        mentioned = True
-                        break
-
-        if not mentioned:
+        if event.out or not event.mentioned:
             return
 
         chat_id = str(event.chat_id)
         user_id = event.sender_id
 
-        if user_id in self._global_ignore:
-            return
-
-        if chat_id in self._chat_ignore and user_id in self._chat_ignore[chat_id]:
+        if user_id in self._global_ignore or (
+            chat_id in self._chat_ignore and user_id in self._chat_ignore[chat_id]
+        ):
             return
 
         chat_settings = self._chat_settings.get(
             chat_id, {"reactions": None, "tags": None}
         )
-        if chat_settings["tags"] is None:
-            if not self._global_settings["tags"]:
+        tags_enabled = (
+            chat_settings["tags"]
+            if chat_settings["tags"] is not None
+            else self._global_settings["tags"]
+        )
+
+        if tags_enabled:
+            await event.mark_read()
+
+    @loader.command(
+        ru_doc="[on/off] - тихие реакции во всех чатах",
+        en_doc="[on/off] - silent reactions in all chats",
+    )
+    async def _toggle_setting(
+        self, message: Message, setting_type: str, scope: str = "global"
+    ):
+        args = utils.get_args_raw(message).lower()
+        chat_id = str(message.chat_id) if scope == "chat" else None
+
+        if args not in ["on", "off", ""]:
+            await utils.answer(
+                message,
+                self.strings["args_error"]
+                if scope == "global"
+                else self.strings["chat_args_error"],
+            )
+            return
+
+        if scope == "global":
+            if args == "on":
+                self._global_settings[setting_type] = True
+            elif args == "off":
+                self._global_settings[setting_type] = False
+            else:
+                status = "on" if self._global_settings[setting_type] else "off"
+                await utils.answer(message, f"Global silent {setting_type}: {status}")
                 return
         else:
-            if not chat_settings["tags"]:
+            chat_settings = self._chat_settings.get(
+                chat_id, {"reactions": None, "tags": None}
+            )
+            if args == "on":
+                chat_settings[setting_type] = True
+            elif args == "off":
+                chat_settings[setting_type] = False
+            else:
+                status = chat_settings[setting_type]
+                if status is None:
+                    status = f"global ({'on' if self._global_settings[setting_type] else 'off'})"
+                else:
+                    status = "on" if status else "off"
+                await utils.answer(
+                    message, f"Silent {setting_type} in this chat: {status}"
+                )
                 return
+            self._chat_settings[chat_id] = chat_settings
 
-        await event.mark_read()
+        self._save_settings()
+        status_key = "on" if args == "on" else "off"
+        if scope == "global":
+            key = f"global_{setting_type}_{status_key}"
+        else:
+            key = f"chat_{setting_type}_{status_key}"
+
+        await utils.answer(
+            message,
+            self.strings.get(
+                key,
+                f"✅ {scope.title()} silent {setting_type} {'enabled' if args == 'on' else 'disabled'}",
+            ),
+        )
 
     @loader.command(
         ru_doc="[on/off] - тихие реакции во всех чатах",
         en_doc="[on/off] - silent reactions in all chats",
     )
     async def sreacts(self, message: Message):
-        """Toggle global silent reactions"""
-        args = utils.get_args_raw(message).lower()
-        if args == "on":
-            self._global_settings["reactions"] = True
-            self._save_global_settings()
-            await utils.answer(message, self.strings["global_reactions_on"])
-        elif args == "off":
-            self._global_settings["reactions"] = False
-            self._save_global_settings()
-            await utils.answer(message, self.strings["global_reactions_off"])
-        elif args == "":
-            status = "on" if self._global_settings["reactions"] else "off"
-            await utils.answer(message, f"Global silent reactions: {status}")
-        else:
-            await utils.answer(message, self.strings["args_error"])
+        await self._toggle_setting(message, "reactions", "global")
 
     @loader.command(
         ru_doc="[on/off] - тихие упоминания во всех чатах",
         en_doc="[on/off] - silent tags in all chats",
     )
     async def stags(self, message: Message):
-        """Toggle global silent tags"""
-        args = utils.get_args_raw(message).lower()
-        if args == "on":
-            self._global_settings["tags"] = True
-            self._save_global_settings()
-            await utils.answer(message, self.strings["global_tags_on"])
-        elif args == "off":
-            self._global_settings["tags"] = False
-            self._save_global_settings()
-            await utils.answer(message, self.strings["global_tags_off"])
-        elif args == "":
-            status = "on" if self._global_settings["tags"] else "off"
-            await utils.answer(message, f"Global silent tags: {status}")
-        else:
-            await utils.answer(message, self.strings["args_error"])
+        await self._toggle_setting(message, "tags", "global")
 
     @loader.command(
         ru_doc="[on/off] - тихие реакции и упоминания во всех чатах",
         en_doc="[on/off] - silent reactions and tags in all chats",
     )
     async def sall(self, message: Message):
-        """Toggle global silent reactions and tags"""
         args = utils.get_args_raw(message).lower()
         if args == "on":
             self._global_settings["reactions"] = True
             self._global_settings["tags"] = True
-            self._save_global_settings()
-            await utils.answer(message, "✅ Global silent reactions and tags enabled")
         elif args == "off":
             self._global_settings["reactions"] = False
             self._global_settings["tags"] = False
-            self._save_global_settings()
-            await utils.answer(message, "❌ Global silent reactions and tags disabled")
         elif args == "":
             status_r = "on" if self._global_settings["reactions"] else "off"
             status_t = "on" if self._global_settings["tags"] else "off"
             await utils.answer(
                 message, f"Global silent reactions: {status_r}, tags: {status_t}"
             )
+            return
         else:
             await utils.answer(message, self.strings["args_error"])
+            return
+
+        self._save_settings()
+        await utils.answer(
+            message,
+            f"{'✅' if args == 'on' else '❌'} Global silent reactions and tags {'enabled' if args == 'on' else 'disabled'}",
+        )
 
     @loader.command(
         ru_doc="[on/off] - тихие реакции в этом чате",
         en_doc="[on/off] - silent reactions in this chat",
     )
     async def hsreacts(self, message: Message):
-        """Toggle silent reactions in this chat"""
-        args = utils.get_args_raw(message).lower()
-        chat_id = str(message.chat_id)
-
-        # Получаем настройки чата или создаем новые
-        chat_settings = self._chat_settings.get(
-            chat_id, {"reactions": None, "tags": None}
-        )
-
-        if args == "on":
-            chat_settings["reactions"] = True
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(message, self.strings["chat_reactions_on"])
-        elif args == "off":
-            chat_settings["reactions"] = False
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(message, self.strings["chat_reactions_off"])
-        elif args == "":
-            status = chat_settings["reactions"]
-            if status is None:
-                status = (
-                    "global ("
-                    + ("on" if self._global_settings["reactions"] else "off")
-                    + ")"
-                )
-            else:
-                status = "on" if status else "off"
-            await utils.answer(message, f"Silent reactions in this chat: {status}")
-        else:
-            await utils.answer(message, self.strings["chat_args_error"])
+        await self._toggle_setting(message, "reactions", "chat")
 
     @loader.command(
         ru_doc="[on/off] - тихие упоминания в этом чате",
         en_doc="[on/off] - silent tags in this chat",
     )
     async def hstags(self, message: Message):
-        """Toggle silent tags in this chat"""
-        args = utils.get_args_raw(message).lower()
-        chat_id = str(message.chat_id)
-
-        chat_settings = self._chat_settings.get(
-            chat_id, {"reactions": None, "tags": None}
-        )
-
-        if args == "on":
-            chat_settings["tags"] = True
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(message, self.strings["chat_tags_on"])
-        elif args == "off":
-            chat_settings["tags"] = False
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(message, self.strings["chat_tags_off"])
-        elif args == "":
-            status = chat_settings["tags"]
-            if status is None:
-                status = (
-                    "global ("
-                    + ("on" if self._global_settings["tags"] else "off")
-                    + ")"
-                )
-            else:
-                status = "on" if status else "off"
-            await utils.answer(message, f"Silent tags in this chat: {status}")
-        else:
-            await utils.answer(message, self.strings["chat_args_error"])
+        await self._toggle_setting(message, "tags", "chat")
 
     @loader.command(
         ru_doc="[on/off] - тихие реакции и упоминания в этом чате",
         en_doc="[on/off] - silent reactions and tags in this chat",
     )
     async def hsall(self, message: Message):
-        """Toggle silent reactions and tags in this chat"""
         args = utils.get_args_raw(message).lower()
         chat_id = str(message.chat_id)
-
         chat_settings = self._chat_settings.get(
             chat_id, {"reactions": None, "tags": None}
         )
@@ -342,66 +293,58 @@ class SilentTRMod(loader.Module):
         if args == "on":
             chat_settings["reactions"] = True
             chat_settings["tags"] = True
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(
-                message, "✅ Silent reactions and tags enabled in this chat"
-            )
         elif args == "off":
             chat_settings["reactions"] = False
             chat_settings["tags"] = False
-            self._chat_settings[chat_id] = chat_settings
-            self._save_chat_settings()
-            await utils.answer(
-                message, "❌ Silent reactions and tags disabled in this chat"
-            )
         elif args == "":
             status_r = chat_settings["reactions"]
-            if status_r is None:
-                status_r = (
-                    "global ("
-                    + ("on" if self._global_settings["reactions"] else "off")
-                    + ")"
-                )
-            else:
-                status_r = "on" if status_r else "off"
             status_t = chat_settings["tags"]
-            if status_t is None:
-                status_t = (
-                    "global ("
-                    + ("on" if self._global_settings["tags"] else "off")
-                    + ")"
-                )
-            else:
-                status_t = "on" if status_t else "off"
+
+            def format_status(status, setting_type):
+                if status is None:
+                    return f"global ({'on' if self._global_settings[setting_type] else 'off'})"
+                return "on" if status else "off"
+
+            status_r = format_status(status_r, "reactions")
+            status_t = format_status(status_t, "tags")
             await utils.answer(
                 message, f"Silent reactions: {status_r}, tags: {status_t} in this chat"
             )
+            return
         else:
             await utils.answer(message, self.strings["chat_args_error"])
+            return
 
-    async def _get_user_id(self, message: Message):
-        """Получить ID пользователя из аргументов или ответа"""
-        reply = await message.get_reply_message()
-        args = utils.get_args_raw(message)
-
-        if reply:
-            return reply.sender_id
-        elif args:
-            try:
-                user = await self._client.get_entity(args)
-                return user.id
-            except Exception:
-                return None
-        else:
-            return None
+        self._chat_settings[chat_id] = chat_settings
+        self._save_settings()
+        await utils.answer(
+            message,
+            f"{'✅' if args == 'on' else '❌'} Silent reactions and tags {'enabled' if args == 'on' else 'disabled'} in this chat",
+        )
 
     @loader.command(
         ru_doc="[ответ/username] - игнорировать пользователя глобально",
         en_doc="[reply/username] - ignore user globally",
     )
+    async def _get_user_id(self, message: Message):
+        reply = await message.get_reply_message()
+        args = utils.get_args_raw(message)
+
+        if reply:
+            return reply.sender_id
+        if args:
+            try:
+                user = await self._client.get_entity(args)
+                return user.id
+            except Exception:
+                return None
+        return None
+
+    @loader.command(
+        ru_doc="[ответ/username] - игнорировать пользователя в этом чате",
+        en_doc="[reply/username] - ignore user in this chat",
+    )
     async def ignore(self, message: Message):
-        """Toggle ignore user globally"""
         user_id = await self._get_user_id(message)
         if not user_id:
             await utils.answer(message, self.strings["no_reply"])
@@ -414,21 +357,18 @@ class SilentTRMod(loader.Module):
             self._global_ignore.append(user_id)
             await utils.answer(message, self.strings["ignore_added"])
 
-        self._save_global_ignore()
+        self._save_settings()
 
     @loader.command(
-        ru_doc="[ответ/username] - игнорировать пользователя в этом чате",
-        en_doc="[reply/username] - ignore user in this chat",
+        ru_doc="Показать статус Silent T&R", en_doc="Show Silent T&R status"
     )
     async def hignore(self, message: Message):
-        """Toggle ignore user in this chat"""
         user_id = await self._get_user_id(message)
         if not user_id:
             await utils.answer(message, self.strings["no_reply"])
             return
 
         chat_id = str(message.chat_id)
-
         if chat_id not in self._chat_ignore:
             self._chat_ignore[chat_id] = []
 
@@ -439,13 +379,12 @@ class SilentTRMod(loader.Module):
             self._chat_ignore[chat_id].append(user_id)
             await utils.answer(message, self.strings["hignore_added"])
 
-        self._save_chat_ignore()
+        self._save_settings()
 
     @loader.command(
         ru_doc="Показать статус Silent T&R", en_doc="Show Silent T&R status"
     )
     async def strstatus(self, message: Message):
-        """Show status"""
         global_reactions = "on" if self._global_settings["reactions"] else "off"
         global_tags = "on" if self._global_settings["tags"] else "off"
 
