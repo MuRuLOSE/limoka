@@ -1,4 +1,5 @@
 # meta developer: @codrago_m
+# scope: heroku_min 2.0.0
 
 import logging
 from .. import utils, loader, main
@@ -113,15 +114,8 @@ class TagWatcher(loader.Module):
                 validator=loader.validators.Boolean(),
             ),
         )
-
     async def client_ready(self):
-        await self.request_join("@xdesai_modules", self.strings["request_join_reason"])
-        self.xdlib = await self.import_lib(
-            "https://raw.githubusercontent.com/xdesai96/modules/refs/heads/main/libs/xdlib.py",
-            suspend_on_error=True,
-        )
-
-        self.asset_channel = self._db.get("legacy.forums", "channel_id", 0)
+        self.asset_channel = self._db.get("heroku.forums", "channel_id", 0)
         self._notif_topic = await utils.asset_forum_topic(
             self._client,
             self._db,
@@ -129,6 +123,10 @@ class TagWatcher(loader.Module):
             "TagWatcher",
             description="Here will be notifications about mentions in chats.",
             icon_emoji_id=5409025823388741707,
+        )
+        self.xdlib = await self.import_lib(
+            "https://raw.githubusercontent.com/coddrago/modules/refs/heads/main/libs/xdlib.py",
+            suspend_on_error=True,
         )
 
     async def render_text(self, m):
@@ -174,7 +172,7 @@ class TagWatcher(loader.Module):
             user_id=id,
             msg_content=msg_content,
             reply_content=reply_content,
-            link=await m.link,
+            link=await m.link(),
         )
 
     @loader.command(
