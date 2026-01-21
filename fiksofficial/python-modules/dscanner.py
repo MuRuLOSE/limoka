@@ -3,6 +3,7 @@
 
 # scope: hikka_only
 # meta developer: @pymodule
+# meta fhsdesc: tool, tools, scanner, domain
 # requires: python-whois dnspython requests
 
 import socket

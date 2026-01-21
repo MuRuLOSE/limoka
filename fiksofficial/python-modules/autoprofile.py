@@ -2,6 +2,7 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @pymodule
+# meta fhsdesc: tool, tools, user, profile
 
 from hikkatl.types import Message
 from telethon.tl.functions.account import UpdateProfileRequest

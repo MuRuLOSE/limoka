@@ -3,6 +3,7 @@
 
 # scope: hikka_only
 # meta developer: @pymodule
+# meta fhsdesc: tool, tools, random
 
 from .. import loader, utils
 import random
