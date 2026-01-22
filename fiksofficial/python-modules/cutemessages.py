@@ -11,6 +11,7 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @pymodule
+# meta fhsdesc: fun, cute, message, love
 
 import random
 import re

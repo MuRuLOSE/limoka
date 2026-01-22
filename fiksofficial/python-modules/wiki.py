@@ -12,6 +12,7 @@
 
 # meta developer: @pymodule
 # requires: aiohttp
+# meta fhsdesc: tool, tools, wiki, wikipedia, info, wikiinfo
 
 from .. import loader, utils
 from ..inline.types import InlineQuery

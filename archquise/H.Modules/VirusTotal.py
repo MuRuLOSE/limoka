@@ -38,6 +38,7 @@ from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
+
 @loader.tds
 class VirusTotalMod(loader.Module):
     """Professional file scanning with VirusTotal"""
