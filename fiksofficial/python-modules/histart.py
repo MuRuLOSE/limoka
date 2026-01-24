@@ -11,6 +11,7 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @pymodule
+# meta fhsdesc: tool, tools, auto, restart, heroku, hikka
 
 from hikkatl.types import Message
 from .. import loader, utils

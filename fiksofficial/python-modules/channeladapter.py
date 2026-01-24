@@ -1,7 +1,8 @@
-# На модуль распространяется лицензия "GNU General Public License v3.0"
+# На модуль распространяется лицензия "GNU General Public License v3.0
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @PyModule
+# meta fhsdesc: tool, tools, channel, admintools, admin, admintool
 from telethon.tl.types import Message
 from .. import loader
 

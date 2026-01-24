@@ -185,20 +185,25 @@ class TimedEmojiStatusMod(loader.Module):
             return "❌"
 
         if document_id:
-            return f"<emoji document_id={document_id}>📋</emoji>"
+            return f"[Custom Emoji ID: {document_id}]"
 
         if emoji_str.isdigit():
-            return f"<emoji document_id={emoji_str}>📋</emoji>"
+            return f"[Custom Emoji ID: {emoji_str}]"
 
         if "<emoji document_id=" in emoji_str:
-            return emoji_str
+         
+            import re
+            match = re.search(r'document_id=(\d+)', emoji_str)
+            if match:
+                return f"[Custom Emoji ID: {match.group(1)}]"
+            return "[Custom Emoji]"
 
         if len(emoji_str) == 1 or (
             len(emoji_str) <= 4 and all(ord(c) >= 0x1F000 for c in emoji_str)
         ):
             return emoji_str
 
-        return emoji_str
+        return emoji_str[:10] + "..." if len(emoji_str) > 10 else emoji_str
 
     async def _set_emoji_status(
         self, emoji_input: str, until: datetime | None = None, message: Message = None
