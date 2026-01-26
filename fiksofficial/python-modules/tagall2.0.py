@@ -11,6 +11,7 @@
 # https://github.com/all-licenses/GNU-General-Public-License-v3.0
 
 # meta developer: @pymodule
+# meta fhsdesc: tool, tools, admin, tag, alltag, tagall
 
 from .. import loader, utils
 from telethon.tl.types import ChannelParticipantsAdmins, UserStatusRecently, UserStatusOnline, Message

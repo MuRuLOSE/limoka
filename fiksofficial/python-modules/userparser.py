@@ -5,6 +5,7 @@
 # Name: UserParser
 # Description: Данный модуль позволяет копировать ID, Username и Name участников чата при помощи команды .userpars
 # meta developer: @PyModule
+# meta fhsdesc: tool, tools, id, parser, userparser
 
 from .. import loader, utils
 import json
