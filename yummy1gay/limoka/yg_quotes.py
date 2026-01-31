@@ -1,4 +1,4 @@
-__version__ = (1, 1, 1, 1)
+__version__ = (1, 2, 0, 0)
 
 # This file is a part of Hikka Userbot!
 # This product includes software developed by t.me/Fl1yd and t.me/spypm.
@@ -14,6 +14,10 @@ __version__ = (1, 1, 1, 1)
 # meta developer: @yg_modules
 # scope: hikka_only
 # scope: hikka_min 1.6.3
+
+# Changelog v1.2:
+# - Added: Proxy for users from RF
+# - Fixed: Correct reply author resolving for forwarded messages
 
 # █▄█ █░█ █▀▄▀█ █▀▄▀█ █▄█   █▀▄▀█ █▀█ █▀▄ █▀
 # ░█░ █▄█ █░▀░█ █░▀░█ ░█░   █░▀░█ █▄█ █▄▀ ▄█
@@ -194,6 +198,12 @@ class Quotes(loader.Module):
                             validator=loader.validators.Integer(minimum=1,maximum=50)),
         loader.ConfigValue("endpoint","https://kok.gay/gayotes/generate",
                             lambda:"URL API-эндпоинта (можешь поднять локально - github.com/yummy1gay/quote-api)",
+                            validator=loader.validators.Link()),
+        loader.ConfigValue("use_rf_proxy", False,
+                            lambda:'Включает прокси для РФ, если основной эндпоинт возвращает ошибку "Нетворк еррорь", и при этом сервер с юзерботом находится в России или ты сам сидишь в России с ограниченным доступом к зарубежным ресурсам (Termux / UserLAnd)',
+                            validator=loader.validators.Boolean()),
+        loader.ConfigValue("rf_endpoint", "https://ru.kok.gay/gayotes/generate",
+                            lambda:"URL API-эндпоинта для РФ",
                             validator=loader.validators.Link()))
 
     async def client_ready(self, client, db):
@@ -226,10 +236,11 @@ class Quotes(loader.Module):
                  "format": "webp" if not doc else "png", "type": self.config["type"]}
 
             await utils.answer(st,self.strings["api_processing"])
-            r=await Dick.post(f"{self.config['endpoint']}.webp",pay)
+            endpoint=self.config['rf_endpoint'] if self.config['use_rf_proxy'] else self.config['endpoint']
+            r=await Dick.post(f"{endpoint}.webp",pay)
             if not r or r.status_code!=200:
-                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь"
-                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь"
+                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
+                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
                 return await utils.answer(st,self.strings["api_error"].format(err))
 
             buf=io.BytesIO(r.content); buf.name="YgQuote"+(".png" if doc else ".webp")
@@ -259,10 +270,11 @@ class Quotes(loader.Module):
                 "format": "webp","type":self.config["type"]}
 
             await utils.answer(st,self.strings["api_processing"])
-            r=await Dick.post(f"{self.config['endpoint']}.webp",dickk)
+            endpoint=self.config['rf_endpoint'] if self.config['use_rf_proxy'] else self.config['endpoint']
+            r=await Dick.post(f"{endpoint}.webp",dickk)
             if not r or r.status_code!=200:
-                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь"
-                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь"
+                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
+                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
                 return await utils.answer(st,self.strings["api_error"].format(err))
 
             buf=io.BytesIO(r.content); buf.name="YgQuote.webp"
@@ -289,7 +301,8 @@ class Quotes(loader.Module):
                 try:
                     r=await mm.get_reply_message()
                     if r:
-                        rname=telethon.utils.get_display_name(r.sender)
+                        ruser = await self.who(r)
+                        rname=telethon.utils.get_display_name(ruser)
                         rtxt=Dick.desc(r,True)
                         if r.raw_text: rtxt=(rtxt+". "+r.raw_text) if rtxt else r.raw_text
                         rb={"name":rname,"text":rtxt or "","entities":Dick.ents(r.entities),
