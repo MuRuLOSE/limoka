@@ -1,5 +1,5 @@
 # -- version --
-__version__ = (1, 2, 1)
+__version__ = (1, 2, 2)
 # -- version --
 
 
@@ -9,7 +9,7 @@ __version__ = (1, 2, 1)
 # ██║╚██╔╝██║██╔══╝░░██╔══██║██║░░██║██║░░██║░░████╔═████║░░╚═══██╗░╚═══██╗
 # ██║░╚═╝░██║███████╗██║░░██║██████╔╝╚█████╔╝░░╚██╔╝░╚██╔╝░██████╔╝██████╔╝
 # ╚═╝░░░░░╚═╝╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░░░░╚═╝░░░╚═╝░░╚═════╝░╚═════╝░
-#                © Copyright 2025
+#                © Copyright 2026
 #            ✈ https://t.me/mead0wssMods
 
 
@@ -33,14 +33,17 @@ class SenderGifts(loader.Module):
         "checking_user": "<emoji document_id=5206634672204829887>🔍</emoji> Проверка пользователя...",
         "checking_balance": "<emoji document_id=5206634672204829887>🔍</emoji> Проверка баланса...",
         "user_not_found": "<emoji document_id=4958526153955476488>❌</emoji> Пользователь не найден",
-        "gift_menu": "<emoji document_id=5931696400982088015>🎁</emoji> Выберите категорию подарков.\n\n<emoji document_id=6032693626394382504>👤</emoji> Пользователь: {}\n<emoji document_id=5873153278023307367>📄</emoji> Текст: {}\n<emoji document_id=5951810621887484519>⭐</emoji> Баланс: {} звезд",
-        "category_menu": "<emoji document_id=5931696400982088015>🎁</emoji> Подарки за {} ⭐\n\n<emoji document_id=6032693626394382504>👤</emoji> Пользователь: {}\n<emoji document_id=5873153278023307367>📄</emoji> Текст: {}",
+        "gift_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выберите категорию подарков.\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}\n<tg-emoji emoji-id=5321485469249198987>⭐️</tg-emoji> Баланс: {} звезд",
+        "category_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Подарки за {} ⭐\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}",
+        "privacy_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выбран подарок: {}\n\nКак отправить подарок?",
         "sending_gift": "<emoji document_id=5201691993775818138>🛫</emoji> Отправка подарка...",
         "gift_sent": "<emoji document_id=5021905410089550576>✅</emoji> Подарок успешно отправлен!",
         "not_enough_stars": "<emoji document_id=4958526153955476488>❌</emoji> Недостаточно звезд для отправки подарка {}!",
         "min_stars_error": "<emoji document_id=4958526153955476488>❌</emoji> Недостаточно звезд для отправки минимального подарка!",
         "no_available_gifts": "<emoji document_id=4958526153955476488>❌</emoji> Нет доступных подарков для вашего баланса",
         "balance_error": "<emoji document_id=4958526153955476488>❌</emoji> Ошибка при проверке баланса",
+        "btn_public": "📢 Публично",
+        "btn_anon": "🕵️ Анонимно",
     }
     
     gift_categories = {
@@ -57,6 +60,7 @@ class SenderGifts(loader.Module):
             {"id": 5170314324215857265, "emoji": "💐", "name": "Цветы"},
             {"id": 5170564780938756245, "emoji": "🚀", "name": "Ракета"},
             {"id": 5922558454332916696, "emoji": "🎄", "name": "Ёлка"},
+            {"id": 5956217000635139069, "emoji": "🧸", "name": "Новогодний мишка"}
         ],
         100: [
             {"id": 5168043875654172773, "emoji": "🏆", "name": "Кубок"},
@@ -135,9 +139,11 @@ class SenderGifts(loader.Module):
         
         if row:
             buttons.append(row)
+
+        helper_msg = await self.inline.form("🪐", balance_msg)
         
         await utils.answer(
-            balance_msg,
+            helper_msg,
             self.strings["gift_menu"].format(
                 f"@{user.username}" if user.username else user.first_name,
                 text if text else "-",
@@ -153,8 +159,8 @@ class SenderGifts(loader.Module):
         for gift in gifts:
             row.append({
                 "text": gift["emoji"],
-                "callback": self._send_gift,
-                "args": (user_id, gift["id"], text, gift["emoji"], msg_id, balance),
+                "callback": self._select_privacy,
+                "args": (user_id, gift["id"], text, gift["emoji"], msg_id, balance, price),
             })
             if len(row) == 3:
                 buttons.append(row)
@@ -180,6 +186,34 @@ class SenderGifts(loader.Module):
                 user_display,
                 text if text else "-"
             ),
+            reply_markup=buttons
+        )
+
+    async def _select_privacy(self, call, user_id, gift_id, text, gift_emoji, msg_id, balance, price):
+        buttons = [
+            [
+                {
+                    "text": self.strings["btn_public"],
+                    "callback": self._send_gift,
+                    "args": (user_id, gift_id, text, gift_emoji, msg_id, balance, False) # hide_name=False публично
+                },
+                {
+                    "text": self.strings["btn_anon"],
+                    "callback": self._send_gift,
+                    "args": (user_id, gift_id, text, gift_emoji, msg_id, balance, True) # hide_name=True анонимно
+                }
+            ],
+            [
+                {
+                    "text": "⬅️ Назад",
+                    "callback": self._show_category,
+                    "args": (user_id, price, text, balance, msg_id)
+                }
+            ]
+        ]
+        
+        await call.edit(
+            self.strings["privacy_menu"].format(gift_emoji),
             reply_markup=buttons
         )
 
@@ -216,7 +250,7 @@ class SenderGifts(loader.Module):
             reply_markup=buttons
         )
 
-    async def _send_gift(self, call, user_id, gift_id, text, gift_emoji, msg_id, balance):
+    async def _send_gift(self, call, user_id, gift_id, text, gift_emoji, msg_id, balance, hide_name):
         try:
             await call.edit(
                 self.strings["sending_gift"],
@@ -227,11 +261,11 @@ class SenderGifts(loader.Module):
                 self.client.parse_mode,
             )
             text, entities = parse_mode.parse(text)
-
             user = await self.client.get_input_entity(user_id)
             inv = InputInvoiceStarGift(
                 user,
                 gift_id,
+                hide_name=hide_name,
                 message=TextWithEntities(text, entities) if text else TextWithEntities("", [])
             )
             form = await self.client(GetPaymentFormRequest(inv))
