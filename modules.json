@@ -131,6 +131,7 @@
           "nonlongermaintained": "No Longer Maintained Repository",
           "newbie": "Newbie"
         },
+        "indexing_in_progress": "⚠️ Database is busy, try again later. If issue persists, try removing limoka_index in the userbot's root folder. If error persists again, report to developers",
         "name_ru": "Limoka",
         "wait_ru": "Подождите\n<emoji document_id=5404630946563515782>🔍</emoji> Идёт поиск среди {count} модулей по запросу: <code>{query}</code>\n<i>{fact}</i>",
         "found_header_ru": "<emoji document_id=5413334818047940135>🔍</emoji> Найден модуль <b>{name}</b> по запросу: <b>{query}</b>\n\n<b><emoji document_id=5418376169055602355>ℹ️</emoji> Описание:</b> {description}\n<b><emoji document_id=5418299289141004396>🧑‍💻</emoji> Разработчик:</b> {username}\n\n<b><emoji document_id=5418376169055602355>🏷</emoji> Теги:</b> {tags}\n\n",
@@ -188,7 +189,8 @@
         "watcher_signature_invalid_ru": "❌ Неверная подпись! Установка отменена.",
         "watcher_loader_missing_ru": "❌ Модуль загрузчика не найден.",
         "watcher_module_not_found_ru": "❌ Модуль не найден в базе Limoka: <code>{path}</code>",
-        "watcher_critical_ru": "❌ Критическая ошибка: {error}"
+        "watcher_critical_ru": "❌ Критическая ошибка: {error}",
+        "indexing_in_progress_ru": "⚠️ База данных занята, попробуйте снова через несколько секунд. Если ошибка сохраняется, попробуйте удалить limoka_index в корневой папке юзербота. Если ошибка сохраняется снова, сообщите разработчикам"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -38599,7 +38601,7 @@
           "sgamerps": "- Start the game «Rock, Paper, Scissors» | (RU) - Начать игру «Камень, ножницы, бумага» | (UZ) - «Tosh, qog'oz, qaychi» o'yinining boshlanishi | (DE) - Beginn des Spiels «Stein, Papier, Schere» | (ES) - El comienzo del juego «Piedra, papel o tijera»"
         },
         {
-          "cleargames": "- Complete all running games. | (RU) <ast.JoinedStr object at 0x7f9ad406ca60> | (UZ) - Barcha faol o'yinlarni tugatish. | (DE) - Alle aktiven Spiele beenden. | (ES) - Completar todos los juegos en curso."
+          "cleargames": "- Complete all running games. | (RU) <ast.JoinedStr object at 0x7f7ec2e48b80> | (UZ) - Barcha faol o'yinlarni tugatish. | (DE) - Alle aktiven Spiele beenden. | (ES) - Completar todos los juegos en curso."
         }
       ],
       "new_commands": [
@@ -38625,7 +38627,7 @@
           "original_name": "cleargames",
           "description": {
             "default": "- Complete all running games.",
-            "ru": "<ast.JoinedStr object at 0x7f9ad406ca60>",
+            "ru": "<ast.JoinedStr object at 0x7f7ec2e48b80>",
             "uz": "- Barcha faol o'yinlarni tugatish.",
             "de": "- Alle aktiven Spiele beenden.",
             "es": "- Completar todos los juegos en curso."
@@ -81807,6 +81809,6 @@
   },
   "meta": {
     "total_modules": 1017,
-    "generated_at": "2026-02-06T01:24:40.647732"
+    "generated_at": "2026-02-06T09:39:12.584561"
   }
 }
