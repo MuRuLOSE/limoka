@@ -145,7 +145,7 @@ BBOX_IOS = (
 )
 
 
-@loader.translatable_docstring
+@loader.tds
 class Gradientor(loader.Module):
     strings = {
         "name": "Gradientor",
@@ -376,7 +376,7 @@ class Gradientor(loader.Module):
             return await utils.answer(message, self.strings["noargs"])
 
         args = args[0].split("/")[-1]
-        background_only = True
+        background_only = False
         
         try:
             gift: UniqueStarGift = await self.client(GetUniqueStarGiftRequest(args))
