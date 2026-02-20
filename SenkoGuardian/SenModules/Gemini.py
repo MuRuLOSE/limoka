@@ -3,7 +3,7 @@
 #  This software is released under the MIT License.
 #  https://opensource.org/licenses/MIT
 
-__version__ = (6, 1, 0) #фыр
+__version__ = (6, 1, 1) #  ￣へ￣
 
 # meta developer: @SenkoGuardianModules
 
@@ -390,6 +390,10 @@ class Gemini(loader.Module):
                 openai_messages.append({"role": "user", "content": content_list})
                 target_model = self.config["model_name"]
                 result_text = await self._send_to_Openrouter_api(target_model, openai_messages, self.config["temperature"])
+                result_text = result_text.strip()
+                result_text = re.sub(r"^\[System Info:.*?\]\s*", "", result_text, flags=re.IGNORECASE)
+                result_text = re.sub(r"^\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
+                result_text = re.sub(r"^\[\d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
                 if self._is_memory_enabled(str(chat_id)):
                     self._update_history(history_key, current_turn_parts, result_text, regeneration, msg_obj, gauto=impersonation_mode)
                 if impersonation_mode: return result_text
@@ -447,8 +451,16 @@ class Gemini(loader.Module):
         contents = []
         raw_hist = self._get_structured_history(chat_id, gauto=impersonation_mode)
         if regeneration and raw_hist: raw_hist = raw_hist[:-2]
+        try: 
+            user_tz = pytz.timezone(self.config["timezone"])
+        except pytz.UnknownTimeZoneError: 
+            user_tz = pytz.utc
         for item in raw_hist:
-            contents.append(types.Content(role=item['role'], parts=[types.Part(text=item['content'])]))
+            content_text = item.get('content', '')
+            if 'date' in item and item['date']:
+                dt = datetime.fromtimestamp(item['date'], user_tz)
+                content_text = f"[{dt.strftime('%d.%m.%Y %H:%M')}] {content_text}"
+            contents.append(types.Content(role=item['role'], parts=[types.Part(text=content_text)]))
         request_parts = list(current_turn_parts)
         if not impersonation_mode:
             try: user_timezone = pytz.timezone(self.config["timezone"])
@@ -488,6 +500,10 @@ class Gemini(loader.Module):
                 )
                 if response.text:
                     result_text = response.text
+                    result_text = result_text.strip()
+                    result_text = re.sub(r"^\[System Info:.*?\]\s*", "", result_text, flags=re.IGNORECASE)
+                    result_text = re.sub(r"^\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
+                    result_text = re.sub(r"^\[\d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
                     was_successful = True
                     if self.config["google_search"]: search_icon = " 🌐"
                     self.current_api_key_index = current_idx
@@ -1103,7 +1119,8 @@ class Gemini(loader.Module):
         header = data.get("header", "")
         raw_text_chunk = chunks[page_num]
         safe_text = self._markdown_to_html(raw_text_chunk)
-        text_to_show = f"{header}<blockquote expandable>{safe_text}</blockquote>"
+        formatted_body = self._format_response_with_smart_separation(safe_text)
+        text_to_show = f"{header}\n{formatted_body}"
         nav_row = []
         if page_num > 0:
             nav_row.append({"text": "◀️", "data": f"gemini:pg:{uid}:{page_num - 1}"})
@@ -1563,11 +1580,19 @@ class Gemini(loader.Module):
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
+        try:
+            user_tz = pytz.timezone(self.config["timezone"])
+        except:
+            user_tz = pytz.utc
         for item in history:
             role = "assistant" if item['role'] == "model" else "user"
             content = item.get("content", "")
+            if 'date' in item and item['date']:
+                dt = datetime.fromtimestamp(item['date'], user_tz)
+                content = f"[{dt.strftime('%d.%m.%Y %H:%M')}] {content}"
             messages.append({"role": role, "content": content})
         return messages
+
 
     def _is_memory_enabled(self, chat_id: str) -> bool: return chat_id not in self.memory_disabled_chats
     def _disable_memory(self, chat_id: int): self.memory_disabled_chats.add(str(chat_id))
