@@ -22698,6 +22698,67 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "fajox1/famods/cocoon.py": {
+      "name": "Cocoon",
+      "description": "Взаимодействие с Cocoon от HikkaHost",
+      "cls_doc": {},
+      "meta": {
+        "pic": null,
+        "banner": "https://github.com/FajoX1/FAmods/blob/main/assets/banners/cocoon.png?raw=true",
+        "developer": "@FAmods & @vsecoder_m"
+      },
+      "commands": [
+        {
+          "ccusage": "Статистика использования Cocoon"
+        },
+        {
+          "cocoon": "Задать вопрос к ИИ"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "ccusage",
+          "original_name": "ccusage",
+          "description": {
+            "default": "Статистика использования Cocoon"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "cocoon",
+          "original_name": "cocoon",
+          "description": {
+            "default": "Задать вопрос к ИИ"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "Cocoon [BETA]",
+        "try_again": "<b><emoji document_id=5456307331644037599>❌</emoji> <b>Что-то пошло не так. Попробуйте снова.</b>",
+        "no_args": "<b><emoji document_id=5456307331644037599>❌</emoji> <b>Нужно </b><code>{}{} {}</code></b>",
+        "no_token": "<b><emoji document_id=5456307331644037599>❌</emoji> <b>Нету токена! Вставь его в <code>{}cfg cocoon</code>\n\n<emoji document_id=5456672880605565619>🌘</emoji> Получить токен: @hikkahost_bot → <emoji document_id=5208521532942358129>🥚</emoji> Cocoon</b>",
+        "invalid_token_or_no_sub": "<b><emoji document_id=5456307331644037599>❌</emoji>Неверный токен или у вас нет подписки <emoji document_id=5188377234380954537>🌘</emoji> HikkaHost.</b>\n\n<emoji document_id=5456672880605565619>🌘</emoji> Получить токен: @hikkahost_bot → <emoji document_id=5208521532942358129>🥚</emoji> Cocoon</b>",
+        "sending_request_to_cocoon": "<emoji document_id=5197252827247841976>🐣</emoji> <b>Обрабатываю запрос в Cocoon...</b>",
+        "thinking": "<emoji document_id=5197252827247841976>🐣</emoji> <b>Думаю...</b>\n\n<blockquote>{thoughts}…</blockquote>",
+        "answer": "<emoji document_id=5456217626957091223>🌘</emoji> <b>Вопрос:</b> {question}\n\n<emoji document_id=5197252827247841976>🐣</emoji> <b>Размышления:</b>\n<blockquote expandable>{thoughts}</blockquote>\n\n<emoji document_id=5208521532942358129>🥚</emoji> {answer}\n\n<emoji document_id=5458567764341985638>🚀</emoji> <b>Модель</b>: <code>{model}</code>",
+        "usage": "<b><emoji document_id=5208521532942358129>🥚</emoji> Cocoon API\n\n<emoji document_id=5458805877328875335>💡</emoji> Использовано:\n</b><i>• {current}/{total} ({percent}% осталось)</i><b>\n\n<emoji document_id=5456591761558245861>⏳</emoji> Лимит сбросится через {days} день(-ей).</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "fajox1/famods/ytsearch.py": {
       "name": "YTsearch",
       "description": "Поиск в Youtube",
@@ -82017,7 +82078,7 @@
     }
   },
   "meta": {
-    "total_modules": 1019,
-    "generated_at": "2026-02-21T01:23:09.755369"
+    "total_modules": 1020,
+    "generated_at": "2026-02-22T01:28:40.351059"
   }
 }
