@@ -13,7 +13,7 @@ class DBMod(loader.Module):
         "close_btn": "❌ Close",
         "back_btn": "⬅ Back",
         "del_btn": "🗑 Delete",
-        "del_all_btn": "💣 Delete all",
+        "del_all_btn": "❌ Delete all",
         "not_found": "🔍 Key {key} not found",
         "invalid_key": "⚠ Invalid key",
         "page": "📄 Page {current}/{total}",
@@ -34,7 +34,7 @@ class DBMod(loader.Module):
         "close_btn": "❌ Закрыть",
         "back_btn": "⬅ Назад",
         "del_btn": "🗑 Удалить",
-        "del_all_btn": "💣 Удалить все",
+        "del_all_btn": "❌ Удалить все",
         "not_found": "🔍 Ключ {key} не найден",
         "invalid_key": "⚠ Некорректный ключ",
         "page": "📄 Страница {current}/{total}",
@@ -240,6 +240,7 @@ class DBMod(loader.Module):
                     {
                         "text": self.strings["del_all_btn"],
                         "callback": self.confirm_delete_all,
+                        "style": "danger",
                         "args": [key_path],
                     }
                 ]
@@ -290,6 +291,7 @@ class DBMod(loader.Module):
                 {
                     "text": self.strings["back_btn"],
                     "callback": self.navigate_db,
+                    "style": "primary",
                     "args": [key_path[:-1], parent_page],
                 }
             )
@@ -329,6 +331,7 @@ class DBMod(loader.Module):
                     {
                         "text": self.strings["del_all_btn"],
                         "callback": self.confirm_delete_all,
+                        "style": "danger",
                         "args": [key_path],
                     }
                 ]
@@ -344,13 +347,16 @@ class DBMod(loader.Module):
                 {
                     "text": self.strings["del_btn"],
                     "callback": self.delete_key,
+                    "styles": "danger",
                     "args": [key_path],
                 }
             ],
             [
                 {
                     "text": self.strings["back_btn"],
+                    "style": "primary",
                     "callback": self.navigate_db,
+                    "style": "primary",
                     "args": [key_path[:-1], parent_page],
                 }
             ],
@@ -363,6 +369,7 @@ class DBMod(loader.Module):
                 {
                     "text": self.strings["del_btn"],
                     "callback": self.delete_key,
+                    "style": "danger",
                     "args": [key_path],
                 }
             ],
@@ -370,6 +377,7 @@ class DBMod(loader.Module):
                 {
                     "text": self.strings["back_btn"],
                     "callback": self.navigate_db,
+                    "style": "primary",
                     "args": [key_path[:-1], parent_page],
                 }
             ],
