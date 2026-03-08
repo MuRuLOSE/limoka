@@ -19441,6 +19441,7 @@
         "user_not_found": "<emoji document_id=4958526153955476488>❌</emoji> Пользователь не найден",
         "gift_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выберите категорию подарков.\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}\n<tg-emoji emoji-id=5321485469249198987>⭐️</tg-emoji> Баланс: {} звезд",
         "category_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Подарки за {} ⭐\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}",
+        "unique_category_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> {}\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}",
         "privacy_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выбран подарок: {}\n\nКак отправить подарок?",
         "sending_gift": "<emoji document_id=5201691993775818138>🛫</emoji> Отправка подарка...",
         "gift_sent": "<emoji document_id=5021905410089550576>✅</emoji> Подарок успешно отправлен!",
@@ -82080,6 +82081,6 @@
   },
   "meta": {
     "total_modules": 1020,
-    "generated_at": "2026-03-03T01:28:23.435183"
+    "generated_at": "2026-03-08T01:26:57.642426"
   }
 }
