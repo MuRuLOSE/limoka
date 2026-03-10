@@ -19441,6 +19441,7 @@
         "user_not_found": "<emoji document_id=4958526153955476488>❌</emoji> Пользователь не найден",
         "gift_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выберите категорию подарков.\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}\n<tg-emoji emoji-id=5321485469249198987>⭐️</tg-emoji> Баланс: {} звезд",
         "category_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Подарки за {} ⭐\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}",
+        "unique_category_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> {}\n\n<tg-emoji emoji-id=6048471184461271609>👤</tg-emoji> Пользователь: {}\n<tg-emoji emoji-id=6048762138430803961>📂</tg-emoji> Текст: {}",
         "privacy_menu": "<tg-emoji emoji-id=5370781982886220096>🎁</tg-emoji> Выбран подарок: {}\n\nКак отправить подарок?",
         "sending_gift": "<emoji document_id=5201691993775818138>🛫</emoji> Отправка подарка...",
         "gift_sent": "<emoji document_id=5021905410089550576>✅</emoji> Подарок успешно отправлен!",
@@ -61901,6 +61902,181 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "fiksofficial/python-modules/github.py": {
+      "name": "GitHubMod",
+      "description": "GitHub repository monitor — commits, issues, PRs, releases and stars",
+      "cls_doc": {
+        "ru": "Мониторинг GitHub репозиториев — коммиты, issues, PR, релизы и звёзды"
+      },
+      "meta": {
+        "pic": null,
+        "banner": null,
+        "developer": "@pymodule"
+      },
+      "commands": [
+        {
+          "github": "- Open GitHub Monitor control panel | (RU) - Открыть панель управления GitHub Monitor"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "github",
+          "original_name": "githubcmd",
+          "description": {
+            "default": "- Open GitHub Monitor control panel",
+            "ru": "- Открыть панель управления GitHub Monitor"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "GitHubMonitor",
+        "setup_welcome": "🐙 <b>GitHub Monitor</b>\n\nChoose a destination to configure.\nEach channel/group has its own repository list and settings.\nNotifications are sent on behalf of the bot.",
+        "enter_dest": "{icon} <b>{label} setup</b>\n\nEnter the <b>@username or ID</b> of the {label_lc}.\nThe bot will be added as admin automatically.",
+        "dest_not_found": "❌ <b>Chat not found.</b>\n\nCheck the @username or ID and try again.\nMake sure you are an admin of that chat.",
+        "dest_configured": "✅ <b>{label}</b> configured: <b>{title}</b>\n\nNow add the first repository to track\nin <code>owner/repo</code> format:",
+        "bot_invite_fail": "⚠️ Could not add the bot automatically.\nPlease add <code>{bot}</code> as admin with <b>Post Messages</b> right manually,\nthen open <code>.github</code> again.",
+        "dest_removed": "🗑 <b>{title}</b> removed.",
+        "repo_already": "⚠️ <code>{repo}</code> is already tracked in <b>{title}</b>.",
+        "repo_not_tracked": "⚠️ <code>{repo}</code> is not tracked in <b>{title}</b>.",
+        "repo_not_found": "❌ Repository <code>{repo}</code> not found or inaccessible.",
+        "repo_added": "✅ Added <code>{repo}</code> to <b>{title}</b>.",
+        "repo_removed": "✅ Removed <code>{repo}</code> from <b>{title}</b>.",
+        "no_dests": "❌ <b>No destinations configured.</b>\n\nRun <code>.github</code> to set up a channel or group.",
+        "setup_canceled": "❌ Setup canceled.",
+        "panel_title": "{icon} <b>{title}</b>\n\n📦 <b>Repositories:</b> {repos}\n📣 <b>Events:</b> {events}\n⏱ <b>Interval:</b> {interval}s\n🔑 <b>Token:</b> {token}",
+        "panel_repos_empty": "none",
+        "interval_invalid": "❌ Enter a number between 60 and 3600.",
+        "rate_limit": "⚠️ <b>GitHub API rate limit.</b>\nResets at <code>{reset}</code>.\nSet a personal token in the destination panel.",
+        "dests_list": "📋 <b>Configured destinations:</b>\n\n{list}",
+        "notify_push_header": "<b>📏 On </b><a href='https://github.com/{repo}'><b>{repo}:{branch}</b></a><b> new commits!</b>\n{count} commits pushed.\n<a href='{compare}'>Compare changes</a>",
+        "notify_push_commit": "\n<blockquote expandable><b>Commit </b><a href='{url}'><b>#{sha}</b></a><b> by <i>{name} (</i></b><a href='https://github.com/{login}'><b><i>@{login}</i></b></a><b><i>)</i></b>\n<i>{msg}</i>\n\n{files_section}{diff_section}</blockquote>",
+        "notify_push_footer": "",
+        "notify_push_created": "<b>🔧 Created files:</b>\n<code>{files}</code>\n\n",
+        "notify_push_removed": "<b>🗑 Removed files:</b>\n<code>{files}</code>\n\n",
+        "notify_push_modified": "<b>🖊 Modified files:</b>\n<code>{files}</code>\n\n",
+        "notify_push_diff": "<b>⌨️ Diff:</b>\n➕ {added}\n➖ {removed}\n",
+        "notify_push_empty": "<b>📏 On </b><a href='https://github.com/{repo}'><b>{repo}:{branch}</b></a><b> new empty push</b>",
+        "notify_issue": "<b>{e} On </b><a href='{url}'><b>{repo}</b></a><b> {action} issue!</b>\n\n<i>{title}</i>\n<a href='{url}'>#{num}</a> by <a href='https://github.com/{author}'><i>@{author}</i></a>",
+        "notify_pr": "<b>{e} On </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> {action} pull request!</b>\n\n<i>{title}</i>\n<blockquote expandable>{body}</blockquote>\n\nUser: <a href='https://github.com/{author}'><i>@{author}</i></a>\n\n<a href='{url}'>#{num}</a>",
+        "notify_release": "<b>{e} On </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> {action} release!</b>\n\n🏷 <code>{tag}</code> · <b>{name}</b>\n👤 <a href='https://github.com/{author}'><i>@{author}</i></a>\n<a href='{url}'>Open release</a>",
+        "notify_star_added": "<b>⭐️ On </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> added star!</b>\n\nTotal stars: <i>{stars}</i>\nUser: <a href='https://github.com/{user}'><i>@{user}</i></a>",
+        "notify_star_removed": "<b>💔 On </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> removed star!</b>\n\nTotal stars: <i>{stars}</i>\nUser: <a href='https://github.com/{user}'><i>@{user}</i></a>",
+        "_cfg_interval": "Default polling interval in seconds (60–3600). Overridden per destination.",
+        "star_label": "⭐ Stars",
+        "_cfg_token": "Default GitHub token for destinations without a personal token.\nWithout token: 60 req/h. With token: 5000 req/h.\nCreate at: github.com/settings/tokens",
+        "push_label": "🔨 Push",
+        "issues_label": "🐛 Issues",
+        "pull_request_label": "🔀 Pull Requests",
+        "release_label": "🚀 Releases",
+        "token_set": "✅ set",
+        "token_not_set": "❌ not set",
+        "btn_channel": "➕ Channel",
+        "btn_group": "➕ Group",
+        "btn_close": "✖️ Close",
+        "btn_back": "◀️ Back",
+        "btn_skip": "⏩ Skip",
+        "btn_add_repo": "➕ Add repository",
+        "btn_set_interval": "⏱ Set interval",
+        "btn_set_token": "🔑 Set token",
+        "btn_clear_token": "🔑 Clear token",
+        "btn_remove": "🗑 Remove",
+        "btn_enter_dest": "✏️ Enter {label} username / ID",
+        "btn_add_repo_confirm": "✏️ Add repository",
+        "input_dest": "@username or ID of the {label}",
+        "input_repo": "owner/repo  (e.g. torvalds/linux)",
+        "input_interval": "Interval in seconds  (60 – 3600)",
+        "input_token": "GitHub Personal Access Token",
+        "repo_invalid_format": "❌ Invalid format. Use <code>owner/repo</code>.",
+        "checking_repo": "🔍 Checking repository...",
+        "issue_opened": "opened",
+        "issue_closed": "closed",
+        "pr_merged": "merged",
+        "pr_closed": "closed",
+        "pr_opened": "opened",
+        "release_prerelease": "pre-release",
+        "release_published": "published",
+        "dest_label_channel": "Channel",
+        "dest_label_group": "Group",
+        "name_ru": "GitHubMonitor",
+        "setup_welcome_ru": "🐙 <b>GitHub Monitor</b>\n\nВыберите назначение для настройки.\nУ каждого канала/группы свой список репозиториев и настройки.\nУведомления отправляются от имени бота.",
+        "enter_dest_ru": "{icon} <b>Настройка {label_lc}а</b>\n\nВведите <b>@username или ID</b> {label_lc}а.\nБот будет добавлен администратором автоматически.",
+        "dest_not_found_ru": "❌ <b>Чат не найден.</b>\n\nПроверьте @username или ID.\nУбедитесь, что вы администратор этого чата.",
+        "dest_configured_ru": "✅ <b>{label}</b> настроен: <b>{title}</b>\n\nТеперь добавьте первый репозиторий для отслеживания\nв формате <code>owner/repo</code>:",
+        "bot_invite_fail_ru": "⚠️ Не удалось добавить бота автоматически.\nДобавьте <code>{bot}</code> вручную как администратора с правом <b>Публикация сообщений</b>,\nзатем откройте <code>.github</code> снова.",
+        "dest_removed_ru": "🗑 <b>{title}</b> удалён.",
+        "repo_already_ru": "⚠️ <code>{repo}</code> уже отслеживается в <b>{title}</b>.",
+        "repo_not_tracked_ru": "⚠️ <code>{repo}</code> не отслеживается в <b>{title}</b>.",
+        "repo_not_found_ru": "❌ Репозиторий <code>{repo}</code> не найден или недоступен.",
+        "repo_added_ru": "✅ Репозиторий <code>{repo}</code> добавлен в <b>{title}</b>.",
+        "repo_removed_ru": "✅ Репозиторий <code>{repo}</code> удалён из <b>{title}</b>.",
+        "no_dests_ru": "❌ <b>Нет настроенных назначений.</b>\n\nЗапустите <code>.github</code> чтобы добавить канал или группу.",
+        "setup_canceled_ru": "❌ Настройка отменена.",
+        "panel_title_ru": "{icon} <b>{title}</b>\n\n📦 <b>Репозитории:</b> {repos}\n📣 <b>События:</b> {events}\n⏱ <b>Интервал:</b> {interval} сек\n🔑 <b>Токен:</b> {token}",
+        "panel_repos_empty_ru": "нет",
+        "interval_invalid_ru": "❌ Введите число от 60 до 3600.",
+        "rate_limit_ru": "⚠️ <b>GitHub API rate limit.</b>\nСброс в <code>{reset}</code>.\nУстановите токен в панели назначения.",
+        "dests_list_ru": "📋 <b>Настроенные назначения:</b>\n\n{list}",
+        "notify_push_header_ru": "<b>📏 На </b><a href='https://github.com/{repo}'><b>{repo}:{branch}</b></a><b> новые коммиты!</b>\n{count} коммитов отправлено.\n<a href='{compare}'>Сравнить изменения</a>",
+        "notify_push_commit_ru": "\n<blockquote expandable><b>Коммит </b><a href='{url}'><b>#{sha}</b></a><b> от <i>{name} (</i></b><a href='https://github.com/{login}'><b><i>@{login}</i></b></a><b><i>)</i></b>\n<i>{msg}</i>\n\n{files_section}{diff_section}</blockquote>",
+        "notify_push_footer_ru": "",
+        "notify_push_created_ru": "<b>🔧 Созданные файлы:</b>\n<code>{files}</code>\n\n",
+        "notify_push_removed_ru": "<b>🗑 Удалённые файлы:</b>\n<code>{files}</code>\n\n",
+        "notify_push_modified_ru": "<b>🖊 Изменённые файлы:</b>\n<code>{files}</code>\n\n",
+        "notify_push_diff_ru": "<b>⌨️ Diff:</b>\n➕ {added}\n➖ {removed}\n",
+        "notify_push_empty_ru": "<b>📏 На </b><a href='https://github.com/{repo}'><b>{repo}:{branch}</b></a><b> пустой push</b>",
+        "notify_issue_ru": "<b>{e} На </b><a href='{url}'><b>{repo}</b></a><b> {action} issue!</b>\n\n<i>{title}</i>\n<a href='{url}'>#{num}</a> от <a href='https://github.com/{author}'><i>@{author}</i></a>",
+        "notify_pr_ru": "<b>{e} На </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> {action} pull request!</b>\n\n<i>{title}</i>\n<blockquote expandable>{body}</blockquote>\n\nПользователь: <a href='https://github.com/{author}'><i>@{author}</i></a>\n\n<a href='{url}'>#{num}</a>",
+        "notify_release_ru": "<b>{e} На </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> {action} релиз!</b>\n\n🏷 <code>{tag}</code> · <b>{name}</b>\n👤 <a href='https://github.com/{author}'><i>@{author}</i></a>\n<a href='{url}'>Открыть релиз</a>",
+        "notify_star_added_ru": "<b>⭐️ На </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> добавлена звезда!</b>\n\nВсего звёзд: <i>{stars}</i>\nПользователь: <a href='https://github.com/{user}'><i>@{user}</i></a>",
+        "notify_star_removed_ru": "<b>💔 На </b><a href='https://github.com/{repo}'><b>{repo}</b></a><b> убрана звезда!</b>\n\nВсего звёзд: <i>{stars}</i>\nПользователь: <a href='https://github.com/{user}'><i>@{user}</i></a>",
+        "_cfg_interval_ru": "Интервал опроса по умолчанию (60–3600 сек). Переопределяется в настройках назначения.",
+        "star_label_ru": "⭐ Звёзды",
+        "_cfg_token_ru": "Глобальный GitHub-токен для назначений без персонального токена.\nБез токена: 60 запросов/час. С токеном: 5000.\nСоздать: github.com/settings/tokens",
+        "push_label_ru": "🔨 Push",
+        "issues_label_ru": "🐛 Issues",
+        "pull_request_label_ru": "🔀 Pull Requests",
+        "release_label_ru": "🚀 Релизы",
+        "token_set_ru": "✅ установлен",
+        "token_not_set_ru": "❌ не установлен",
+        "btn_channel_ru": "➕ Канал",
+        "btn_group_ru": "➕ Группа",
+        "btn_close_ru": "✖️ Закрыть",
+        "btn_back_ru": "◀️ Назад",
+        "btn_skip_ru": "⏩ Пропустить",
+        "btn_add_repo_ru": "➕ Добавить репозиторий",
+        "btn_set_interval_ru": "⏱ Установить интервал",
+        "btn_set_token_ru": "🔑 Установить токен",
+        "btn_clear_token_ru": "🔑 Очистить токен",
+        "btn_remove_ru": "🗑 Удалить",
+        "btn_enter_dest_ru": "✏️ Ввести {label} username / ID",
+        "btn_add_repo_confirm_ru": "✏️ Добавить репозиторий",
+        "input_dest_ru": "@username или ID {label}а",
+        "input_repo_ru": "owner/repo  (например: torvalds/linux)",
+        "input_interval_ru": "Интервал в секундах  (60 – 3600)",
+        "input_token_ru": "GitHub Personal Access Token",
+        "repo_invalid_format_ru": "❌ Неверный формат. Используйте <code>owner/repo</code>.",
+        "checking_repo_ru": "🔍 Проверяю репозиторий...",
+        "issue_opened_ru": "открыт",
+        "issue_closed_ru": "закрыт",
+        "pr_merged_ru": "смёрджен",
+        "pr_closed_ru": "закрыт",
+        "pr_opened_ru": "открыт",
+        "release_prerelease_ru": "пре-релиз",
+        "release_published_ru": "опубликован",
+        "dest_label_channel_ru": "Канал",
+        "dest_label_group_ru": "Группа"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "fiksofficial/python-modules/checkhost.py": {
       "name": "CheckHostMod",
       "description": "Check host via check-host.net",
@@ -62999,7 +63175,7 @@
         "no_reply_ru": "<emoji document_id=6030512294109122096>💬</emoji> Вы не ответили на сообщение пользователя"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/animals.py": {
@@ -64784,7 +64960,7 @@
         "usage_ru": "Напиши <code>.help Жаконизатор</code>"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/Music.py": {
@@ -64946,7 +65122,7 @@
         "error_ru": "<b>Не удалось получить цитату. Попробуйте позже!</b>"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/TaskManager.py": {
@@ -65401,6 +65577,53 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "archquise/H.Modules/SMArchiver.py": {
+      "name": "SMArchiver",
+      "description": "unloads all messages from Favorites",
+      "cls_doc": {},
+      "meta": {
+        "pic": null,
+        "banner": null,
+        "developer": "@hikka_mods"
+      },
+      "commands": [
+        {
+          "smdump": "(RU) выгружает все сообщения из Избранного / Saved Messages и собирает их в одном архиве. | (EN) downloads all messages from Favorites / Saved Messages and collects them in one archive."
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "smdump",
+          "original_name": "smdump",
+          "description": {
+            "default": "",
+            "ru": "выгружает все сообщения из Избранного / Saved Messages и собирает их в одном архиве.",
+            "en": "downloads all messages from Favorites / Saved Messages and collects them in one archive."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "SMArchiver",
+        "archive_created": "🎉 Archive with messages has been successfully created: {filename}",
+        "no_messages": "⚠️ There are no messages in Saved Messages.",
+        "error": "❌ An error occurred: {error}",
+        "processing": "🛠️ Processing messages... Please wait.\n\nP.S: Be careful, if you have a lot of messages, you may get flooding, and if you have a lot of heavy files, the download will be slower than usual.",
+        "archive_created_ru": "🎉 Архив с сообщениями успешно создан: {filename}",
+        "no_messages_ru": "⚠️ В Сохраненных сообщениях нет сообщений.",
+        "error_ru": "❌ Произошла ошибка: {error}",
+        "processing_ru": "🛠️ Обработка сообщений... Пожалуйста, подождите.\n\nP.S: Будьте осторожны, если у вас много сообщений, вы можете получить флуд, а если у вас много тяжелых файлов, загрузка будет медленнее обычного."
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "archquise/H.Modules/CryptoCurrency.py": {
       "name": "CryptoCurrencyMod",
       "description": "Module for displaying current cryptocurrency exchange rates.",
@@ -65441,7 +65664,7 @@
         "coin_not_found_ru": "Криптовалюта '{query}' не найдена."
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/InlineCoin.py": {
@@ -65599,53 +65822,6 @@
         "invalid_args_ru": "<emoji document_id=5854929766146118183>❌</emoji> Нет аргументов или они неверны",
         "downloading_ru": "<emoji document_id=5215484787325676090>🕐</emoji> Скачиваю...",
         "done_ru": "<emoji document_id=5854762571659218443>✅</emoji> Готово!"
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
-      "class_cmd_names": {}
-    },
-    "archquise/H.Modules/SMAcrhiver.py": {
-      "name": "SMArchiver",
-      "description": "unloads all messages from Favorites",
-      "cls_doc": {},
-      "meta": {
-        "pic": null,
-        "banner": null,
-        "developer": "@hikka_mods"
-      },
-      "commands": [
-        {
-          "smdump": "(RU) выгружает все сообщения из Избранного / Saved Messages и собирает их в одном архиве. | (EN) downloads all messages from Favorites / Saved Messages and collects them in one archive."
-        }
-      ],
-      "new_commands": [
-        {
-          "name": "smdump",
-          "original_name": "smdump",
-          "description": {
-            "default": "",
-            "ru": "выгружает все сообщения из Избранного / Saved Messages и собирает их в одном архиве.",
-            "en": "downloads all messages from Favorites / Saved Messages and collects them in one archive."
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        }
-      ],
-      "inline_handlers": [],
-      "strings": {
-        "name": "SMArchiver",
-        "archive_created": "🎉 Archive with messages has been successfully created: {filename}",
-        "no_messages": "⚠️ There are no messages in Saved Messages.",
-        "error": "❌ An error occurred: {error}",
-        "processing": "🛠️ Processing messages... Please wait.\n\nP.S: Be careful, if you have a lot of messages, you may get flooding, and if you have a lot of heavy files, the download will be slower than usual.",
-        "archive_created_ru": "🎉 Архив с сообщениями успешно создан: {filename}",
-        "no_messages_ru": "⚠️ В Сохраненных сообщениях нет сообщений.",
-        "error_ru": "❌ Произошла ошибка: {error}",
-        "processing_ru": "🛠️ Обработка сообщений... Пожалуйста, подождите.\n\nP.S: Будьте осторожны, если у вас много сообщений, вы можете получить флуд, а если у вас много тяжелых файлов, загрузка будет медленнее обычного."
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -65866,20 +66042,76 @@
       "class_cmd_names": {}
     },
     "archquise/H.Modules/AniLiberty.py": {
-      "name": "AniLiberty",
-      "description": "",
+      "name": "AniLibertyMod",
+      "description": "Ищет и возвращает случайное аниме из базы Aniliberty",
       "cls_doc": {},
       "meta": {
         "pic": null,
         "banner": null,
         "developer": "@hikka_mods"
       },
-      "commands": [],
-      "new_commands": [],
-      "inline_handlers": [],
-      "strings": {},
+      "commands": [
+        {
+          "arandom": "(RU) Возвращает случайный релиз из базы | (EN) Returns a random release from the database"
+        },
+        {
+          "asearchinlinehandler": ""
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "arandom",
+          "original_name": "arandom",
+          "description": {
+            "default": "",
+            "ru": "Возвращает случайный релиз из базы",
+            "en": "Returns a random release from the database"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "asearchinlinehandler",
+          "original_name": "asearch_inline_handler",
+          "description": {
+            "default": ""
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": true,
+          "is_inline_handler": true,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [
+        {
+          "name": "asearchinlinehandler",
+          "description": {
+            "default": ""
+          },
+          "decorators": []
+        }
+      ],
+      "strings": {
+        "name": "AniLiberty",
+        "announce": "<b>The announcement</b>:",
+        "ongoing": "<b>Ongoing</b>:",
+        "type": "<b>Type</b>:",
+        "genres": "<b>Genres</b>:",
+        "favorite": "<b>Favourites &lt;3</b>:",
+        "announce_ru": "<b>Анонс</b>:",
+        "ongoing_ru": "<b>Онгоинг</b>:",
+        "type_ru": "<b>Тип</b>:",
+        "genres_ru": "<b>Жанры</b>:",
+        "favorite_ru": "<b>Избранное &lt;3</b>:"
+      },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/GigaChat.py": {
@@ -66846,7 +67078,7 @@
         "error_ru": "Произошла ошибка!"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/CodeShare.py": {
@@ -66893,7 +67125,7 @@
         "link_ready_ru": "<emoji document_id=5854762571659218443>✅</emoji> <b>Код загружен! Ссылка:</b> <code>{}</code>"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/KBSwapper.py": {
@@ -67202,13 +67434,13 @@
       },
       "commands": [
         {
-          "addfolder": "Adds folder to the tracking list by it's name. Usage: .addfolder FolderName | (R) Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки | (RU) Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки"
+          "addfolder": "Adds folder to the tracking list by it's name. Usage: .addfolder FolderName | (RU) Добавить папку в список отслеживания | (EN) Add folder to the tracking list | (R) Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки | (RU) Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки"
         },
         {
-          "delfolder": "Deletes folder from the tracking list | (R) Удаляет папку из списка для отслежнивания | (RU) Удаляет папку из списка для отслежнивания"
+          "delfolder": "Deletes folder from the tracking list | (RU) Удалить папку из списка отслеживания | (EN) Delete folder from the tracking list | (R) Удаляет папку из списка для отслежнивания | (RU) Удаляет папку из списка для отслежнивания"
         },
         {
-          "listfolders": "Prints list of tracked folders | (R) Выводит список отслеживаемых папок | (RU) Выводит список отслеживаемых папок"
+          "listfolders": "Prints list of tracked folders | (RU) Список отслеживаемых папок | (EN) List tracked folders | (R) Выводит список отслеживаемых папок | (RU) Выводит список отслеживаемых папок"
         }
       ],
       "new_commands": [
@@ -67217,8 +67449,9 @@
           "original_name": "addfolder",
           "description": {
             "default": "Adds folder to the tracking list by it's name. Usage: .addfolder FolderName",
-            "r": "Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки",
-            "ru": "Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки"
+            "ru": "Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки",
+            "en": "Add folder to the tracking list",
+            "r": "Добавляет папки в список отслеживания по их названию. Использование: .addfolder НазваниеПапки"
           },
           "cmd_names": {},
           "aliases": [],
@@ -67232,8 +67465,9 @@
           "original_name": "delfolder",
           "description": {
             "default": "Deletes folder from the tracking list",
-            "r": "Удаляет папку из списка для отслежнивания",
-            "ru": "Удаляет папку из списка для отслежнивания"
+            "ru": "Удаляет папку из списка для отслежнивания",
+            "en": "Delete folder from the tracking list",
+            "r": "Удаляет папку из списка для отслежнивания"
           },
           "cmd_names": {},
           "aliases": [],
@@ -67247,8 +67481,9 @@
           "original_name": "listfolders",
           "description": {
             "default": "Prints list of tracked folders",
-            "r": "Выводит список отслеживаемых папок",
-            "ru": "Выводит список отслеживаемых папок"
+            "ru": "Выводит список отслеживаемых папок",
+            "en": "List tracked folders",
+            "r": "Выводит список отслеживаемых папок"
           },
           "cmd_names": {},
           "aliases": [],
@@ -67283,7 +67518,7 @@
         "addfolder_ru": "<emoji document_id=5278227821364275264>📁</emoji> <b>Папка успешно добавлена в лист отслеживания!</b>"
       },
       "has_on_load": false,
-      "has_on_unload": true,
+      "has_on_unload": false,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/shortener.py": {
@@ -67356,7 +67591,7 @@
         "api_error_ru": "<emoji document_id=5854929766146118183>❌</emoji> Ошибка API: {error}"
       },
       "has_on_load": false,
-      "has_on_unload": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "archquise/H.Modules/timezone.py": {
@@ -82079,7 +82314,7 @@
     }
   },
   "meta": {
-    "total_modules": 1020,
-    "generated_at": "2026-03-03T01:28:23.435183"
+    "total_modules": 1021,
+    "generated_at": "2026-03-10T01:21:50.318940"
   }
 }
