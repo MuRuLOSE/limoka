@@ -29,6 +29,7 @@ import aiohttp
 import aiofiles
 import os
 import logging
+from typing import Optional
 
 from .. import loader, utils
 from telethon.types import MessageMediaDocument
@@ -53,19 +54,33 @@ class CodeShareMod(loader.Module):
         "link_ready": "<emoji document_id=5854762571659218443>✅</emoji> <b>Код загружен! Ссылка:</b> <code>{}</code>",
     }
 
-    async def upload_to_kmi(self, content: str) -> str:
+    def __init__(self):
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
+    async def upload_to_kmi(self, content: str) -> Optional[str]:
         url = "https://kmi.aeza.net"
         data = aiohttp.FormData()
         data.add_field("kmi", content)
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, data=data) as response:
-                if response.status == 200:
-                    link = await response.text()
-                    return link
-                else:
-                    logger.error(f"Error occurred! Status code: {response.status}")
-                    return
+        session = await self._get_session()
+        async with session.post(url, data=data) as response:
+            if response.status == 200:
+                link = await response.text()
+                return link
+            else:
+                logger.error(f"Error occurred! Status code: {response.status}")
+                return None
 
     @loader.command(
         ru_doc="Загрузка кода на сайт",

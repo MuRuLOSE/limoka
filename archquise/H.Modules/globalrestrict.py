@@ -676,7 +676,7 @@ class GlobalRestrict(loader.Module):
                 utils.get_entity_url(user),
                 utils.escape_html(get_full_name(user)),
                 (
-                    self.strings("unmutes_in_n_chats").format(counter)
+                    self.strings("unmute_in_n_chats").format(counter)
                     if silent
                     else chats
                 ),

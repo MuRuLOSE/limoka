@@ -114,13 +114,13 @@ class NumbersAPI(loader.Module):
 
     async def _get_number_fact(self, number: int, fact_type: str) -> str:
         """Get fact about number"""
-        url = f"http://numbersapi.com/{number}/{fact_type}"
+        url = f"https://numbersapi.com/{number}/{fact_type}"
         return await self._fetch_fact(url)
 
     async def _get_date_fact(self, month: int, day: int) -> str:
         """Get fact about date"""
         date_str = f"{month:02d}/{day:02d}"
-        url = f"http://numbersapi.com/{date_str}/date"
+        url = f"https://numbersapi.com/{date_str}/date"
         return await self._fetch_fact(url)
 
     @loader.command(

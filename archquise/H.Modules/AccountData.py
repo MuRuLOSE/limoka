@@ -26,14 +26,17 @@
 # scope: Api AccountData 0.0.1
 # ---------------------------------------------------------------------------------
 
+import asyncio
 import logging
 from datetime import datetime
+from typing import Optional
 
 import aiohttp
 
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class AccountData(loader.Module):
@@ -45,9 +48,21 @@ class AccountData(loader.Module):
                 "api_token",
                 "7518491974:1ea2284eec9dc40a9838cfbcb48a2b36",
                 "API token for datereg.pro",
-                validator=loader.validators.String(),
+                validator=loader.validators.Hidden(),
             )
         )
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
 
     strings = {
         "name": "AccountData",
@@ -64,15 +79,16 @@ class AccountData(loader.Module):
         "no_reply": "<emoji document_id=6030512294109122096>💬</emoji> Вы не ответили на сообщение пользователя",
     }
 
-    async def get_creation_date(self, user_id: int) -> str:
-        api_token = self.config.get("api_token", "")
+    async def get_creation_date(self, user_id: int) -> dict:
+        api_token = self.config["api_token"]
         if not api_token:
             return {"error": "API token not configured"}
-            
+
         url = "https://api.datereg.pro/api/v1/users/getCreationDateFast"
         params = {"token": api_token, "user_id": user_id}
 
-        async with aiohttp.ClientSession() as session:
+        session = await self._get_session()
+        try:
             async with session.get(url, params=params) as response:
                 if response.status == 200:
                     json_response = await response.json()
@@ -80,11 +96,15 @@ class AccountData(loader.Module):
                         return {
                             "creation_date": json_response["creation_date"],
                             "accuracy_percent": json_response["accuracy_percent"],
-                        }  # type: ignore
+                        }
                     else:
-                        return {"error": json_response["error"]["message"]}  # type: ignore
+                        return {"error": json_response["error"]["message"]}
                 else:
-                    return {"error": f"HTTP {response.status}"}  # type: ignore
+                    return {"error": f"HTTP {response.status}"}
+        except asyncio.TimeoutError:
+            return {"error": "Request timed out"}
+        except Exception as e:
+            return {"error": str(e)}
 
     @loader.command(
         ru_doc="Узнать примерную дату регистрации Telergam-аккаунта",
@@ -93,17 +113,17 @@ class AccountData(loader.Module):
     async def accdata(self, message):
         if reply := await message.get_reply_message():
             result = await self.get_creation_date(user_id=reply.sender.id)
-            
+
             if "error" in result or not result.get("creation_date"):
                 error_msg = result.get("error", "Unknown error occurred")
                 await utils.answer(message, f"Ошибка: {error_msg}")
                 return
-                
+
             try:
-                month, year = map(int, result['creation_date'].split('.'))
+                month, year = map(int, result["creation_date"].split("."))
                 date_object = datetime(year, month, 1)
-                formatted = date_object.strftime('%B %Y')
-                
+                formatted = date_object.strftime("%B %Y")
+
                 await utils.answer(
                     message,
                     f"{self.strings('date_text').format(data=formatted, accuracy=result['accuracy_percent'])}\n\n{self.strings('date_text_ps')}",

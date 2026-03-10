@@ -28,12 +28,14 @@
 # ---------------------------------------------------------------------------------
 
 import logging
+from typing import Optional
 
 import aiohttp
 
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class AnimeQuotesMod(loader.Module):
@@ -58,6 +60,20 @@ class AnimeQuotesMod(loader.Module):
         "error": "<b>Не удалось получить цитату. Попробуйте позже!</b>",
     }
 
+    def __init__(self):
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
     @loader.command(
         ru_doc="Получить случайную цитату из аниме",
         en_doc="Get a random quote from the anime",
@@ -66,19 +82,19 @@ class AnimeQuotesMod(loader.Module):
         url = "https://api.animechan.io/v1/quotes/random"
 
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
-                    response.raise_for_status()
-                    data = await response.json()
+            session = await self._get_session()
+            async with session.get(url) as response:
+                response.raise_for_status()
+                data = await response.json()
 
-                    quote_content = data["data"]["content"]
-                    character_name = data["data"]["character"]["name"]
-                    anime_name = data["data"]["anime"]["name"]
+                quote_content = data["data"]["content"]
+                character_name = data["data"]["character"]["name"]
+                anime_name = data["data"]["anime"]["name"]
 
-                    quote = self.strings["quote_template"].format(
-                        quote=quote_content, character=character_name, anime=anime_name
-                    )
-                    await utils.answer(message, quote)
+                quote = self.strings("quote_template").format(
+                    quote=quote_content, character=character_name, anime=anime_name
+                )
+                await utils.answer(message, quote)
 
         except aiohttp.ClientError:
-            await utils.answer(message, self.strings["error"])
+            await utils.answer(message, self.strings("error"))

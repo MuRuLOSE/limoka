@@ -465,6 +465,7 @@ class AutoFarmbotMod(loader.Module):
         :return:
         """
         self.client = client
+        self.tg_id = (await client.get_me()).id
         self.db = 0
         self.redis = await aioredis.from_url(
             self.config["config_redis_cloud_link"],

@@ -43,26 +43,35 @@ from ..inline.types import InlineQuery
 
 logger = logging.getLogger(__name__)
 
-BASE_API_URL = "https://aniliberty.top/api/v1" 
+BASE_API_URL = "https://aniliberty.top/api/v1"
+
 
 # Датаклассы для парсинга и хранения json
 @dataclass
 class Genre:
     name: str
-@dataclass 
+
+
+@dataclass
 class Name:
     main: str
+
+
 @dataclass
 class Type:
     description: str
+
+
 @dataclass
 class Poster:
     preview: str
     thumbnail: str
+
+
 @dataclass
 class ReleaseInfo:
     id: int
-    genres: Optional[list[Genre]] 
+    genres: Optional[list[Genre]]
     name: Name
     is_ongoing: bool
     type: Type
@@ -70,6 +79,7 @@ class ReleaseInfo:
     added_in_users_favorites: int
     alias: str
     poster: Poster
+
 
 @loader.tds
 class AniLibertyMod(loader.Module):
@@ -92,36 +102,53 @@ class AniLibertyMod(loader.Module):
         "favorite": "<b>Избранное &lt;3</b>:",  # &lt; == <
     }
 
+    def __init__(self):
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
     async def search_title(self, query):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f'{BASE_API_URL}/app/search/releases?query={query}&include=id%2Cname.main%2Cis_ongoing%2Ctype.description%2Cdescription%2Cadded_in_users_favorites%2Calias%2Cposter.preview%2Cposter.thumbnail') as resp:
-                json_answer = await resp.json()
-                results = []
-                for i in json_answer:
-                    obj = from_dict(data_class=ReleaseInfo, data=i) 
-                    results.append(obj) 
-                return results   
-   
+        session = await self._get_session()
+        async with session.get(
+            f"{BASE_API_URL}/app/search/releases?query={query}&include=id%2Cname.main%2Cis_ongoing%2Ctype.description%2Cdescription%2Cadded_in_users_favorites%2Calias%2Cposter.preview%2Cposter.thumbnail"
+        ) as resp:
+            json_answer = await resp.json()
+            results = []
+            for i in json_answer:
+                obj = from_dict(data_class=ReleaseInfo, data=i)
+                results.append(obj)
+            return results
+
     async def get_title(self, release_id):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f'{BASE_API_URL}/anime/releases/{release_id}?include=id%2Cgenres.name%2Cname.main%2Cis_ongoing%2Ctype.description%2Cdescription%2Cadded_in_users_favorites%2Calias%2Cposter.preview%2Cposter.thumbnail') as resp:
-                    try:
-                        json_answer = await resp.json()
-                        data = from_dict(data_class=ReleaseInfo, data=json_answer)
-                        return data
-                    except JSONDecodeError:
-                        logger.error("Ошибка парсинга JSON!")
+        session = await self._get_session()
+        async with session.get(
+            f"{BASE_API_URL}/anime/releases/{release_id}?include=id%2Cgenres.name%2Cname.main%2Cis_ongoing%2Ctype.description%2Cdescription%2Cadded_in_users_favorites%2Calias%2Cposter.preview%2Cposter.thumbnail"
+        ) as resp:
+            try:
+                json_answer = await resp.json()
+                data = from_dict(data_class=ReleaseInfo, data=json_answer)
+                return data
+            except JSONDecodeError:
+                logger.error("Ошибка парсинга JSON!")
 
     async def get_random_title(self):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f'{BASE_API_URL}/anime/releases/random?limit=1&include=id') as resp:
-                randid = await resp.json()
-                """ 
-                Приходится запрашивать по второму кругу, т.к. API в рандомных релизах не отдает жанры, даже если попросить через include
-                """
-                data = await self.get_title(randid[0]['id'])
-                return data
-            
+        session = await self._get_session()
+        async with session.get(
+            f"{BASE_API_URL}/anime/releases/random?limit=1&include=id"
+        ) as resp:
+            randid = await resp.json()
+            data = await self.get_title(randid[0]["id"])
+            return data
+
     @loader.command(
         ru_doc="Возвращает случайный релиз из базы",
         en_doc="Returns a random release from the database",
@@ -130,17 +157,18 @@ class AniLibertyMod(loader.Module):
         anime_release = await self.get_random_title()
         genres_str = ""
         for genre in anime_release.genres[:-1]:
-            genres_str += f'{genre.name}, '
+            genres_str += f"{genre.name}, "
         genres_str += anime_release.genres[-1].name
 
-        
         text = f"{anime_release.name.main} \n"
         text += f"{self.strings['ongoing']} {'Да' if anime_release.is_ongoing else 'Нет'}\n\n"
         text += f"{self.strings['type']} {anime_release.type.description}\n"
         text += f"{self.strings['genres']} {genres_str}\n\n"
-        
+
         text += f"<code>{anime_release.description}</code>\n\n"
-        text += f"{self.strings['favorite']} {str(anime_release.added_in_users_favorites)}"
+        text += (
+            f"{self.strings['favorite']} {str(anime_release.added_in_users_favorites)}"
+        )
 
         kb = [
             [
@@ -179,14 +207,14 @@ class AniLibertyMod(loader.Module):
             """ 
             Приходится запрашивать по второму кругу, т.к. API в поиске не отдает жанры, даже если попросить через include
             """
-            release_genres = await self.get_title(anime_release.id) 
+            release_genres = await self.get_title(anime_release.id)
             genres_str = ""
             for genre in release_genres.genres[:-1]:
-                genres_str += f'{genre.name}, '
+                genres_str += f"{genre.name}, "
             genres_str += release_genres.genres[-1].name
             release_text = (
                 f"{anime_release.name.main}\n"
-                f"{self.strings['ongoing']} {"Да" if anime_release.is_ongoing else "Нет"}\n\n"
+                f"{self.strings['ongoing']} {'Да' if anime_release.is_ongoing else 'Нет'}\n\n"
                 f"{self.strings['type']} {anime_release.type.description}\n"
                 f"{self.strings['genres']} {genres_str}\n\n"
                 f"<code>{anime_release.description}</code>\n\n"
@@ -214,16 +242,18 @@ class AniLibertyMod(loader.Module):
         anime_release = await self.get_random_title()
         genres_str = ""
         for genre in anime_release.genres[:-1]:
-            genres_str += f'{genre.name}, '
+            genres_str += f"{genre.name}, "
         genres_str += anime_release.genres[-1].name
 
         text = f"{anime_release.name.main} \n"
-        text += f"{self.strings['ongoing']} {"Да" if anime_release.is_ongoing else "Нет"}\n\n"
+        text += f"{self.strings['ongoing']} {'Да' if anime_release.is_ongoing else 'Нет'}\n\n"
         text += f"{self.strings['type']} {anime_release.type.description}\n"
         text += f"{self.strings['genres']} {genres_str}\n\n"
 
         text += f"<code>{anime_release.description}</code>\n\n"
-        text += f"{self.strings['favorite']} {str(anime_release.added_in_users_favorites)}"
+        text += (
+            f"{self.strings['favorite']} {str(anime_release.added_in_users_favorites)}"
+        )
 
         kb = [
             [

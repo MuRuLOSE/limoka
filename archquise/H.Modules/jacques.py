@@ -30,6 +30,7 @@
 import io
 import logging
 from textwrap import wrap
+from typing import Optional
 
 import aiohttp
 from PIL import Image, ImageDraw, ImageFont
@@ -37,6 +38,7 @@ from PIL import Image, ImageDraw, ImageFont
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class JacquesMod(loader.Module):
@@ -50,6 +52,7 @@ class JacquesMod(loader.Module):
         self.name = self.strings["name"]
         self._me = None
         self._ratelimit = []
+        self._session: Optional[aiohttp.ClientSession] = None
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "font",
@@ -63,6 +66,17 @@ class JacquesMod(loader.Module):
                 validator=loader.validators.Choice(["left", "right", "center"]),
             ),
         )
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=30)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
 
     @loader.command(
         ru_doc="<реплай на сообщение/свой текст>",
@@ -81,14 +95,14 @@ class JacquesMod(loader.Module):
         else:
             txt = args
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(self.config["font"]) as font_response:
-                font_data = await font_response.read()
+        session = await self._get_session()
+        async with session.get(self.config["font"]) as font_response:
+            font_data = await font_response.read()
 
-            async with session.get(
-                "https://raw.githubusercontent.com/Codwizer/ReModules/main/assets/IMG_20231128_152538.jpg"
-            ) as pic_response:
-                pic_data = await pic_response.read()
+        async with session.get(
+            "https://raw.githubusercontent.com/Codwizer/ReModules/main/assets/IMG_20231128_152538.jpg"
+        ) as pic_response:
+            pic_data = await pic_response.read()
 
         img = Image.open(io.BytesIO(pic_data)).convert("RGB")
 
@@ -96,7 +110,8 @@ class JacquesMod(loader.Module):
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(io.BytesIO(font_data), 32, encoding="UTF-8")
 
-        text_size = draw.multiline_textsize(wrapped_text, font=font)
+        text_bbox = draw.multiline_textbbox((0, 0), wrapped_text, font=font)
+        text_size = (text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1])
         imtext = Image.new("RGBA", (text_size[0] + 10, text_size[1] + 10), (0, 0, 0, 0))
         draw_imtext = ImageDraw.Draw(imtext)
         draw_imtext.multiline_text(

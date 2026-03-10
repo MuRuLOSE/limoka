@@ -28,6 +28,8 @@
 
 import logging
 import re
+from typing import Optional
+
 import aiohttp
 
 from .. import loader, utils
@@ -69,6 +71,18 @@ class Shortener(loader.Module):
                 validator=loader.validators.Hidden(),
             )
         )
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
 
     def _validate_url(self, url: str) -> bool:
         """Validate URL format"""
@@ -87,27 +101,32 @@ class Shortener(loader.Module):
 
         return url_pattern.match(url) is not None
 
-    async def shorten_url(self, url: str, token: str) -> str:
-        async with aiohttp.ClientSession() as session:
-            async with session.post("https://api-ssl.bitly.com/v4/shorten", json={'long_url': url}, headers={"Authorization": f"Bearer {token}"}) as resp:
-                if resp.status == 201:
-                    json_response = await resp.json()
-                    return json_response['link']
-                else:
-                    logger.error(f"Error occurred! Status code: {resp.status}")
-                    return
-    
-    async def get_bitlink_stats(self, bitlink: str, token: str) -> str:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary", headers={"Authorization": f"Bearer {token}"}) as resp:
-                if resp.status == 200:
-                    json_response = await resp.json()
-                    return json_response['total_clicks']
-                else:
-                    logger.error(f"Error occurred! Status code: {resp.status}")
-                    return
+    async def shorten_url(self, url: str, token: str) -> Optional[str]:
+        session = await self._get_session()
+        async with session.post(
+            "https://api-ssl.bitly.com/v4/shorten",
+            json={"long_url": url},
+            headers={"Authorization": f"Bearer {token}"},
+        ) as resp:
+            if resp.status == 201:
+                json_response = await resp.json()
+                return json_response["link"]
+            else:
+                logger.error(f"Error occurred! Status code: {resp.status}")
+                return None
 
-
+    async def get_bitlink_stats(self, bitlink: str, token: str) -> Optional[int]:
+        session = await self._get_session()
+        async with session.get(
+            f"https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary",
+            headers={"Authorization": f"Bearer {token}"},
+        ) as resp:
+            if resp.status == 200:
+                json_response = await resp.json()
+                return json_response["total_clicks"]
+            else:
+                logger.error(f"Error occurred! Status code: {resp.status}")
+                return None
 
     @loader.command(
         ru_doc="Сократить ссылку через bit.ly (ссылка с https://)",
@@ -129,7 +148,13 @@ class Shortener(loader.Module):
             return
 
         try:
-            short_url = await self.shorten_url(url=args, token=self.config['token'])
+            short_url = await self.shorten_url(url=args, token=self.config["token"])
+            if short_url is None:
+                await utils.answer(
+                    message,
+                    self.strings("api_error").format(error="Failed to shorten URL"),
+                )
+                return
             await utils.answer(message, self.strings("shortencmd").format(c=short_url))
         except Exception as e:
             logger.error(f"Error shortening URL: {e}")
@@ -155,7 +180,17 @@ class Shortener(loader.Module):
                 await utils.answer(message, self.strings("invalid_url"))
                 return
             else:
-                clicks = await self.get_bitlink_stats(bitlink=args, token=self.config['token'])
+                clicks = await self.get_bitlink_stats(
+                    bitlink=args, token=self.config["token"]
+                )
+                if clicks is None:
+                    await utils.answer(
+                        message,
+                        self.strings("api_error").format(
+                            error="Failed to get statistics"
+                        ),
+                    )
+                    return
                 await utils.answer(message, self.strings("statclcmd").format(c=clicks))
         except Exception as e:
             logger.error(f"Error getting statistics: {e}")

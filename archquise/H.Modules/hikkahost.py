@@ -36,6 +36,7 @@ from .. import loader, utils
 
 logger = logging.getLogger(__name__)
 
+
 class HostApi:
     """
     A class for interacting with a Host API.
@@ -58,8 +59,11 @@ class HostApi:
         Returns:
             dict: The API response as a dictionary.
         """
-        url = "http://api.hikka.host" + path
-        async with aiohttp.ClientSession(trust_env=True) as session:
+        url = "https://api.hikka.host" + path
+        async with aiohttp.ClientSession(
+            trust_env=True,
+            timeout=aiohttp.ClientTimeout(total=15),
+        ) as session:
             async with session.request(
                 method,
                 url,
@@ -67,7 +71,6 @@ class HostApi:
                     "Content-Type": "application/json",
                     "token": self.token,
                 },
-                ssl=False,
             ) as response:
                 return await response.json()
 
@@ -290,14 +293,20 @@ class HikkahostMod(loader.Module):
         token = self.config["token"]
         user_id = token.split(":")[0]
         api = HostApi(token)
-        data = await api.logs(user_id, token)
+        data = await api.logs(user_id)
 
         files_log = data["logs"]
 
-        with open("log.txt", "w") as log_file:
-            json.dump(files_log, log_file)
+        import tempfile
+        import os
 
-        await utils.answer_file(message, "log.txt", self.strings("logs"))
+        fd, tmp_path = tempfile.mkstemp(suffix=".txt", prefix="hikkahost_log_")
+        try:
+            with os.fdopen(fd, "w") as log_file:
+                json.dump(files_log, log_file)
+            await utils.answer_file(message, tmp_path, self.strings("logs"))
+        finally:
+            os.unlink(tmp_path)
 
     @loader.command(
         ru_doc="Рестарт HikkaHost",
@@ -314,4 +323,4 @@ class HikkahostMod(loader.Module):
         user_id = token.split(":")[0]
         api = HostApi(token)
 
-        await api.action(user_id, token)
+        await api.action(user_id)

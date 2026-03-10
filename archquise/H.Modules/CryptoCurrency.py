@@ -27,12 +27,14 @@
 # ---------------------------------------------------------------------------------
 
 import logging
+from typing import Optional
 
 import aiohttp
 
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class CryptoCurrencyMod(loader.Module):
@@ -49,12 +51,26 @@ class CryptoCurrencyMod(loader.Module):
         "coin_not_found": "Криптовалюта '{query}' не найдена.",
     }
 
+    def __init__(self):
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
     async def fetch_json(self, url):
         """Fetch JSON data from a given URL."""
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                response.raise_for_status()
-                return await response.json()
+        session = await self._get_session()
+        async with session.get(url) as response:
+            response.raise_for_status()
+            return await response.json()
 
     async def get_exchange_rates(self):
         """Get exchange rates for RUB and EUR based on USD."""

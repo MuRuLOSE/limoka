@@ -28,6 +28,7 @@
 # ---------------------------------------------------------------------------------
 
 import logging
+from typing import Optional
 
 import aiohttp
 import re
@@ -36,6 +37,7 @@ import random
 from .. import loader, utils
 
 logger = logging.getLogger(__name__)
+
 
 @loader.tds
 class face(loader.Module):
@@ -62,6 +64,20 @@ class face(loader.Module):
         "error": "Произошла ошибка!",
     }
 
+    def __init__(self):
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    async def _get_session(self) -> aiohttp.ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=15)
+            )
+        return self._session
+
+    async def on_unload(self):
+        if self._session and not self._session.closed:
+            await self._session.close()
+
     @loader.command(
         ru_doc="Рандом kaomoji",
         en_doc="Random kaomoji",
@@ -71,14 +87,14 @@ class face(loader.Module):
 
         url = "https://files.archquise.ru/kaomoji.txt"
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    data = await response.text()
-                    kaomoji_list = [s.strip() for s in re.split(r'[\t\r\n]+', data) if s.strip()]
-                    kaomoji = random.choice(kaomoji_list)
-                    await utils.answer(
-                        message, self.strings("random_face").format(kaomoji)
-                    )
-                else:
-                    await utils.answer(message, self.strings("error"))
+        session = await self._get_session()
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.text()
+                kaomoji_list = [
+                    s.strip() for s in re.split(r"[\t\r\n]+", data) if s.strip()
+                ]
+                kaomoji = random.choice(kaomoji_list)
+                await utils.answer(message, self.strings("random_face").format(kaomoji))
+            else:
+                await utils.answer(message, self.strings("error"))
