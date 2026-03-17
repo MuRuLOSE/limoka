@@ -52266,13 +52266,7 @@
         "_doc_text_ru": "Текст, который будет написан рядом с файлом",
         "_doc_username_ru": "Ваш username с last.fm",
         "nick_error_ru": "<emoji document_id=5465665476971471368>❌</emoji> <b>Укажите ваш никнейм с last.fm</b>",
-        "uploading_ru": "<emoji document_id=5841359499146825803>🕔</emoji> <i>Загрузка баннера...</i>",
-        "name_jp": "LastFm",
-        "no_track_jp": "<emoji document_id=5465665476971471368>❌</emoji> <b>現在再生中のトラックはありません</b>",
-        "_doc_text_jp": "ファイルの横に表示されるテキスト",
-        "_doc_username_jp": "Last.fmのユーザー名",
-        "nick_error_jp": "<emoji document_id=5465665476971471368>❌</emoji> <b>Last.fmのニックネームを入力してください</b>",
-        "uploading_jp": "<emoji document_id=5841359499146825803>🕔</emoji> <i>バナーをアップロード中...</i>"
+        "uploading_ru": "<emoji document_id=5841359499146825803>🕔</emoji> <i>Загрузка баннера...</i>"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -82295,6 +82289,6 @@
   },
   "meta": {
     "total_modules": 1021,
-    "generated_at": "2026-03-11T01:22:17.528364"
+    "generated_at": "2026-03-17T01:27:48.388790"
   }
 }
