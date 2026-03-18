@@ -88,6 +88,12 @@ class SenderGifts(loader.Module):
             "gifts": [  
                 {"id": 5866352046986232958, "emoji": "🧸", "name": "8 Марта мишка", "price": 50},
             ]
+        },
+        "saint_patricks_day ": {
+            "name": "💰 День святого патрика",
+            "gifts": [  
+                {"id": 5893356958802511476, "emoji": "🧸", "name": "Лепрекон мишка", "price": 50},
+            ]
         }
     }
 
