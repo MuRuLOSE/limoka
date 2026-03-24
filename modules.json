@@ -35290,6 +35290,152 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SenkoGuardian/SenModules/ChatCopy.py": {
+      "name": "ChatCopy",
+      "description": "Модуль для копирования чатов с поддержкой топиков (форумов), фото, видео, файлов (документов).",
+      "cls_doc": {},
+      "meta": {
+        "pic": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
+        "banner": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
+        "developer": "@SenkoGuardianModules (from VIP section)"
+      },
+      "commands": [
+        {
+          "chatcopy": "<src> <dest>[start_id:final_id] [-n] [-dmc] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь"
+        },
+        {
+          "ccwatch": "<src> <dest> [start_id:final_id][-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+        },
+        {
+          "cchelp": "— Подробная документация по модулю ChatCopy"
+        },
+        {
+          "ccpanel": "Панель управления"
+        },
+        {
+          "ccclear": "Очистить кэш маппинга топиков. Использование: .ccclear topics"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "chatcopy",
+          "original_name": "chatcopy",
+          "description": {
+            "default": "<src> <dest>[start_id:final_id] [-n] [-dmc] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccwatch",
+          "original_name": "ccwatch",
+          "description": {
+            "default": "<src> <dest> [start_id:final_id][-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "cchelp",
+          "original_name": "cchelp",
+          "description": {
+            "default": "— Подробная документация по модулю ChatCopy"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccpanel",
+          "original_name": "ccpanel",
+          "description": {
+            "default": "Панель управления"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccclear",
+          "original_name": "ccclear",
+          "description": {
+            "default": "Очистить кэш маппинга топиков. Использование: .ccclear topics"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "ChatCopy",
+        "cfg_batch": "Размер пачки сообщений (1-100)",
+        "cfg_delay": "Задержка ОТПРАВКИ между пачками (сек)",
+        "cfg_flood_buffer": "Дополнительное время к FloodWait (сек)",
+        "copy_start_prem": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "copy_start_no_prem": "🚀 <b>ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n⏬⏬⏬⏬\n<b>Цель:</b> {dest}\n\n⚙️ <b>Режим:</b> {mode}\n🔢 <b>Старт с ID:</b> {start_id}\n👤 <b>Без автора:</b> {no_auth}\n💬 <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "copy_done_detailed_prem": "<emoji document_id=5208422125924275090>✅</emoji> <b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n<emoji document_id=5123248930124989216>✅</emoji> <b>Перенесено сообщений: {count}</b> <emoji document_id=5123248930124989216>✅</emoji>\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
+        "copy_done_detailed_no_prem": "<b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n✔️ <b>Перенесено сообщений: {count}</b> ✔️\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
+        "flood_wait_notice": "⏸ <b>FloodWait</b>\n📊 <b>Задержка:</b> <code>{minutes}m {seconds}s</code>\n🕐 <b>Возобновление:</b> <code>{resume_time}</code>\n📨 <b>Переслано:</b> <code>{count}</code> сообщений\n⏳ <b>Осталось:</b> <code>{remaining}</code> сообщений\n⚡ <b>Скорость:</b> <code>{speed}</code> сообщений/мин",
+        "panel_summary": "<b>📊 ChatCopy Status</b>\n\n<b>🔄 Активная:</b> {active}\n<b>⏳ В очереди:</b> {queue_len}\n<b>👀 Слежка:</b> {watching_count}\n<b>⏱ Последний FW:</b> {last_flood}",
+        "panel_task_running": "{name}\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин | 📊 {progress}%\n├ ⏱ Прошло: {elapsed} | Осталось: {eta}\n└ 🕐 Начало: {start_time} | Окончание: {end_time}",
+        "panel_task_paused": "{name}\n├ ⏸ На паузе (FW: {flood_time})\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин\n└ 🕐 Продолжение: {resume_time}",
+        "btn_stop": "🛑 Стоп",
+        "btn_pause": "⏸ Пауза",
+        "btn_resume": "▶️ Продолжить",
+        "btn_back": "🔙 Назад",
+        "btn_tasks": "📋 Очередь задач",
+        "btn_watch": "👀 Слежка",
+        "btn_settings": "⚙️ Настройки",
+        "btn_stats": "📊 Статистика",
+        "forum_enabled": "✅ Топики включены в {chat}",
+        "forum_enable_failed": "❌ Не удалось включить топики в {chat}. Нужны права администратора.",
+        "forum_not_channel": "❌ {chat} не является каналом/группой",
+        "err_ent": "❌ Ошибка: Чат не найден или нет доступа.",
+        "args_err": "❌ Синтаксис: .chatcopy <src> <dest>[start_id:final_id] [-n] [-dmc][--media|--photo_video|--docs|--text]",
+        "watch_added": "<b>👀 Наблюдение активировано</b>\nID: <code>{src_id}</code>\n{src} -> {dest}\nРежим топиков: {topics}\nБез подписей: {no_capt}\nФильтр: {filter_type}",
+        "queue_wait": "⏳ <b>Задача в очереди...</b> ({pos})",
+        "topic_created": "📂 Создан топик: <b>{title}</b>",
+        "topic_error": "❌ Ошибка создания топика: {error}",
+        "task_stopped": "🛑 Задача остановлена\nПереслано: {count} сообщений{flood_info}",
+        "stats_title": "<b>📊 Статистика ChatCopy</b>\n\n",
+        "stats_total": "Всего задач: {total}\nЗавершено: {completed}\nОстановлено: {stopped}\nFloodWait'ов: {floods}",
+        "task_list_header": "<b>📋 Очередь задач ({total})</b>\n\n<i>Нажми на номер для подробностей</i>\n\n",
+        "task_item_compact_running": "▶️{num}. <b>{src}</b> → <b>{dest}</b> ({progress}%)",
+        "task_item_compact_queued": "⏳{num}. <b>{src}</b> → <b>{dest}</b> (через {wait})",
+        "task_item_compact_paused": "⚠️{num}. <b>{src}</b> → <b>{dest}</b> (FW)",
+        "task_item_compact_completed": "✅{num}. <b>{src}</b> → <b>{dest}</b>",
+        "task_item_compact_error": "❌{num}. <b>{src}</b> → <b>{dest}</b>",
+        "task_detail_running": "<b>▶️ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Выполняется</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ Скорость: <code>{speed}/мин</code>\n├ Прошло: <code>{elapsed}</code>\n├ Осталось: <code>{eta_left}</code>\n├ Начато: <code>{start_time}</code>\n├ Окончание: <code>{end_time}</code>\n└ Позиция: <code>{position}</code>",
+        "task_detail_queued": "<b>⏳ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>В очереди</code>\n├ Оценка сообщений: <code>~{total}</code>\n├ Начало через: <code>{eta_start}</code>\n├ Расчетное начало: <code>{start_time}</code>\n├ Расчетное окончание: <code>{end_time}</code>\n├ Позиция: <code>{position}</code>\n└ Расчетное время: <code>{estimated_duration}</code>",
+        "task_detail_paused": "<b>⚠️ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Пауза (FloodWait)</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ FloodWait'ов: <code>{flood_count}</code>\n├ Время ожидания: <code>{flood_time}</code>\n├ Продолжение: <code>{resume_time}</code>\n├ Скорость до паузы: <code>{speed}/мин</code>\n└ Осталось сообщений: <code>{remaining}</code>",
+        "task_detail_completed": "<b>✅ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Завершена</code>\n├ Переслано: <code>{count}</code> сообщений\n├ Длительность: <code>{duration}</code>\n├ Средняя скорость: <code>{avg_speed}/мин</code>\n├ Завершено: <code>{end_time}</code>\n└ FloodWait'ов: <code>{floods}</code>",
+        "task_detail_error": "<b>❌ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Ошибка</code>\n└ Попробуйте перезапустить",
+        "no_tasks": "<i>Нет активных задач</i>",
+        "preparing_prem": "<emoji document_id=5208722554591659638>💫</emoji> <b>Подготовка к копированию. Подсчитываем (да, вручную!) кол-во медиа, это может занять время...</b>",
+        "preparing_no_prem": "⌛️ <b>Подготовка к копированию. Подсчитываем кол-во медиа, это может занять время...</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SenkoGuardian/SenModules/GiftFinder.py": {
       "name": "GiftFinderMod",
       "description": "Парсер пользователей с NFT-подарками в чате.",
@@ -82430,7 +82576,7 @@
     }
   },
   "meta": {
-    "total_modules": 1022,
-    "generated_at": "2026-03-23T01:31:16.986395"
+    "total_modules": 1023,
+    "generated_at": "2026-03-24T01:25:29.514836"
   }
 }
