@@ -35290,6 +35290,152 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SenkoGuardian/SenModules/ChatCopy.py": {
+      "name": "ChatCopy",
+      "description": "Модуль для копирования чатов с поддержкой топиков (форумов), фото, видео, файлов (документов).",
+      "cls_doc": {},
+      "meta": {
+        "pic": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
+        "banner": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
+        "developer": "@SenkoGuardianModules (from VIP section)"
+      },
+      "commands": [
+        {
+          "chatcopy": "<src> <dest>[start_id:final_id] [-n] [-dmc] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь"
+        },
+        {
+          "ccwatch": "<src> <dest> [start_id:final_id][-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+        },
+        {
+          "cchelp": "— Подробная документация по модулю ChatCopy"
+        },
+        {
+          "ccpanel": "Панель управления"
+        },
+        {
+          "ccclear": "Очистить кэш маппинга топиков. Использование: .ccclear topics"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "chatcopy",
+          "original_name": "chatcopy",
+          "description": {
+            "default": "<src> <dest>[start_id:final_id] [-n] [-dmc] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccwatch",
+          "original_name": "ccwatch",
+          "description": {
+            "default": "<src> <dest> [start_id:final_id][-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "cchelp",
+          "original_name": "cchelp",
+          "description": {
+            "default": "— Подробная документация по модулю ChatCopy"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccpanel",
+          "original_name": "ccpanel",
+          "description": {
+            "default": "Панель управления"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ccclear",
+          "original_name": "ccclear",
+          "description": {
+            "default": "Очистить кэш маппинга топиков. Использование: .ccclear topics"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "ChatCopy",
+        "cfg_batch": "Размер пачки сообщений (1-100)",
+        "cfg_delay": "Задержка ОТПРАВКИ между пачками (сек)",
+        "cfg_flood_buffer": "Дополнительное время к FloodWait (сек)",
+        "copy_start_prem": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "copy_start_no_prem": "🚀 <b>ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n⏬⏬⏬⏬\n<b>Цель:</b> {dest}\n\n⚙️ <b>Режим:</b> {mode}\n🔢 <b>Старт с ID:</b> {start_id}\n👤 <b>Без автора:</b> {no_auth}\n💬 <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "copy_done_detailed_prem": "<emoji document_id=5208422125924275090>✅</emoji> <b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n<emoji document_id=5123248930124989216>✅</emoji> <b>Перенесено сообщений: {count}</b> <emoji document_id=5123248930124989216>✅</emoji>\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
+        "copy_done_detailed_no_prem": "<b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n✔️ <b>Перенесено сообщений: {count}</b> ✔️\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
+        "flood_wait_notice": "⏸ <b>FloodWait</b>\n📊 <b>Задержка:</b> <code>{minutes}m {seconds}s</code>\n🕐 <b>Возобновление:</b> <code>{resume_time}</code>\n📨 <b>Переслано:</b> <code>{count}</code> сообщений\n⏳ <b>Осталось:</b> <code>{remaining}</code> сообщений\n⚡ <b>Скорость:</b> <code>{speed}</code> сообщений/мин",
+        "panel_summary": "<b>📊 ChatCopy Status</b>\n\n<b>🔄 Активная:</b> {active}\n<b>⏳ В очереди:</b> {queue_len}\n<b>👀 Слежка:</b> {watching_count}\n<b>⏱ Последний FW:</b> {last_flood}",
+        "panel_task_running": "{name}\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин | 📊 {progress}%\n├ ⏱ Прошло: {elapsed} | Осталось: {eta}\n└ 🕐 Начало: {start_time} | Окончание: {end_time}",
+        "panel_task_paused": "{name}\n├ ⏸ На паузе (FW: {flood_time})\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин\n└ 🕐 Продолжение: {resume_time}",
+        "btn_stop": "🛑 Стоп",
+        "btn_pause": "⏸ Пауза",
+        "btn_resume": "▶️ Продолжить",
+        "btn_back": "🔙 Назад",
+        "btn_tasks": "📋 Очередь задач",
+        "btn_watch": "👀 Слежка",
+        "btn_settings": "⚙️ Настройки",
+        "btn_stats": "📊 Статистика",
+        "forum_enabled": "✅ Топики включены в {chat}",
+        "forum_enable_failed": "❌ Не удалось включить топики в {chat}. Нужны права администратора.",
+        "forum_not_channel": "❌ {chat} не является каналом/группой",
+        "err_ent": "❌ Ошибка: Чат не найден или нет доступа.",
+        "args_err": "❌ Синтаксис: .chatcopy <src> <dest>[start_id:final_id] [-n] [-dmc][--media|--photo_video|--docs|--text]",
+        "watch_added": "<b>👀 Наблюдение активировано</b>\nID: <code>{src_id}</code>\n{src} -> {dest}\nРежим топиков: {topics}\nБез подписей: {no_capt}\nФильтр: {filter_type}",
+        "queue_wait": "⏳ <b>Задача в очереди...</b> ({pos})",
+        "topic_created": "📂 Создан топик: <b>{title}</b>",
+        "topic_error": "❌ Ошибка создания топика: {error}",
+        "task_stopped": "🛑 Задача остановлена\nПереслано: {count} сообщений{flood_info}",
+        "stats_title": "<b>📊 Статистика ChatCopy</b>\n\n",
+        "stats_total": "Всего задач: {total}\nЗавершено: {completed}\nОстановлено: {stopped}\nFloodWait'ов: {floods}",
+        "task_list_header": "<b>📋 Очередь задач ({total})</b>\n\n<i>Нажми на номер для подробностей</i>\n\n",
+        "task_item_compact_running": "▶️{num}. <b>{src}</b> → <b>{dest}</b> ({progress}%)",
+        "task_item_compact_queued": "⏳{num}. <b>{src}</b> → <b>{dest}</b> (через {wait})",
+        "task_item_compact_paused": "⚠️{num}. <b>{src}</b> → <b>{dest}</b> (FW)",
+        "task_item_compact_completed": "✅{num}. <b>{src}</b> → <b>{dest}</b>",
+        "task_item_compact_error": "❌{num}. <b>{src}</b> → <b>{dest}</b>",
+        "task_detail_running": "<b>▶️ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Выполняется</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ Скорость: <code>{speed}/мин</code>\n├ Прошло: <code>{elapsed}</code>\n├ Осталось: <code>{eta_left}</code>\n├ Начато: <code>{start_time}</code>\n├ Окончание: <code>{end_time}</code>\n└ Позиция: <code>{position}</code>",
+        "task_detail_queued": "<b>⏳ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>В очереди</code>\n├ Оценка сообщений: <code>~{total}</code>\n├ Начало через: <code>{eta_start}</code>\n├ Расчетное начало: <code>{start_time}</code>\n├ Расчетное окончание: <code>{end_time}</code>\n├ Позиция: <code>{position}</code>\n└ Расчетное время: <code>{estimated_duration}</code>",
+        "task_detail_paused": "<b>⚠️ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Пауза (FloodWait)</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ FloodWait'ов: <code>{flood_count}</code>\n├ Время ожидания: <code>{flood_time}</code>\n├ Продолжение: <code>{resume_time}</code>\n├ Скорость до паузы: <code>{speed}/мин</code>\n└ Осталось сообщений: <code>{remaining}</code>",
+        "task_detail_completed": "<b>✅ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Завершена</code>\n├ Переслано: <code>{count}</code> сообщений\n├ Длительность: <code>{duration}</code>\n├ Средняя скорость: <code>{avg_speed}/мин</code>\n├ Завершено: <code>{end_time}</code>\n└ FloodWait'ов: <code>{floods}</code>",
+        "task_detail_error": "<b>❌ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Ошибка</code>\n└ Попробуйте перезапустить",
+        "no_tasks": "<i>Нет активных задач</i>",
+        "preparing_prem": "<emoji document_id=5208722554591659638>💫</emoji> <b>Подготовка к копированию. Подсчитываем (да, вручную!) кол-во медиа, это может занять время...</b>",
+        "preparing_no_prem": "⌛️ <b>Подготовка к копированию. Подсчитываем кол-во медиа, это может занять время...</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SenkoGuardian/SenModules/GiftFinder.py": {
       "name": "GiftFinderMod",
       "description": "Парсер пользователей с NFT-подарками в чате.",
@@ -52412,8 +52558,7 @@
       "name": "SpotifyMod",
       "description": "Card with the currently playing track on Spotify.",
       "cls_doc": {
-        "ru": "Карточка с играющим треком в Spotify.",
-        "jp": "Spotify からのメッセージ"
+        "ru": "Карточка с играющим треком в Spotify."
       },
       "meta": {
         "pic": null,
@@ -52422,28 +52567,34 @@
       },
       "commands": [
         {
-          "splaylistadd": "- ➕ Add current track to playlist (use number from .splaylists) | (RU) - ➕ Добавить текущий трек в плейлист (используйте номер из .splaylists)"
+          "sq": "<query> - search Spotify track"
         },
         {
-          "splaylistrem": "- ➖ Remove current track from playlist (use number from .splaylists) | (RU) - ➖ Удалить текущий трек из плейлиста (используйте номер из .splaylists)"
+          "ssearch": "<query> - search Spotify track"
         },
         {
-          "splaylistcreate": "- 🆕 Create a new playlist | (RU) - 🆕 Создать новый плейлист"
+          "splaylistadd": "| .spla - ➕ Add current track to playlist (use number from .splaylists | .spls) | (RU) | .spla - ➕ Добавить текущий трек в плейлист (используйте номер из .splaylists | .spls)"
         },
         {
-          "splaylistdelete": "- 🗑 Delete playlist (use number from .splaylists) | (RU) - 🗑 Удалить плейлист (используйте номер из .splaylists)"
+          "splaylistrem": "| .splr - ➖ Remove current track from playlist (use number from .splaylists | .spls) | (RU) | .splr - ➖ Удалить текущий трек из плейлиста (используйте номер из .splaylists | .spls)"
         },
         {
-          "splaylists": "- 📃 Get all playlists | (RU) - 📃 Получить все плейлисты"
+          "splaylistcreate": "| .splc - 🆕 Create a new playlist | (RU) | .splc - 🆕 Создать новый плейлист"
         },
         {
-          "sbio": "- ℹ️ Toggle bio playback streaming | (RU) - ℹ️ Переключить стриминг воспроизведения в био"
+          "splaylistdelete": "| .spld - 🗑 Delete playlist (use number from .splaylists | .spls) | (RU) | .spld - 🗑 Удалить плейлист (используйте номер из .splaylists | .spls)"
         },
         {
-          "svolume": "- 🔊 Change playback volume. .svolume <0-100> | (RU) - 🔊 Изменить громкость. .svolume <0-100>"
+          "splaylists": "| .spls - 📃 Get all playlists | (RU) | .spls - 📃 Получить все плейлисты"
         },
         {
-          "sdevice": "- 🎵 Set preferred playback device. Usage: .sdevice <device_id> or .sdevice to list devices | (RU) - 🎵 Выбрать устройство для воспроизведения. Например: .sdevice <ID устройства>\n- 📝 Показать список устройств: .sdevice"
+          "sbio": "- ℹ️ Toggle streaming playback in bio | (RU) - ℹ️ Переключить стриминг воспроизведения в био"
+        },
+        {
+          "svolume": "| .sv - 🔊 Change playback volume. .svolume | .sv <0-100> | (RU) | .sv - 🔊 Изменить громкость. .svolume | .sv <0-100>"
+        },
+        {
+          "sdevice": "| .sd - 🎵 Set preferred playback device. Usage: .sdevice <device_id> or .sdevice | .sd to list devices | (RU) | .sd - 🎵 Выбрать устройство для воспроизведения. Например: .sdevice <ID устройства>или .sdevice | .sd для вывода списка устройств"
         },
         {
           "srepeat": "- 💫 Repeat | (RU) - 💫 Включить повтор трека"
@@ -52482,28 +52633,51 @@
           "unauth": "- Log out of account | (RU) - Выйти из аккаунта"
         },
         {
-          "stokrefresh": "- Refresh authorization token | (RU) - Обновить токен авторизации"
+          "stokrefresh": "| .stokr - Refresh authorization token | (RU) | .stokr - Обновить токен авторизации"
         },
         {
-          "snow": "- 🎧 View current track card. | (RU) - 🎧 Показать карточку играющего трека"
+          "snow": "| .sn - 🎧 View current track card. | (RU) | .sn - 🎧 Показать карточку играющего трека"
         },
         {
-          "snowt": "- 🎧 Download current track. | (RU) - 🎧 Скачать играющий трек"
+          "snowt": "| .snt - 🎧 Download current track. | (RU) | .snt - 🎧 Скачать играющий трек"
         },
         {
-          "ssearch": "🔍 Search for tracks. Usage: .ssearch <query> or .ssearch <number> to download | (RU) - 🔍 Поиск треков. Например: .ssearch Imagine Dragons Believer\n- 🎧 Скачать трек: .ssearch 1 (где 1 — номер трека из списка)"
-        },
-        {
-          "ssearchreset": "- 🔄 Reset track search results | (RU) - 🔄 Сброс результатов поиска по трекам"
+          "ssearch": "| .sq - 🔍 Search for tracks. | (RU) | .sq - 🔍 Поиск треков."
         }
       ],
       "new_commands": [
         {
+          "name": "sq",
+          "original_name": "sq",
+          "description": {
+            "default": "<query> - search Spotify track"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": true,
+          "is_inline_handler": true,
+          "decorators": []
+        },
+        {
+          "name": "ssearch",
+          "original_name": "ssearch",
+          "description": {
+            "default": "<query> - search Spotify track"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": true,
+          "is_inline_handler": true,
+          "decorators": []
+        },
+        {
           "name": "splaylistadd",
           "original_name": "splaylistadd",
           "description": {
-            "default": "- ➕ Add current track to playlist (use number from .splaylists)",
-            "ru": "- ➕ Добавить текущий трек в плейлист (используйте номер из .splaylists)"
+            "default": "| .spla - ➕ Add current track to playlist (use number from .splaylists | .spls)",
+            "ru": "| .spla - ➕ Добавить текущий трек в плейлист (используйте номер из .splaylists | .spls)"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52516,8 +52690,8 @@
           "name": "splaylistrem",
           "original_name": "splaylistrem",
           "description": {
-            "default": "- ➖ Remove current track from playlist (use number from .splaylists)",
-            "ru": "- ➖ Удалить текущий трек из плейлиста (используйте номер из .splaylists)"
+            "default": "| .splr - ➖ Remove current track from playlist (use number from .splaylists | .spls)",
+            "ru": "| .splr - ➖ Удалить текущий трек из плейлиста (используйте номер из .splaylists | .spls)"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52530,8 +52704,8 @@
           "name": "splaylistcreate",
           "original_name": "splaylistcreate",
           "description": {
-            "default": "- 🆕 Create a new playlist",
-            "ru": "- 🆕 Создать новый плейлист"
+            "default": "| .splc - 🆕 Create a new playlist",
+            "ru": "| .splc - 🆕 Создать новый плейлист"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52544,8 +52718,8 @@
           "name": "splaylistdelete",
           "original_name": "splaylistdelete",
           "description": {
-            "default": "- 🗑 Delete playlist (use number from .splaylists)",
-            "ru": "- 🗑 Удалить плейлист (используйте номер из .splaylists)"
+            "default": "| .spld - 🗑 Delete playlist (use number from .splaylists | .spls)",
+            "ru": "| .spld - 🗑 Удалить плейлист (используйте номер из .splaylists | .spls)"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52558,8 +52732,8 @@
           "name": "splaylists",
           "original_name": "splaylists",
           "description": {
-            "default": "- 📃 Get all playlists",
-            "ru": "- 📃 Получить все плейлисты"
+            "default": "| .spls - 📃 Get all playlists",
+            "ru": "| .spls - 📃 Получить все плейлисты"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52572,7 +52746,7 @@
           "name": "sbio",
           "original_name": "sbiocmd",
           "description": {
-            "default": "- ℹ️ Toggle bio playback streaming",
+            "default": "- ℹ️ Toggle streaming playback in bio",
             "ru": "- ℹ️ Переключить стриминг воспроизведения в био"
           },
           "cmd_names": {},
@@ -52586,8 +52760,8 @@
           "name": "svolume",
           "original_name": "svolume",
           "description": {
-            "default": "- 🔊 Change playback volume. .svolume <0-100>",
-            "ru": "- 🔊 Изменить громкость. .svolume <0-100>"
+            "default": "| .sv - 🔊 Change playback volume. .svolume | .sv <0-100>",
+            "ru": "| .sv - 🔊 Изменить громкость. .svolume | .sv <0-100>"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52600,8 +52774,8 @@
           "name": "sdevice",
           "original_name": "sdevicecmd",
           "description": {
-            "default": "- 🎵 Set preferred playback device. Usage: .sdevice <device_id> or .sdevice to list devices",
-            "ru": "- 🎵 Выбрать устройство для воспроизведения. Например: .sdevice <ID устройства>\n- 📝 Показать список устройств: .sdevice"
+            "default": "| .sd - 🎵 Set preferred playback device. Usage: .sdevice <device_id> or .sdevice | .sd to list devices",
+            "ru": "| .sd - 🎵 Выбрать устройство для воспроизведения. Например: .sdevice <ID устройства>или .sdevice | .sd для вывода списка устройств"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52782,8 +52956,8 @@
           "name": "stokrefresh",
           "original_name": "stokrefreshcmd",
           "description": {
-            "default": "- Refresh authorization token",
-            "ru": "- Обновить токен авторизации"
+            "default": "| .stokr - Refresh authorization token",
+            "ru": "| .stokr - Обновить токен авторизации"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52796,8 +52970,8 @@
           "name": "snow",
           "original_name": "snowcmd",
           "description": {
-            "default": "- 🎧 View current track card.",
-            "ru": "- 🎧 Показать карточку играющего трека"
+            "default": "| .sn - 🎧 View current track card.",
+            "ru": "| .sn - 🎧 Показать карточку играющего трека"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52810,8 +52984,8 @@
           "name": "snowt",
           "original_name": "snowtcmd",
           "description": {
-            "default": "- 🎧 Download current track.",
-            "ru": "- 🎧 Скачать играющий трек"
+            "default": "| .snt - 🎧 Download current track.",
+            "ru": "| .snt - 🎧 Скачать играющий трек"
           },
           "cmd_names": {},
           "aliases": [],
@@ -52824,22 +52998,8 @@
           "name": "ssearch",
           "original_name": "ssearchcmd",
           "description": {
-            "default": "🔍 Search for tracks. Usage: .ssearch <query> or .ssearch <number> to download",
-            "ru": "- 🔍 Поиск треков. Например: .ssearch Imagine Dragons Believer\n- 🎧 Скачать трек: .ssearch 1 (где 1 — номер трека из списка)"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        },
-        {
-          "name": "ssearchreset",
-          "original_name": "ssearchresetcmd",
-          "description": {
-            "default": "- 🔄 Reset track search results",
-            "ru": "- 🔄 Сброс результатов поиска по трекам"
+            "default": "| .sq - 🔍 Search for tracks.",
+            "ru": "| .sq - 🔍 Поиск треков."
           },
           "cmd_names": {},
           "aliases": [],
@@ -52849,150 +53009,118 @@
           "decorators": []
         }
       ],
-      "inline_handlers": [],
+      "inline_handlers": [
+        {
+          "name": "sq",
+          "description": {
+            "default": "<query> - search Spotify track"
+          },
+          "decorators": []
+        },
+        {
+          "name": "ssearch",
+          "description": {
+            "default": "<query> - search Spotify track"
+          },
+          "decorators": []
+        }
+      ],
       "strings": {
         "name": "SpotifyMod",
-        "need_auth": "<emoji document_id=5778527486270770928>❌</emoji> <b>Please execute </b><code>.sauth</code><b> before performing this action.</b>",
-        "on-repeat": "<emoji document_id=5258420634785947640>🔄</emoji> <b>Set on-repeat.</b>",
-        "off-repeat": "<emoji document_id=5260687119092817530>🔄</emoji> <b>Stopped track repeat.</b>",
-        "skipped": "<emoji document_id=6037622221625626773>➡️</emoji> <b>Skipped track.</b>",
-        "playing": "<emoji document_id=5773626993010546707>▶️</emoji> <b>Playing...</b>",
-        "back": "<emoji document_id=6039539366177541657>⬅️</emoji> <b>Switched to previous track</b>",
-        "paused": "<emoji document_id=5774077015388852135>❌</emoji> <b>Pause</b>",
-        "restarted": "<emoji document_id=5843596438373667352>✅️</emoji> <b>Playing track from the beginning</b>",
-        "liked": "<emoji document_id=5258179403652801593>❤️</emoji> <b>Liked current playback</b>",
-        "unlike": "<emoji document_id=5774077015388852135>❌</emoji> <b>Unliked current playback</b>",
-        "err": "<emoji document_id=5778527486270770928>❌</emoji> <b>An error occurred.</b>\n<code>{}</code>",
-        "already_authed": "<emoji document_id=5778527486270770928>❌</emoji> <b>Already authorized</b>",
-        "authed": "<emoji document_id=5776375003280838798>✅</emoji> <b>Authentication successful</b>",
-        "deauth": "<emoji document_id=5877341274863832725>🚪</emoji> <b>Successfully logged out of account</b>",
-        "auth": "<emoji document_id=5778168620278354602>🔗</emoji> <a href=\"{}\">Follow this link</a>, allow access, then enter <code>.scode https://...</code> with the link you received.",
-        "no_music": "<emoji document_id=5778527486270770928>❌</emoji> <b>No music is playing!</b>",
-        "dl_err": "<emoji document_id=5778527486270770928>❌</emoji> <b>Failed to download track.</b>",
-        "volume_changed": "<emoji document_id=5890997763331591703>🔊</emoji> <b>Volume changed to {}%.</b>",
-        "volume_invalid": "<emoji document_id=5778527486270770928>❌</emoji> <b>Volume level must be a number between 0 and 100.</b>",
-        "volume_err": "<emoji document_id=5778527486270770928>❌</emoji> <b>An error occurred while changing volume.</b>",
-        "no_volume_arg": "<emoji document_id=5778527486270770928>❌</emoji> <b>Please specify a volume level between 0 and 100.</b>",
-        "searching_tracks": "<emoji document_id=5841359499146825803>🕔</emoji> <b>Searching for tracks matching {}...</b>",
-        "no_search_query": "<emoji document_id=5778527486270770928>❌</emoji> <b>Please specify a search query.</b>",
-        "no_tracks_found": "<emoji document_id=5778527486270770928>❌</emoji> <b>No tracks found for {}.</b>",
-        "search_results": "<emoji document_id=5776375003280838798>✅</emoji> <b>Search results for {}:</b>\n\n{}",
-        "downloading_search_track": "<emoji document_id=5841359499146825803>🕔</emoji> <b>Downloading {}...</b>",
-        "download_success": "<emoji document_id=5776375003280838798>✅</emoji> <b>Successfully downloaded {} - {}</b>",
-        "invalid_track_number": "<emoji document_id=5778527486270770928>❌</emoji> <b>Invalid track number. Please search first or provide a valid number from the list.</b>",
-        "device_list": "<emoji document_id=5956561916573782596>📄</emoji> <b>Available devices:</b>\n{}",
-        "no_devices_found": "<emoji document_id=5778527486270770928>❌</emoji> <b>No devices found.</b>",
-        "device_changed": "<emoji document_id=5776375003280838798>✅</emoji> <b>Playback transferred to {}.</b>",
-        "invalid_device_id": "<emoji document_id=5778527486270770928>❌</emoji> <b>Invalid device ID. Use</b> <code>.sdevice</code> <b>to see available devices.</b>",
-        "search_results_cleared": "<emoji document_id=5776375003280838798>✅</emoji> <b>Search results cleared</b>",
-        "autobio": "<emoji document_id=6319076999105087378>🎧</emoji> <b>Spotify autobio {}</b>",
-        "no_ytdlp": "<emoji document_id=5778527486270770928>❌</emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
-        "snowt_failed": "\n\n<emoji document_id=5778527486270770928>❌</emoji> <b>Download failed</b>",
-        "uploading_banner": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>Uploading banner...</i>",
-        "downloading_track": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>Downloading track...</i>",
-        "no_playlists": "<emoji document_id=5778527486270770928>❌</emoji> <b>No playlists found.</b>",
-        "playlists_list": "<emoji document_id=5956561916573782596>📄</emoji> <b>Your playlists:</b>\n\n{}",
-        "added_to_playlist": "<emoji document_id=5776375003280838798>✅</emoji> <b>Added {} to {}</b>",
-        "removed_from_playlist": "<emoji document_id=5776375003280838798>✅</emoji> <b>Removed {} from {}</b>",
-        "invalid_playlist_index": "<emoji document_id=5778527486270770928>❌</emoji> <b>Invalid playlist number.</b>",
-        "no_cached_playlists": "<emoji document_id=5778527486270770928>❌</emoji> <b>Use .splaylists first.</b>",
-        "playlist_created": "<emoji document_id=5776375003280838798>✅</emoji> <b>Playlist {} created.</b>",
-        "playlist_deleted": "<emoji document_id=5776375003280838798>✅</emoji> <b>Playlist {} deleted.</b>",
-        "no_playlist_name": "<emoji document_id=5778527486270770928>❌</emoji> <b>Please specify a playlist name.</b>",
-        "need_auth_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Выполни </b><code>.sauth</code><b> перед выполнением этого действия.</b>",
-        "err_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Произошла ошибка.</b>\n<code>{}</code>",
-        "on-repeat_ru": "<emoji document_id=5258420634785947640>🔄</emoji> <b>Включен повтор трека.</b>",
-        "off-repeat_ru": "<emoji document_id=5260687119092817530>🔄</emoji> <b>Повтор трека отключён.</b>",
-        "skipped_ru": "<emoji document_id=6037622221625626773>➡️</emoji> <b>Трек пропущен.</b>",
-        "playing_ru": "<emoji document_id=5773626993010546707>▶️</emoji> <b>Играет...</b>",
-        "back_ru": "<emoji document_id=6039539366177541657>⬅️</emoji> <b>Переключено на предыдущий трек</b>",
-        "paused_ru": "<emoji document_id=5774077015388852135>❌</emoji> <b>Пауза</b>",
-        "restarted_ru": "<emoji document_id=5843596438373667352>✅️</emoji> <b>Воспроизведение трека с начала...</b>",
-        "liked_ru": "<emoji document_id=5258179403652801593>❤️</emoji> <b>Текущий трек добавлен в избранное</b>",
-        "unlike_ru": "<emoji document_id=5774077015388852135>❌</emoji> <b>Убрал лайк с текущего трека</b>",
-        "already_authed_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Уже авторизован</b>",
-        "authed_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Успешная аутентификация</b>",
-        "deauth_ru": "<emoji document_id=5877341274863832725>🚪</emoji> <b>Успешный выход из аккаунта</b>",
-        "auth_ru": "<emoji document_id=5778168620278354602>🔗</emoji> <a href=\"{}\">Пройдите по этой ссылке</a>, разрешите вход, затем введите <code>.scode https://...</code> с ссылкой которую вы получили.",
-        "no_music_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Музыка не играет!</b>",
-        "dl_err_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Не удалось скачать трек.</b>",
-        "volume_changed_ru": "<emoji document_id=5890997763331591703>🔊</emoji> <b>Громкость изменена на {}%.</b>",
-        "volume_invalid_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Уровень громкости должен быть числом от 0 до 100.</b>",
-        "volume_err_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Произошла ошибка при изменении громкости.</b>",
-        "no_volume_arg_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Пожалуйста, укажите уровень громкости от 0 до 100.</b>",
-        "searching_tracks_ru": "<emoji document_id=5841359499146825803>🕔</emoji> <b>Идет поиск треков по запросу {}...</b>",
-        "no_search_query_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Пожалуйста, укажите поисковый запрос.</b>",
-        "no_tracks_found_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>По запросу '{}' ничего не найдено.</b>",
-        "search_results_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Результаты поиска по запросу {}:</b>\n\n{}",
-        "downloading_search_track_ru": "<emoji document_id=5841359499146825803>🕔</emoji> <b>Скачиваю {}...</b>",
-        "download_success_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Трек {} - {} успешно скачан.</b>",
-        "invalid_track_number_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Некорректный номер трека. Сначала выполните поиск или укажите правильный номер из списка.</b>",
-        "device_list_ru": "<emoji document_id=5956561916573782596>📄</emoji> <b>Доступные устройства:</b>\n{}",
-        "no_devices_found_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Устройства не найдены.</b>",
-        "device_changed_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Воспроизведение переключено на {}.</b>",
-        "invalid_device_id_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Некорректный ID устройства. Используйте</b> <code>.sdevice</code> <b>, чтобы увидеть доступные устройства.</b>",
-        "search_results_cleared_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Результаты поиска очищены</b>",
-        "autobio_ru": "<emoji document_id=6319076999105087378>🎧</emoji> <b>Обновление био включено {}</b>",
-        "no_ytdlp_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
-        "snowt_failed_ru": "\n\n<emoji document_id=5778527486270770928>❌</emoji> <b>Ошибка скачивания.</b>",
-        "uploading_banner_ru": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>Загрузка баннера...</i>",
-        "downloading_track_ru": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>Скачивание трека...</i>",
-        "no_playlists_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Плейлисты не найдены.</b>",
-        "playlists_list_ru": "<emoji document_id=5956561916573782596>📄</emoji> <b>Ваши плейлисты:</b>\n\n{}",
-        "added_to_playlist_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Трек {} добавлен в {}</b>",
-        "removed_from_playlist_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Трек {} удален из {}</b>",
-        "invalid_playlist_index_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Неверный номер плейлиста.</b>",
-        "no_cached_playlists_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Сначала используйте .splaylists.</b>",
-        "playlist_created_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Плейлист {} создан.</b>",
-        "playlist_deleted_ru": "<emoji document_id=5776375003280838798>✅</emoji> <b>Плейлист {} удален.</b>",
-        "no_playlist_name_ru": "<emoji document_id=5778527486270770928>❌</emoji> <b>Пожалуйста, укажите название плейлиста.</b>",
-        "need_auth_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>この操作を行う前に </b><code>.sauth</code><b> を実行してください。</b>",
-        "on-repeat_jp": "<emoji document_id=5258420634785947640>🔄</emoji> <b>リピート再生を設定しました。</b>",
-        "off-repeat_jp": "<emoji document_id=5260687119092817530>🔄</emoji> <b>リピート再生を解除しました。</b>",
-        "skipped_jp": "<emoji document_id=6037622221625626773>➡️</emoji> <b>スキップしました。</b>",
-        "playing_jp": "<emoji document_id=5773626993010546707>▶️</emoji> <b>再生中...</b>",
-        "back_jp": "<emoji document_id=6039539366177541657>⬅️</emoji> <b>前のトラックに戻りました。</b>",
-        "paused_jp": "<emoji document_id=5774077015388852135>❌</emoji> <b>一時停止</b>",
-        "restarted_jp": "<emoji document_id=5843596438373667352>✅️</emoji> <b>最初から再生します。</b>",
-        "liked_jp": "<emoji document_id=5258179403652801593>❤️</emoji> <b>お気に入りに追加しました。</b>",
-        "unlike_jp": "<emoji document_id=5774077015388852135>❌</emoji> <b>お気に入りから削除しました。</b>",
-        "err_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>エラーが発生しました。</b>\n<code>{}</code>",
-        "already_authed_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>既に認証されています。</b>",
-        "authed_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>認証に成功しました。</b>",
-        "deauth_jp": "<emoji document_id=5877341274863832725>🚪</emoji> <b>ログアウトしました。</b>",
-        "auth_jp": "<emoji document_id=5778168620278354602>🔗</emoji> <a href=\"{}\">リンクをクリック</a>してアクセスを許可し、取得したURLを使って <code>.scode https://...</code> を入力してください。",
-        "no_music_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>音楽は再生されていません！</b>",
-        "dl_err_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>トラックのダウンロードに失敗しました。</b>",
-        "volume_changed_jp": "<emoji document_id=5890997763331591703>🔊</emoji> <b>音量を {}% に変更しました。</b>",
-        "volume_invalid_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>音量は0から100の数字で指定してください。</b>",
-        "volume_err_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>音量の変更中にエラーが発生しました。</b>",
-        "no_volume_arg_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>0から100の間で音量を指定してください。</b>",
-        "searching_tracks_jp": "<emoji document_id=5841359499146825803>🕔</emoji> <b>{} を検索中...</b>",
-        "no_search_query_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>検索キーワードを指定してください。</b>",
-        "no_tracks_found_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>{} は見つかりませんでした。</b>",
-        "search_results_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>{} の検索結果:</b>\n\n{}",
-        "downloading_search_track_jp": "<emoji document_id=5841359499146825803>🕔</emoji> <b>{} をダウンロード中...</b>",
-        "download_success_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>{} - {} のダウンロードに成功しました。</b>",
-        "invalid_track_number_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>トラック番号が無効です。 先に検索するか、リストから有効な番号を指定してください。</b>",
-        "device_list_jp": "<emoji document_id=5956561916573782596>📄</emoji> <b>利用可能なデバイス:</b>\n{}",
-        "no_devices_found_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>デバイスが見つかりません。</b>",
-        "device_changed_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>再生デバイスを {} に切り替えました。</b>",
-        "invalid_device_id_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>デバイスIDが無効です。 </b><code>.sdevice</code> <b>で利用可能なデバイスを確認してください。</b>",
-        "search_results_cleared_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>検索結果をクリアしました。</b>",
-        "autobio_jp": "<emoji document_id=6319076999105087378>🎧</emoji> <b>Spotify AutoBio: {}</b>",
-        "no_ytdlp_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>yt-dlpが見つかりません... 設定を確認するか、インストールしてください (<code>{}terminal pip install yt-dlp</code>)</b>",
-        "snowt_failed_jp": "\n\n<emoji document_id=5778527486270770928>❌</emoji> <b>ダウンロードに失敗しました。</b>",
-        "uploading_banner_jp": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>バナーをアップロード中...</i>",
-        "downloading_track_jp": "\n\n<emoji document_id=5841359499146825803>🕔</emoji> <i>トラックをダウンロード中...</i>",
-        "no_playlists_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>プレイリストが見つかりません。</b>",
-        "playlists_list_jp": "<emoji document_id=5956561916573782596>📄</emoji> <b>あなたのプレイリスト:</b>\n\n{}",
-        "added_to_playlist_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>{} を {} に追加しました。</b>",
-        "removed_from_playlist_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>{} を {} から削除しました。</b>",
-        "invalid_playlist_index_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>プレイリスト番号が無効です。</b>",
-        "no_cached_playlists_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>先に .splaylists を使用してください。</b>",
-        "playlist_created_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>プレイリスト {} を作成しました。</b>",
-        "playlist_deleted_jp": "<emoji document_id=5776375003280838798>✅</emoji> <b>プレイリスト {} を削除しました。</b>",
-        "no_playlist_name_jp": "<emoji document_id=5778527486270770928>❌</emoji> <b>プレイリスト名を指定してください。</b>"
+        "need_auth": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please execute </b><code>.sauth</code><b> before performing this action.</b>",
+        "on-repeat": "<tg-emoji emoji-id=5258420634785947640>🔄</tg-emoji> <b>Set on-repeat.</b>",
+        "off-repeat": "<tg-emoji emoji-id=5260687119092817530>🔄</tg-emoji> <b>Stopped track repeat.</b>",
+        "skipped": "<tg-emoji emoji-id=6037622221625626773>➡️</tg-emoji> <b>Skipped track.</b>",
+        "playing": "<tg-emoji emoji-id=5773626993010546707>▶️</tg-emoji> <b>Playing...</b>",
+        "back": "<tg-emoji emoji-id=6039539366177541657>⬅️</tg-emoji> <b>Switched to previous track</b>",
+        "paused": "<tg-emoji emoji-id=5774077015388852135>❌</tg-emoji> <b>Pause</b>",
+        "restarted": "<tg-emoji emoji-id=5843596438373667352>✅️</tg-emoji> <b>Playing track from the beginning</b>",
+        "liked": "<tg-emoji emoji-id=5258179403652801593>❤️</tg-emoji> <b>Liked current playback</b>",
+        "unlike": "<tg-emoji emoji-id=5774077015388852135>❌</tg-emoji> <b>Unliked current playback</b>",
+        "err": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>An error occurred.</b>\n<code>{}</code>",
+        "already_authed": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Already authorized</b>",
+        "authed": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Authentication successful</b>",
+        "deauth": "<tg-emoji emoji-id=5877341274863832725>🚪</tg-emoji> <b>Successfully logged out of account</b>",
+        "auth": "<tg-emoji emoji-id=5778168620278354602>🔗</tg-emoji> <a href=\"{}\">Follow this link</a>, allow access, then enter <code>.scode https://...</code> with the link you received.",
+        "no_music": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No music is playing!</b>",
+        "dl_err": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Failed to download track.</b>",
+        "volume_changed": "<tg-emoji emoji-id=5890997763331591703>🔊</tg-emoji> <b>Volume changed to {}%.</b>",
+        "volume_invalid": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Volume level must be a number between 0 and 100.</b>",
+        "volume_err": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>An error occurred while changing volume.</b>",
+        "no_volume_arg": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a volume level between 0 and 100.</b>",
+        "searching_tracks": "<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <b>Searching for tracks matching {}...</b>",
+        "no_search_query": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a search query.</b>",
+        "no_tracks_found": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No tracks found for {}.</b>",
+        "search_results": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Search results for {}:</b>\n\n{}",
+        "search_results_inline": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Found {count} results for {query}.</b>\n<b>Select a track:</b>",
+        "downloading_search_track": "<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <b>Downloading {}...</b>",
+        "download_success": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Successfully downloaded {} - {}</b>",
+        "invalid_track_number": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Invalid track number. Please search first or provide a valid number from the list.</b>",
+        "device_list": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Available devices:</b>\n{}",
+        "no_devices_found": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No devices found.</b>",
+        "device_changed": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playback transferred to {}.</b>",
+        "invalid_device_id": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Invalid device ID. Use</b> <code>.sdevice</code> <b>to see available devices.</b>",
+        "autobio": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Spotify autobio {}</b>",
+        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Download failed</b>",
+        "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Uploading banner...</i>",
+        "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Downloading track...</i>",
+        "no_playlists": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No playlists found.</b>",
+        "playlists_list": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Your playlists:</b>\n\n{}",
+        "added_to_playlist": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Added {} to {}</b>",
+        "removed_from_playlist": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Removed {} from {}</b>",
+        "invalid_playlist_index": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Invalid playlist number.</b>",
+        "no_cached_playlists": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Use .splaylists first.</b>",
+        "playlist_created": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playlist {} created.</b>",
+        "playlist_deleted": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playlist {} deleted.</b>",
+        "no_playlist_name": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a playlist name.</b>",
+        "need_auth_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Выполни </b><code>.sauth</code><b> перед выполнением этого действия.</b>",
+        "err_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Произошла ошибка.</b>\n<code>{}</code>",
+        "on-repeat_ru": "<tg-emoji emoji-id=5258420634785947640>🔄</tg-emoji> <b>Включен повтор трека.</b>",
+        "off-repeat_ru": "<tg-emoji emoji-id=5260687119092817530>🔄</tg-emoji> <b>Повтор трека отключён.</b>",
+        "skipped_ru": "<tg-emoji emoji-id=6037622221625626773>➡️</tg-emoji> <b>Трек пропущен.</b>",
+        "playing_ru": "<tg-emoji emoji-id=5773626993010546707>▶️</tg-emoji> <b>Играет...</b>",
+        "back_ru": "<tg-emoji emoji-id=6039539366177541657>⬅️</tg-emoji> <b>Переключено на предыдущий трек</b>",
+        "paused_ru": "<tg-emoji emoji-id=5774077015388852135>❌</tg-emoji> <b>Пауза</b>",
+        "restarted_ru": "<tg-emoji emoji-id=5843596438373667352>✅️</tg-emoji> <b>Воспроизведение трека с начала...</b>",
+        "liked_ru": "<tg-emoji emoji-id=5258179403652801593>❤️</tg-emoji> <b>Текущий трек добавлен в избранное</b>",
+        "unlike_ru": "<tg-emoji emoji-id=5774077015388852135>❌</tg-emoji> <b>Убрал лайк с текущего трека</b>",
+        "already_authed_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Уже авторизован</b>",
+        "authed_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Успешная аутентификация</b>",
+        "deauth_ru": "<tg-emoji emoji-id=5877341274863832725>🚪</tg-emoji> <b>Успешный выход из аккаунта</b>",
+        "auth_ru": "<tg-emoji emoji-id=5778168620278354602>🔗</tg-emoji> <a href=\"{}\">Пройдите по этой ссылке</a>, разрешите вход, затем введите <code>.scode https://...</code> с ссылкой которую вы получили.",
+        "no_music_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Музыка не играет!</b>",
+        "dl_err_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Не удалось скачать трек.</b>",
+        "volume_changed_ru": "<tg-emoji emoji-id=5890997763331591703>🔊</tg-emoji> <b>Громкость изменена на {}%.</b>",
+        "volume_invalid_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Уровень громкости должен быть числом от 0 до 100.</b>",
+        "volume_err_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Произошла ошибка при изменении громкости.</b>",
+        "no_volume_arg_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите уровень громкости от 0 до 100.</b>",
+        "searching_tracks_ru": "<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <b>Идет поиск треков по запросу {}...</b>",
+        "no_search_query_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите поисковый запрос.</b>",
+        "no_tracks_found_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>По запросу '{}' ничего не найдено.</b>",
+        "search_results_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Результаты поиска по запросу {}:</b>\n\n{}",
+        "search_results_inline_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Найдено {count} результатов по запросу {query}.</b>\n<b>Выберите трек:</b>",
+        "downloading_search_track_ru": "<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <b>Скачиваю {}...</b>",
+        "download_success_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Трек {} - {} успешно скачан.</b>",
+        "invalid_track_number_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Некорректный номер трека. Сначала выполните поиск или укажите правильный номер из списка.</b>",
+        "device_list_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Доступные устройства:</b>\n{}",
+        "no_devices_found_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Устройства не найдены.</b>",
+        "device_changed_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Воспроизведение переключено на {}.</b>",
+        "invalid_device_id_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Некорректный ID устройства. Используйте</b> <code>.sdevice</code> <b>, чтобы увидеть доступные устройства.</b>",
+        "autobio_ru": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Обновление био включено {}</b>",
+        "no_ytdlp_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "snowt_failed_ru": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка скачивания.</b>",
+        "uploading_banner_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Загрузка баннера...</i>",
+        "downloading_track_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Скачивание трека...</i>",
+        "no_playlists_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Плейлисты не найдены.</b>",
+        "playlists_list_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Ваши плейлисты:</b>\n\n{}",
+        "added_to_playlist_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Трек {} добавлен в {}</b>",
+        "removed_from_playlist_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Трек {} удален из {}</b>",
+        "invalid_playlist_index_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Неверный номер плейлиста.</b>",
+        "no_cached_playlists_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Сначала используйте .splaylists.</b>",
+        "playlist_created_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} создан.</b>",
+        "playlist_deleted_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} удален.</b>",
+        "no_playlist_name_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите название плейлиста.</b>"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -60893,6 +61021,25 @@
       "strings": {},
       "has_on_load": false,
       "has_on_unload": false,
+      "class_cmd_names": {}
+    },
+    "fiksofficial/python-modules/placeholders+.py": {
+      "name": "PlaceholdersMod",
+      "description": "Плейсхолдеры",
+      "cls_doc": {},
+      "meta": {
+        "pic": null,
+        "banner": null,
+        "developer": "@pymodule"
+      },
+      "commands": [],
+      "new_commands": [],
+      "inline_handlers": [],
+      "strings": {
+        "name": "Placeholders+"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
       "class_cmd_names": {}
     },
     "fiksofficial/python-modules/ai.py": {
@@ -82430,7 +82577,7 @@
     }
   },
   "meta": {
-    "total_modules": 1022,
-    "generated_at": "2026-03-23T01:31:16.986395"
+    "total_modules": 1024,
+    "generated_at": "2026-03-26T01:49:04.390176"
   }
 }
