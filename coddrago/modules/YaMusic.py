@@ -1,11 +1,9 @@
-__version__ = (3, 1, 1)
+__version__ = (3, 2, 0)
 # meta banner: https://raw.githubusercontent.com/kamekuro/hikka-mods/main/banners/yamusic.png
-# packurl: https://raw.githubusercontent.com/coddrago/assets/refs/heads/main/modules/yamusic.yml
-# meta banner: https://raw.githubusercontent.com/coddrago/modules/refs/heads/main/banner.png
+# packurl: https://raw.githubusercontent.com/coddrago/modules/refs/heads/dev/translations/yamusic.yml
 # meta developer: @codrago_m
-# old meta dev: @kamekuro xuesos
 # scope: heroku_only
-# scope: heroku_min 1.7.2
+# scope: heroku_min 2.0.0
 # requires: aiohttp asyncio pillow>=10.0.0 git+https://github.com/MarshalX/yandex-music-api
 
 import aiohttp
@@ -17,6 +15,7 @@ import random
 import string
 import typing
 import time
+import uuid
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 import telethon
@@ -171,7 +170,6 @@ class Banners:
         current_y += 80
 
         bar_width = 800
-        bar_height = 6
         font_time = get_font(40)
 
         bar_start_x = center_x - (bar_width // 2)
@@ -180,11 +178,12 @@ class Banners:
 
         total_mins = self.duration // 1000 // 60
         total_secs = (self.duration // 1000) % 60
-        total_time_str = f"{total_mins}:{total_secs:02d}"
+        
+        total_time_str = f"{total_mins:02d}:{total_secs:02d}"
 
         cur_mins = self.progress // 1000 // 60
         cur_secs = (self.progress // 1000) % 60
-        cur_time_str = f"{cur_mins}:{cur_secs:02d}"
+        cur_time_str = f"{cur_mins:02d}:{cur_secs:02d}"
 
         draw_text_shadow(
             cur_time_str, (bar_start_x - 30, bar_y), font_time, anchor="rm"
@@ -193,34 +192,44 @@ class Banners:
             total_time_str, (bar_end_x + 30, bar_y), font_time, anchor="lm"
         )
 
-        draw.line(
-            [(bar_start_x, bar_y), (bar_end_x, bar_y)],
-            fill=(255, 255, 255, 80),
-            width=bar_height,
-        )
-
+        old_state = random.getstate()
+        
+        random.seed(self.title + str(self.duration))
+        
+        num_bars = 65
+        bar_spacing = bar_width / num_bars
+        bar_w = max(4, int(bar_spacing * 0.5))  
+        max_h = 50  
+        min_h = 6   
+        
         if self.duration > 0:
             progress_ratio = self.progress / self.duration
         else:
             progress_ratio = 0
-        progress_px = int(bar_width * progress_ratio)
-        if progress_px > bar_width:
-            progress_px = bar_width
+        
+        active_bars = int(num_bars * progress_ratio)
 
-        draw.line(
-            [(bar_start_x, bar_y), (bar_start_x + progress_px, bar_y)],
-            fill="white",
-            width=bar_height + 5,
-        )
-        draw.ellipse(
-            (
-                bar_start_x + progress_px - 10,
-                bar_y - 10,
-                bar_start_x + progress_px + 10,
-                bar_y + 10,
-            ),
-            fill="white",
-        )
+        for i in range(num_bars):
+            base_h = random.randint(min_h, max_h)
+            edge_factor = 1.0 - abs((i - num_bars / 2) / (num_bars / 2))
+            h = int(base_h * 0.4 + max_h * edge_factor * 0.6)
+            h = max(min_h, h)
+
+            x_center = bar_start_x + i * bar_spacing
+            left = x_center - (bar_w / 2)
+            right = x_center + (bar_w / 2)
+            top = bar_y - (h / 2)
+            bottom = bar_y + (h / 2)
+
+            color = (255, 255, 255, 255) if i < active_bars else (80, 80, 80, 100)
+
+            draw.rounded_rectangle(
+                (left, top, right, bottom), 
+                radius=int(bar_w / 2), 
+                fill=color
+            )
+
+        random.setstate(old_state)
 
         current_y += 80
 
@@ -312,13 +321,7 @@ class YaMusicMod(loader.Module):
     """The module for Yandex.Music streaming service"""
 
     strings = {
-        "name": "YaMusic",
-        "iguide": '📜 <b><a href="https://yandex-music.rtfd.io/en/main/token.html">Guide for obtaining access token for Yandex.Music</a></b>',
-    }
-
-    strings_ru = {
-        "_cls_doc": "Модуль для стримингового сервиса Яндекс.Музыка",
-        "iguide": '📜 <b><a href="https://yandex-music.rtfd.io/en/main/token.html">Гайд по получению токена Яндекс.Музыки</a></b>',
+        "name": "YaMusic"
     }
 
     def __init__(self):
@@ -373,11 +376,10 @@ class YaMusicMod(loader.Module):
         self._client: telethon.TelegramClient = client
         self._db = db
 
-        #utils.register_placeholder(
-            #"now_play", self._now_play_placeholder, "placeholder for nowplay music" 
-        # Heroku 2.0.0 feature
-        #)
-        #utils.register_placeholder("duration", self._duration_placeholder, "progress bar")
+        utils.register_placeholder(
+            "now_play", self._now_play_placeholder, "placeholder for nowplay music" 
+        )
+        utils.register_placeholder("duration", self._duration_placeholder, "progress bar")
 
         if not self.get("guide_sent", False):
             await self.inline.bot.send_message(self._tg_id, self.strings("iguide"))
@@ -423,7 +425,7 @@ class YaMusicMod(loader.Module):
         me = await self._client.get_me()
         self._premium = me.premium if hasattr(me, "premium") else False
 
-    @loader.loop(15)
+    @loader.loop(30)
     async def autobio(self):
         if not self.config["token"]:
             self.autobio.stop()
@@ -543,7 +545,7 @@ class YaMusicMod(loader.Module):
             now = await self.__get_now_playing()
             if not now or now.get("paused"):
                 return "<code>Not Playing</code>"
-            
+
             duration = now.get("duration_ms", 0)
             progress = now.get("progress_ms", 0)
             
@@ -632,13 +634,14 @@ class YaMusicMod(loader.Module):
     )
     async def ynowcmd(self, message: telethon.types.Message):
         """👉 Get the banner of the track playing right now"""
+
+        await utils.answer(message, self.strings("uploading_banner"))
         ym_client = await self._get_ym_client()
         if not ym_client:
             return await utils.answer(
                 message, self.strings("errors")["no_token_or_invalid"]
             )
 
-        await utils.answer(message, self.strings("uploading_banner"))
         now = await self.__get_now_playing()
 
         if not now or now.get("paused"):
@@ -694,10 +697,6 @@ class YaMusicMod(loader.Module):
             .format(playlist_name),
             link=f"<a href=\"https://music.yandex.ru/track/{now['playable_id']}\">Яндекс.Музыка</a>",
         )
-        try:
-            await utils.answer(message, out + self.strings("uploading_banner"))
-        except Exception:
-            pass
 
         album_obj = track_object.albums[0] if track_object.albums else None
 
@@ -823,10 +822,6 @@ class YaMusicMod(loader.Module):
             .format(playlist_name),
             link=f"<a href=\"https://music.yandex.ru/track/{now['playable_id']}\">Яндекс.Музыка</a>",
         )
-        try:
-            await utils.answer(message, out + self.strings("downloading_track"))
-        except Exception:
-            pass
 
         await utils.answer(
             message=message,
@@ -954,6 +949,7 @@ class YaMusicMod(loader.Module):
                 ),
             )
 
+
     async def __download_track(
         self,
         client: yandex_music.ClientAsync,
@@ -977,7 +973,7 @@ class YaMusicMod(loader.Module):
                     await asyncio.sleep(1)
                     continue
                 raise e
-
+    
     async def __get_ynison(self):
         async def create_ws(token, ws_proto):
             async with aiohttp.ClientSession() as session:
