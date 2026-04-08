@@ -1,5 +1,5 @@
 # -- version --
-__version__ = (1, 2, 3)
+__version__ = (1, 2, 4)
 # -- version --
 
 
@@ -14,6 +14,8 @@ __version__ = (1, 2, 3)
 
 
 # meta developer: @mead0wssMods x @nullmod
+# meta banner: https://files.catbox.moe/nie3ef.jpg
+# banner by: @SunnexGB
 # scope: heroku_only
 
 from .. import loader, utils
@@ -22,10 +24,12 @@ from herokutl.tl.types import InputInvoiceStarGift, TextWithEntities
 from herokutl.errors.rpcerrorlist import BadRequestError
 import logging
 import herokutl
+import aiohttp
+import json
 
 @loader.tds
 class SenderGifts(loader.Module):
-    """Модуль для отправки подарков Telegram прямиком в чате"""
+    """Модуль для отправки обычных и удаленных подарков Telegram прямиком в чате"""
     
     strings = {
         "name": "SenderGifts",
@@ -43,25 +47,27 @@ class SenderGifts(loader.Module):
         "min_stars_error": "<emoji document_id=4958526153955476488>❌</emoji> Недостаточно звезд для отправки минимального подарка!",
         "no_available_gifts": "<emoji document_id=4958526153955476488>❌</emoji> Нет доступных подарков для вашего баланса",
         "balance_error": "<emoji document_id=4958526153955476488>❌</emoji> Ошибка при проверке баланса",
+        "user_disallowed_gifts": "<emoji document_id=4958526153955476488>❌</emoji> Данный пользователь не принимает подарки!",
         "btn_public": "📢 Публично",
         "btn_anon": "🕵️ Анонимно",
     }
 
+    # резерв
     regular_gifts = {
-        15: [
+        15:[
             {"id": 5170145012310081615, "emoji": "❤️", "name": "Сердце"},
             {"id": 5170233102089322756, "emoji": "🧸", "name": "Мишка"},
         ],
-        25: [
+        25:[
             {"id": 5170250947678437525, "emoji": "🎁", "name": "Подарок"},
             {"id": 5168103777563050263, "emoji": "🌹", "name": "Роза"},
         ],
-        50: [
+        50:[
             {"id": 5170144170496491616, "emoji": "🎂", "name": "Тортик"},
             {"id": 5170314324215857265, "emoji": "💐", "name": "Цветы"},
             {"id": 5170564780938756245, "emoji": "🚀", "name": "Ракета"},
         ],
-        100: [
+        100:[
             {"id": 5168043875654172773, "emoji": "🏆", "name": "Кубок"},
             {"id": 5170690322832818290, "emoji": "💍", "name": "Кольцо"},
             {"id": 5170521118301225164, "emoji": "💎", "name": "Алмаз"},
@@ -71,31 +77,51 @@ class SenderGifts(loader.Module):
     unique_gifts = {
         "new_year": {
             "name": "🎄 Новогодние подарки",
-            "gifts": [
+            "gifts":[
                 {"id": 5922558454332916696, "emoji": "🎄", "name": "Ёлка", "price": 50},
                 {"id": 5956217000635139069, "emoji": "🧸", "name": "Новогодний мишка", "price": 50},
             ]
         },
         "valentines": {
             "name": "💘 День святого валентина",
-            "gifts": [
+            "gifts":[
                 {"id": 5800655655995968830, "emoji": "🧸", "name": "14 Февраля мишка", "price": 50},
                 {"id": 5801108895304779062, "emoji": "💘", "name": "14 Февраля сердце", "price": 50},
             ]
         },
         "march_8th": {
             "name": "🌷 8 Марта",
-            "gifts": [  
+            "gifts":[  
                 {"id": 5866352046986232958, "emoji": "🧸", "name": "8 Марта мишка", "price": 50},
             ]
         },
-        "saint_patricks_day ": {
+        "saint_patricks_day": {
             "name": "💰 День святого патрика",
-            "gifts": [  
+            "gifts":[  
                 {"id": 5893356958802511476, "emoji": "🧸", "name": "Лепрекон мишка", "price": 50},
+            ]
+        },
+        "april_1th": {
+            "name": "🤪 1 Апреля",
+            "gifts":[
+                {"id": 5935895822435615975, "emoji": "🧸", "name": "1 Апреля мишка", "price": 50}
             ]
         }
     }
+
+    async def fetch_gifts_from_github(self):
+        url = "https://raw.githubusercontent.com/mead0wsss/mead0wsMods/main/gifts.json"
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=5) as response:
+                    if response.status == 200:
+                        data = await response.json(content_type=None)
+                        if "regular_gifts" in data:
+                            self.regular_gifts = {int(k): v for k, v in data["regular_gifts"].items()}
+                        if "unique_gifts" in data:
+                            self.unique_gifts = data["unique_gifts"]
+        except Exception as e:
+            logging.error(f"Не удалось загрузить подарки с GitHub: {e}")
 
     async def get_star_balance(self):
         try:
@@ -108,6 +134,8 @@ class SenderGifts(loader.Module):
     @loader.command()
     async def sendgift(self, message):
         """- <username> <text*> - отправить подарок пользователю (* - необязательный параметр.) Поддерживается реплай режим."""
+        
+        await self.fetch_gifts_from_github()
         args = utils.get_args_html(message)
         reply = await message.get_reply_message()
         if reply:
@@ -152,7 +180,6 @@ class SenderGifts(loader.Module):
 
         helper_msg = await self.inline.form("🪐", balance_msg)
         
-
         await self._show_main_menu_logic(helper_msg, user.id, text, balance, message.id, answer=True)
 
     async def _show_main_menu_logic(self, msg_or_call, user_id, text, balance, msg_id, answer=False):
@@ -162,13 +189,11 @@ class SenderGifts(loader.Module):
         except:
             user_display = f"ID: {user_id}"
 
-        buttons = [
-            [{
+        buttons = [[{
                 "text": "🎁 Обычные подарки",
                 "callback": self._show_regular_categories,
                 "args": (user_id, text, balance, msg_id),
-            }],
-            [{
+            }],[{
                 "text": "✨ Уникальные подарки",
                 "callback": self._show_unique_categories,
                 "args": (user_id, text, balance, msg_id),
@@ -192,10 +217,10 @@ class SenderGifts(loader.Module):
         except:
             user_display = f"ID: {user_id}"
 
-        available_categories = [price for price in self.regular_gifts.keys() if balance >= price]
+        available_categories =[price for price in self.regular_gifts.keys() if balance >= price]
         
         buttons = []
-        row = []
+        row =[]
         for price in sorted(available_categories):
             row.append({
                 "text": f"{price} ⭐",
@@ -226,7 +251,7 @@ class SenderGifts(loader.Module):
         except:
             user_display = f"ID: {user_id}"
 
-        buttons = []
+        buttons =[]
         for cat_id, cat_data in self.unique_gifts.items():
             if any(balance >= gift["price"] for gift in cat_data["gifts"]):
                 buttons.append([{
@@ -256,7 +281,7 @@ class SenderGifts(loader.Module):
     async def _show_category(self, call, user_id, price, text, balance, msg_id):
         gifts = self.regular_gifts[price]
         buttons = []
-        row = []
+        row =[]
         for gift in gifts:
             row.append({
                 "text": gift["emoji"],
@@ -265,7 +290,7 @@ class SenderGifts(loader.Module):
             })
             if len(row) == 3:
                 buttons.append(row)
-                row = []
+                row =[]
         
         if row:
             buttons.append(row)
@@ -299,7 +324,7 @@ class SenderGifts(loader.Module):
                 })
             if len(row) == 3:
                 buttons.append(row)
-                row = []
+                row =[]
         
         if row:
             buttons.append(row)
@@ -326,8 +351,7 @@ class SenderGifts(loader.Module):
         else:
             back_callback = self._show_unique_category_gifts
 
-        buttons = [
-            [
+        buttons = [[
                 {
                     "text": self.strings["btn_public"],
                     "callback": self._send_gift,
@@ -338,8 +362,7 @@ class SenderGifts(loader.Module):
                     "callback": self._send_gift,
                     "args": (user_id, gift_id, text, gift_emoji, msg_id, balance, True)
                 }
-            ],
-            [
+            ],[
                 {
                     "text": "⬅️ Назад",
                     "callback": back_callback,
@@ -369,7 +392,7 @@ class SenderGifts(loader.Module):
                 user,
                 gift_id,
                 hide_name=hide_name,
-                message=TextWithEntities(text, entities) if text else TextWithEntities("", [])
+                message=TextWithEntities(text, entities) if text else TextWithEntities("",[])
             )
             form = await self.client(GetPaymentFormRequest(inv))
             result = await self.client(SendStarsFormRequest(form.form_id, inv))
@@ -380,6 +403,11 @@ class SenderGifts(loader.Module):
             if "BALANCE_TOO_LOW" in str(e):
                 await call.edit(
                     self.strings["not_enough_stars"].format(gift_emoji),
+                    reply_markup=None
+                )
+            elif "USER_DISALLOWED_STARGIFTS" in str(e):
+                await call.edit(
+                    self.strings["user_disallowed_gifts"].format(gift_emoji),
                     reply_markup=None
                 )
             else:
