@@ -15,6 +15,7 @@
 
 import contextlib
 import logging
+import re
 from datetime import datetime, timezone
 
 import aiohttp
@@ -49,6 +50,25 @@ EVENT_LABELS = {
     "release":      "🚀 Releases",
     "star":         "⭐ Stars",
 }
+
+
+def _sanitize_body(text: str, max_len: int = 300) -> str:
+    if not text:
+        return ""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    text = re.sub(r"<details[^>]*>.*?</details>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<summary[^>]*>.*?</summary>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<img[^>]*>", "", text, flags=re.IGNORECASE)
+    ALLOWED = {"b", "i", "u", "s", "code", "pre", "a", "blockquote", "tg-spoiler"}
+    text = re.sub(
+        r"<(/?)([a-zA-Z][a-zA-Z0-9]*)[^>]*>",
+        lambda m: m.group(0) if m.group(2).lower() in ALLOWED else "",
+        text,
+    )
+    text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    if len(text) > max_len:
+        text = text[:max_len].rstrip() + "…"
+    return text
 
 
 @loader.tds
@@ -396,6 +416,7 @@ class GitHubMod(loader.Module):
             ),
         )
         self._sessions: dict[str, aiohttp.ClientSession] = {}
+        self._seen: set[str] = set()   # дедупликация событий: "repo:type:id"
 
     async def client_ready(self):
         raw = self.db.get("GitHubMod", "dests")
@@ -677,7 +698,7 @@ class GitHubMod(loader.Module):
             else:
                 e_key, action = "pr_open", self.strings("pr_opened")
             raw_body = pr.get("body") or ""
-            body = (raw_body[:200] + "...") if len(raw_body) > 200 else raw_body
+            body = _sanitize_body(raw_body, max_len=300)
             msgs.append(self.strings("notify_pr").format(
                 e=E[e_key], action=action, repo=repo,
                 url=pr.get("html_url", "#"),
@@ -743,28 +764,79 @@ class GitHubMod(loader.Module):
             since = repo_data.get("last_checked")
             if not since:
                 continue
+
             if "push" in events:
                 c = await self._fetch_commits(repo, since, cid_str)
                 if c:
-                    newest_sha = c[-1].get("sha", "")
-                    branch = await self._fetch_branch_for_commit(repo, newest_sha, cid_str)
-                    messages += self._fmt_push(repo, c, branch=branch)
+                    # дедуп по SHA
+                    new_commits = []
+                    for commit in c:
+                        key = f"{repo}:push:{commit.get('sha', '')}"
+                        if key not in self._seen:
+                            self._seen.add(key)
+                            new_commits.append(commit)
+                    if new_commits:
+                        newest_sha = new_commits[-1].get("sha", "")
+                        branch = await self._fetch_branch_for_commit(repo, newest_sha, cid_str)
+                        messages += self._fmt_push(repo, new_commits, branch=branch)
+
             if "issues" in events:
                 i = await self._fetch_issues(repo, since, cid_str)
                 if i:
-                    messages += self._fmt_issues(repo, i)
+                    new_issues = []
+                    for issue in i:
+                        # ключ: repo:issue:number:state (state меняется — open/closed)
+                        key = f"{repo}:issue:{issue.get('number')}:{issue.get('state')}"
+                        if key not in self._seen:
+                            self._seen.add(key)
+                            new_issues.append(issue)
+                    if new_issues:
+                        messages += self._fmt_issues(repo, new_issues)
+
             if "pull_request" in events:
                 p = await self._fetch_prs(repo, since, cid_str)
                 if p:
-                    messages += self._fmt_prs(repo, p)
+                    new_prs = []
+                    for pr in p:
+                        merged = pr.get("merged_at") is not None
+                        state  = pr.get("state", "open")
+                        # ключ включает финальное состояние PR
+                        phase = "merged" if merged else state
+                        key = f"{repo}:pr:{pr.get('number')}:{phase}"
+                        if key not in self._seen:
+                            self._seen.add(key)
+                            new_prs.append(pr)
+                    if new_prs:
+                        messages += self._fmt_prs(repo, new_prs)
+
             if "release" in events:
                 r = await self._fetch_releases(repo, since, cid_str)
                 if r:
-                    messages += self._fmt_releases(repo, r)
+                    new_releases = []
+                    for rel in r:
+                        key = f"{repo}:release:{rel.get('id', rel.get('tag_name'))}"
+                        if key not in self._seen:
+                            self._seen.add(key)
+                            new_releases.append(rel)
+                    if new_releases:
+                        messages += self._fmt_releases(repo, new_releases)
+
             if "star" in events:
                 s = await self._fetch_stargazers(repo, since, cid_str)
                 if s:
-                    messages += self._fmt_star(repo, s)
+                    new_stars = []
+                    for star in s:
+                        user = (star.get("sender") or {}).get("login", "")
+                        key  = f"{repo}:star:{user}"
+                        if key not in self._seen:
+                            self._seen.add(key)
+                            new_stars.append(star)
+                    if new_stars:
+                        messages += self._fmt_star(repo, new_stars)
+
+        # Ограничиваем размер _seen чтобы не распухал в памяти
+        if len(self._seen) > 2000:
+            self._seen = set(list(self._seen)[-1000:])
 
         for text in messages:
             try:
@@ -1032,3 +1104,4 @@ class GitHubMod(loader.Module):
         """- Open GitHub Monitor control panel"""
         await self._render_main_menu(message)
 
+    
