@@ -179,7 +179,7 @@ class PicToStoriesMod(loader.Module):
             all_albums = await self.client(
                 functions.stories.GetAlbumsRequest(peer=types.InputPeerSelf(), hash=0)
             )
-            
+
             target = next(
                 (a for a in all_albums.albums if getattr(a, 'title', '') == args),
                 None
@@ -201,11 +201,11 @@ class PicToStoriesMod(loader.Module):
                         title=args,
                     )
                 )
-        else:
-            await self.client(
-                functions.stories.TogglePinnedRequest(
-                    peer=types.InputPeerSelf(), id=story_ids, pinned=True
-                )
+
+        await self.client(
+            functions.stories.TogglePinnedRequest(
+                peer=types.InputPeerSelf(), id=story_ids, pinned=True
             )
+        )
 
         await utils.answer(message, self.strings("done"))
