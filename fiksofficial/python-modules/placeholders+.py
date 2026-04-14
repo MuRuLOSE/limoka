@@ -26,7 +26,7 @@ from typing import Optional, Dict, Any
 from collections import OrderedDict
 
 from .. import loader, utils, validators
-from herokutl.tl.functions.users import GetFullUserRequest
+from telethon.tl.functions.users import GetFullUserRequest
 from herokutl.tl.functions.payments import GetStarsStatusRequest
 
 logger = logging.getLogger(__name__)
@@ -118,21 +118,23 @@ class PlaceholdersMod(loader.Module):
         )
         self.cache = LRUCache(max_size=100, ttl=300)
 
-    async def client_ready(self):
+    async def client_ready(self, client, db):
+        self._client = client
         self.session = aiohttp.ClientSession()
 
-        self.me = await self._client.get_me()
-        self.full_me = await self._client(GetFullUserRequest(self.me))
+        self.me = await client.get_me()
+        self.full_me = await client(GetFullUserRequest(self.me))
 
         try:
-            stars_status = await self._client(GetStarsStatusRequest(entity="me"))
+            stars_status = await self._client(GetStarsStatusRequest(entity='me'))
             self.stars_balance = stars_status.balance
-        except Exception:
+        except:
             self.stars_balance = 0
 
         self.tz = timezone(timedelta(hours=self.config["timezone"]))
         self.weekdays_ru = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
 
+        # Регистрация плейсхолдеров
         self._register_placeholders()
 
     def _register_placeholders(self):
@@ -199,30 +201,18 @@ class PlaceholdersMod(loader.Module):
             utils.register_placeholder(name, func, desc)
     
     async def get_premium_check(self):
-        if not getattr(self.me, "premium", False):
+        if not self.me.premium:
             return "Нет Premium"
-
-        # premium_until отсутствует в публичном MTProto API herokutl/Telethon —
-        # пробуем достать его, но не падаем если поля нет
-        until = None
-        try:
-            until = getattr(self.full_me.full_user, "premium_until", None)
-            # Иногда это datetime, иногда unix timestamp (int)
-            if isinstance(until, datetime):
-                until = until.timestamp()
-        except Exception:
-            until = None
-
-        if not until:
-            return "✅ Premium активен"
-
-        if until < time.time():
-            return "⚠️ Премиум истёк"
-
+        
+        until = self.full_me.full_user.premium_until
+        if not until or until < time.time():
+            return "Премиум закончился"
+        
         end_date = datetime.fromtimestamp(until, tz=self.tz)
         days_left = (end_date.date() - datetime.now(self.tz).date()).days
+        
         formatted = end_date.strftime("%d.%m.%Y")
-        return f"✅ до {formatted} (ещё {days_left} дн.)"
+        return f"{formatted} (Осталось {days_left} дней)"
 
     async def get_username(self): 
         return f"@{self.me.username}" if self.me.username else "Нет"
@@ -245,8 +235,10 @@ class PlaceholdersMod(loader.Module):
     async def get_dc_id(self): 
         return str(self.me.dc_id if hasattr(self.me, "dc_id") else "Неизвестно")
     
-    async def get_stars(self): 
-        return f"{self.stars_balance:,}".replace(",", " ") if self.stars_balance else "0"
+    async def get_stars(self):
+        result = await self.client(GetStarsStatusRequest("me"))
+        stars = result.balance.amount if result and result.balance else 0
+        return f"{stars:,}".replace(",", " ") if stars else "0"
 
     async def get_usd_to_rub(self):
         cache_key = "usd_rub"
@@ -261,7 +253,7 @@ class PlaceholdersMod(loader.Module):
                 result = f"1 USD ≈ {rate:.2f} RUB"
                 self.cache.set(cache_key, result)
                 return result
-        except Exception:
+        except:
             try:
                 async with self.session.get("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json") as resp:
                     data = await resp.json()
@@ -269,7 +261,7 @@ class PlaceholdersMod(loader.Module):
                     result = f"1 USD ≈ {rate:.2f} RUB"
                     self.cache.set(cache_key, result)
                     return result
-            except Exception:
+            except:
                 return "Курс USD недоступен"
     
     async def get_rub_to_usd(self):
@@ -278,7 +270,7 @@ class PlaceholdersMod(loader.Module):
             try:
                 rate = float(usd_rub.split("≈")[1].strip().split()[0])
                 return f"1 RUB ≈ {1/rate:.4f} USD"
-            except Exception:
+            except:
                 pass
         return "Курс RUB недоступен"
     
@@ -301,7 +293,7 @@ class PlaceholdersMod(loader.Module):
                 result = f"1 TON ≈ {rate:.2f} RUB"
                 self.cache.set(cache_key, result)
                 return result
-        except Exception:
+        except:
             return "Курс TON недоступен"
     
     async def get_rub_to_ton(self):
@@ -310,7 +302,7 @@ class PlaceholdersMod(loader.Module):
             try:
                 rate = float(ton_rub.split("≈")[1].strip().split()[0])
                 return f"1 RUB ≈ {1/rate:.6f} TON"
-            except Exception:
+            except:
                 pass
         return "Курс недоступен"
     
@@ -327,7 +319,7 @@ class PlaceholdersMod(loader.Module):
                 result = f"1 BTC ≈ {rate:,.0f} RUB"
                 self.cache.set(cache_key, result)
                 return result
-        except Exception:
+        except:
             return "Курс BTC недоступен"
     
     async def get_eth_to_rub(self):
@@ -343,7 +335,7 @@ class PlaceholdersMod(loader.Module):
                 result = f"1 ETH ≈ {rate:,.0f} RUB"
                 self.cache.set(cache_key, result)
                 return result
-        except Exception:
+        except:
             return "Курс ETH недоступен"
     
     async def get_stars_to_rub(self): 
@@ -373,7 +365,7 @@ class PlaceholdersMod(loader.Module):
             sent_gb = net.bytes_sent // (1024**3)
             recv_gb = net.bytes_recv // (1024**3)
             return f"↑ {sent_gb} GB │ ↓ {recv_gb} GB"
-        except Exception:
+        except:
             return "↑ 0 GB │ ↓ 0 GB"
     
     async def get_speedtest(self):
@@ -405,7 +397,7 @@ class PlaceholdersMod(loader.Module):
                     result = f"≈ {speed_mbps:.1f} Mbps"
                     self.cache.set(cache_key, result)
                     return result
-            except Exception:
+            except:
                 continue
         
         return "Тест скорости недоступен"
@@ -426,7 +418,7 @@ class PlaceholdersMod(loader.Module):
             used_gb = usage.used // (1024**3)
             total_gb = usage.total // (1024**3)
             return f"{used_gb} GB / {total_gb} GB ({percent:.1f}%)"
-        except Exception:
+        except:
             return "Диск недоступен"
     
     async def get_local_ip(self):
@@ -436,7 +428,7 @@ class PlaceholdersMod(loader.Module):
             ip = s.getsockname()[0]
             s.close()
             return ip
-        except Exception:
+        except:
             return "Неизвестно"
     
     async def get_user_hostname(self): 
@@ -507,7 +499,7 @@ class PlaceholdersMod(loader.Module):
                     }
                     self.cache.set(cache_key, weather_data)
                     return weather_data
-        except Exception:
+        except:
             pass
         
         default = {
@@ -595,7 +587,7 @@ class PlaceholdersMod(loader.Module):
                     result = f"🎵 {stats['playcount']} скробблов"
                     self.cache.set(cache_key, result)
                     return result
-        except Exception:
+        except:
             pass
         
         return "Статистика недоступна"
@@ -637,14 +629,10 @@ class PlaceholdersMod(loader.Module):
                     }
                     self.cache.set(cache_key, result)
                     return result
-        except Exception:
+        except:
             pass
         
         return None
 
     async def on_unload(self):
-        utils.unregister_placeholders(self.__class__.__name__)
-        try:
-            await self.session.close()
-        except Exception:
-            pass
+        await self.session.close()

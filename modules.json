@@ -8310,6 +8310,73 @@
       "has_on_unload": true,
       "class_cmd_names": {}
     },
+    "Fixyres/FModules/FSecurity.py": {
+      "name": "FSecurity",
+      "description": "Module for automatic AI-based security checks of installed modules.",
+      "cls_doc": {
+        "ru": "Модуль для автоматической проверки устанавливаемых модулей через ИИ.",
+        "ua": "Модуль для автоматичної перевірки встановлюваних модулів через ШІ.",
+        "de": "Modul zur automatischen Prüfung installierter Module mit KI.",
+        "jp": "AIでインストールされるモジュールを自動チェックするモジュール。",
+        "tr": "Kurulan modülleri yapay zeka ile otomatik kontrol eden modül.",
+        "uz": "O'rnatilayotgan modullarni AI orqali avtomatik tekshiruvchi modul.",
+        "kz": "Орнатылатын модульдерді ЖИ арқылы автоматты тексеретін модуль."
+      },
+      "meta": {
+        "pic": null,
+        "banner": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FSecurity/banner.png",
+        "developer": "@FModules"
+      },
+      "commands": [],
+      "new_commands": [],
+      "inline_handlers": [],
+      "strings": {
+        "name": "FSecurity",
+        "lang": "en",
+        "unavailable": "AI module check is unavailable.",
+        "suspicious": "AI interrupted installation of a suspicious module, reason:",
+        "blocked": "AI blocked module installation, reason:",
+        "continue": "Continue installation?",
+        "lang_ru": "ru",
+        "unavailable_ru": "Проверка модуля через ИИ недоступна.",
+        "suspicious_ru": "ИИ прервал установку подозрительного модуля, причина:",
+        "blocked_ru": "ИИ заблокировал установку модуля, причина:",
+        "continue_ru": "Продолжить установку?",
+        "lang_ua": "ua",
+        "unavailable_ua": "Перевірка модуля через ШІ недоступна.",
+        "suspicious_ua": "ШІ перервав встановлення підозрілого модуля, причина:",
+        "blocked_ua": "ШІ заблокував встановлення модуля, причина:",
+        "continue_ua": "Продовжити встановлення?",
+        "lang_de": "de",
+        "unavailable_de": "Die KI-Modulprüfung ist nicht verfügbar.",
+        "suspicious_de": "Die KI hat die Installation eines verdächtigen Moduls unterbrochen, Grund:",
+        "blocked_de": "Die KI hat die Modulinstallation blockiert, Grund:",
+        "continue_de": "Installation fortsetzen?",
+        "lang_jp": "jp",
+        "unavailable_jp": "AIモジュールのチェックが利用できません。",
+        "suspicious_jp": "AIが疑わしいモジュールのインストールを中断しました、理由：",
+        "blocked_jp": "AIがモジュールのインストールをブロックしました、理由：",
+        "continue_jp": "インストールを続行しますか？",
+        "lang_tr": "tr",
+        "unavailable_tr": "Yapay zeka modül kontrolü kullanılamıyor.",
+        "suspicious_tr": "Yapay zeka şüpheli bir modülün kurulumunu durdurdu, sebep:",
+        "blocked_tr": "Yapay zeka modül kurulumunu engelledi, sebep:",
+        "continue_tr": "Kuruluma devam edilsin mi?",
+        "lang_uz": "uz",
+        "unavailable_uz": "AI modul tekshiruvi mavjud emas.",
+        "suspicious_uz": "AI shubhali modul o'rnatilishini to'xtatdi, sabab:",
+        "blocked_uz": "AI modul o'rnatilishini blokladi, sabab:",
+        "continue_uz": "O'rnatishni davom ettirasizmi?",
+        "lang_kz": "kz",
+        "unavailable_kz": "AI модульін тексеру қолжетімсіз.",
+        "suspicious_kz": "AI күдікті модульді орнатуды тоқтатты, себебі:",
+        "blocked_kz": "AI модульді орнатуды бұғаттады, себебі:",
+        "continue_kz": "Орнатуды жалғастырасыз ба?"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "Fixyres/FModules/BSR.py": {
       "name": "BSR",
       "description": "Module for finding nearby game rooms in BrawlStars.",
@@ -84526,7 +84593,7 @@
       "cls_doc": {},
       "meta": {
         "pic": null,
-        "banner": "https://github.com/Midga3/heroku-modules/blob/main/new_module.jpg?raw=true",
+        "banner": null,
         "developer": "@midga3_modules"
       },
       "commands": [],
@@ -84951,7 +85018,7 @@
     }
   },
   "meta": {
-    "total_modules": 1057,
-    "generated_at": "2026-04-12T17:39:10.030299"
+    "total_modules": 1058,
+    "generated_at": "2026-04-14T01:57:03.389942"
   }
 }

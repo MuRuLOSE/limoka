@@ -100,18 +100,6 @@ class MInstaller:
             
         return "dependency", []
 
-    async def pip(self, dependencies: List[str]) -> bool:
-        virtualenv = hasattr(sys, 'real_prefix') or sys.prefix != getattr(sys, 'base_prefix', sys.prefix)
-        flags = ["--user"] if loader.USER_INSTALL and not virtualenv else []
-        
-        process = await asyncio.create_subprocess_exec(
-            sys.executable, "-m", "pip", "install", "-U", "-q",
-            "--disable-pip-version-check", "--no-warn-script-location",
-            *flags, *dependencies
-        )
-        
-        return await process.wait() == 0
-
     async def load(self, plugin: 'loader.Module', code: str, origin: str, step: int) -> Union[str, List[str]]:
         if step == 0:
             try:
@@ -121,7 +109,7 @@ class MInstaller:
                 ))
                 
                 if dependencies:
-                    if not await self.pip(dependencies):
+                    if not await plugin.install_requirements(dependencies):
                         return dependencies
                     importlib.invalidate_caches()
                     return "retry"
@@ -171,7 +159,7 @@ class MInstaller:
             alternative = {"sklearn": "scikit-learn", "pil": "Pillow", "herokutl": "Heroku-TL-New"}.get(exception.name.lower(), exception.name)
             dependencies = [alternative]
             
-            if not alternative or not await self.pip(dependencies):
+            if not alternative or not await plugin.install_requirements(dependencies):
                 return dependencies
                 
             importlib.invalidate_caches()
