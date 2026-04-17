@@ -8310,6 +8310,117 @@
       "has_on_unload": true,
       "class_cmd_names": {}
     },
+    "Fixyres/FModules/LFSecurity.py": {
+      "name": "FSecurity",
+      "description": "Module for automatic AI-based security checks of installed modules.",
+      "cls_doc": {
+        "ru": "Модуль для автоматической проверки устанавливаемых модулей через ИИ.",
+        "ua": "Модуль для автоматичної перевірки встановлюваних модулів через ШІ.",
+        "de": "Modul zur automatischen Prüfung installierter Module mit KI.",
+        "jp": "AIでインストールされるモジュールを自動チェックするモジュール。",
+        "tr": "Kurulan modülleri yapay zeka ile otomatik kontrol eden modül.",
+        "uz": "O'rnatilayotgan modullarni AI orqali avtomatik tekshiruvchi modul.",
+        "kz": "Орнатылатын модульдерді ЖИ арқылы автоматты тексеретін модуль."
+      },
+      "meta": {
+        "pic": null,
+        "banner": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FSecurity/banner.png",
+        "developer": "@NFModules",
+        "fhsdesc": "security, guard, antiscam, antivirus"
+      },
+      "commands": [],
+      "new_commands": [],
+      "inline_handlers": [],
+      "strings": {
+        "name": "FSecurity"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
+    "Fixyres/FModules/FSecurity.py": {
+      "name": "FSecurity",
+      "description": "Module for automatic AI-based security checks of installed modules.",
+      "cls_doc": {
+        "ru": "Модуль для автоматической проверки устанавливаемых модулей через ИИ.",
+        "ua": "Модуль для автоматичної перевірки встановлюваних модулів через ШІ.",
+        "de": "Modul zur automatischen Prüfung installierter Module mit KI.",
+        "jp": "AIでインストールされるモジュールを自動チェックするモジュール。",
+        "tr": "Kurulan modülleri yapay zeka ile otomatik kontrol eden modül.",
+        "uz": "O'rnatilayotgan modullarni AI orqali avtomatik tekshiruvchi modul.",
+        "kz": "Орнатылатын модульдерді ЖИ арқылы автоматты тексеретін модуль."
+      },
+      "meta": {
+        "pic": null,
+        "banner": null,
+        "developer": "@NFModules"
+      },
+      "commands": [],
+      "new_commands": [],
+      "inline_handlers": [],
+      "strings": {
+        "name": "FSecurity",
+        "lang": "English",
+        "unavailable": "AI module{} check is unavailable.",
+        "suspicious": "AI interrupted installation of a suspicious module{}, reason:",
+        "blocked": "AI blocked module installation{}, reason:",
+        "continue": "Continue installation?",
+        "strict_mode_doc": "Block loading modules by any method (lm/dlm allowed) if the AI API is unavailable or the module is suspicious. On restart, this also applies to already installed modules.",
+        "nvidia_api_key_doc": "API key from build.nvidia.com, used for AI checks. If not specified, a public key from GitHub will be used.",
+        "lang_ru": "Russian",
+        "unavailable_ru": "Проверка модуля{} через ИИ недоступна.",
+        "suspicious_ru": "ИИ прервал установку подозрительного модуля{}, причина:",
+        "blocked_ru": "ИИ заблокировал установку модуля{}, причина:",
+        "continue_ru": "Продолжить установку?",
+        "strict_mode_doc_ru": "Не позволять загружать модули любым методом (lm/dlm разрешено), если API ИИ недоступен или модуль подозрителен. При перезагрузке работает даже на уже установленные модули.",
+        "nvidia_api_key_doc_ru": "API ключ от build.nvidia.com, используется для проверки через ИИ. Если вы его не укажете, будет использоваться общий ключ с GitHub.",
+        "lang_ua": "Ukraine",
+        "unavailable_ua": "Перевірка модуля{} через ШІ недоступна.",
+        "suspicious_ua": "ШІ перервав встановлення підозрілого модуля{}, причина:",
+        "blocked_ua": "ШІ заблокував встановлення модуля{}, причина:",
+        "continue_ua": "Продовжити встановлення?",
+        "strict_mode_doc_ua": "Не дозволяти завантажувати модулі будь-яким методом (lm/dlm дозволено), якщо API ШІ недоступний або модуль підозрілий. При перезавантаженні працює навіть на вже встановлені модулі.",
+        "nvidia_api_key_doc_ua": "API ключ від build.nvidia.com, використовується для перевірки через ШІ. Якщо ви його не вкажете, буде використовуватися загальний ключ з GitHub.",
+        "lang_de": "Germany",
+        "unavailable_de": "Die KI-Modulprüfung{} ist nicht verfügbar.",
+        "suspicious_de": "Die KI hat die Installation eines verdächtigen Moduls unterbrochen{}, Grund:",
+        "blocked_de": "Die KI hat die Modulinstallation blockiert{}, Grund:",
+        "continue_de": "Installation fortsetzen?",
+        "strict_mode_doc_de": "Das Laden von Modulen mit jeder Methode blockieren (lm/dlm erlaubt), wenn die KI-API nicht verfügbar ist oder das Modul verdächtig ist. Beim Neustart gilt dies auch für bereits installierte Module.",
+        "nvidia_api_key_doc_de": "API-Schlüssel von build.nvidia.com, der für KI-Prüfungen verwendet wird. Wenn nicht angegeben, wird ein öffentlicher Schlüssel von GitHub verwendet.",
+        "lang_jp": "Japanese",
+        "unavailable_jp": "AIモジュール{}のチェックが利用できません。",
+        "suspicious_jp": "AIが疑わしいモジュールのインストールを中断しました{}、理由：",
+        "blocked_jp": "AIがモジュールのインストールをブロックしました{}、理由：",
+        "continue_jp": "インストールを続行しますか？",
+        "strict_mode_doc_jp": "AI APIが利用できない場合や疑わしいモジュールの場合、すべての方法でモジュールの読み込みをブロックします（lm/dlmは許可）。再起動時にはインストール済みモジュールにも適用されます。",
+        "nvidia_api_key_doc_jp": "build.nvidia.com のAPIキー。AIチェックに使用されます。指定しない場合は、GitHubのパブリックキーが使用されます。",
+        "lang_tr": "Turkish",
+        "unavailable_tr": "Yapay zeka modül{} kontrolü kullanılamıyor.",
+        "suspicious_tr": "Yapay zeka şüpheli bir modülün kurulumunu durdurdu{}, sebep:",
+        "blocked_tr": "Yapay zeka modül kurulumunu engelledi{}, sebep:",
+        "continue_tr": "Kuruluma devam edilsin mi?",
+        "strict_mode_doc_tr": "AI API kullanılamıyorsa veya modül şüpheliyse, tüm yöntemlerle modül yüklenmesini engelle (lm/dlm izinli). Yeniden başlatmada zaten kurulu modüller için de geçerlidir.",
+        "nvidia_api_key_doc_tr": "Yapay zeka kontrolleri için kullanılan build.nvidia.com API anahtarı. Belirtilmezse GitHub'daki genel anahtar kullanılacaktır.",
+        "lang_uz": "Uzbekistan",
+        "unavailable_uz": "AI modul{} tekshiruvi mavjud emas.",
+        "suspicious_uz": "AI shubhali modul o'rnatilishini to'xtatdi{}, sabab:",
+        "blocked_uz": "AI modul o'rnatilishini blokladi{}, sabab:",
+        "continue_uz": "O'rnatishni davom ettirasizmi?",
+        "strict_mode_doc_uz": "AI API mavjud bo'lmasa yoki modul shubhali bo'lsa, barcha usullar bilan modul yuklashni bloklash (lm/dlm ruxsat etilgan). Qayta ishga tushirishda allaqachon o'rnatilgan modullarga ham ta'sir qiladi.",
+        "nvidia_api_key_doc_uz": "build.nvidia.com API kaliti, AI orqali tekshirish uchun ishlatiladi. Agar ko'rsatmasangiz, GitHub-dan umumiy kalit ishlatiladi.",
+        "lang_kz": "Kazakhstan",
+        "unavailable_kz": "AI модуль{} тексеру қолжетімсіз.",
+        "suspicious_kz": "AI күдікті модульді орнатуды тоқтатты{}, себебі:",
+        "blocked_kz": "AI модульді орнатуды бұғаттады{}, себебі:",
+        "continue_kz": "Орнатуды жалғастырасыз ба?",
+        "strict_mode_doc_kz": "AI API қолжетімсіз болса немесе модуль күдікті болса, барлық әдістермен модуль жүктеуді бұғаттау (lm/dlm рұқсат етілген). Қайта іске қосқанда орнатылған модульдерге де қолданылады.",
+        "nvidia_api_key_doc_kz": "build.nvidia.com API кілті, ЖИ арқылы тексеру үшін қолданылады. Егер оны көрсетпесеңіз, GitHub-тан ортақ кілт пайдаланылады."
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "Fixyres/FModules/BSR.py": {
       "name": "BSR",
       "description": "Module for finding nearby game rooms in BrawlStars.",
@@ -84951,7 +85062,7 @@
     }
   },
   "meta": {
-    "total_modules": 1057,
-    "generated_at": "2026-04-16T02:02:10.912643"
+    "total_modules": 1059,
+    "generated_at": "2026-04-17T01:57:48.212632"
   }
 }
