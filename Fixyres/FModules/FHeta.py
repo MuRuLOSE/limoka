@@ -302,7 +302,7 @@ class FHetaUI:
 
 @loader.tds
 class FHeta(loader.Module):
-    '''Module for searching modules! Watch all FHeta news in @FHeta_Updates!'''
+    '''Module for searching modules! Watch all FHeta news in @NFHeta_Updates!'''
 
     strings = {
         "name": "FHeta",
@@ -338,7 +338,7 @@ class FHeta(loader.Module):
     }
     
     strings_ru = {
-        "_cls_doc": "Модуль для поиска модулей! Следите за всеми новостями FHeta в @FHeta_Updates!",
+        "_cls_doc": "Модуль для поиска модулей! Следите за всеми новостями FHeta в @NFHeta_Updates!",
         "lang": "ru",
         "author": "от",
         "description": "Описание",
@@ -371,7 +371,7 @@ class FHeta(loader.Module):
     }
     
     strings_ua = {
-        "_cls_doc": "Модуль для пошуку модулів! Слідкуйте за всіма новинами FHeta в @FHeta_Updates!",
+        "_cls_doc": "Модуль для пошуку модулів! Слідкуйте за всіма новинами FHeta в @NFHeta_Updates!",
         "lang": "ua",
         "author": "від",
         "description": "Опис",
@@ -404,7 +404,7 @@ class FHeta(loader.Module):
     }
     
     strings_kz = {
-        "_cls_doc": "Модульдерді іздеу модулі! FHeta барлық жаңалықтарын @FHeta_Updates арнасында қадағалаңыз!",
+        "_cls_doc": "Модульдерді іздеу модулі! FHeta барлық жаңалықтарын @NFHeta_Updates арнасында қадағалаңыз!",
         "lang": "kz",
         "author": "авторы",
         "description": "Сипаттама",
@@ -437,7 +437,7 @@ class FHeta(loader.Module):
     }
     
     strings_uz = {
-        "_cls_doc": "Modullarni qidirish moduli! FHeta barcha yangilanishlarini @FHeta_Updates kanalida kuzatib boring!",
+        "_cls_doc": "Modullarni qidirish moduli! FHeta barcha yangilanishlarini @NFHeta_Updates kanalida kuzatib boring!",
         "lang": "uz",
         "author": "muallif",
         "description": "Tavsif",
@@ -470,7 +470,7 @@ class FHeta(loader.Module):
     }
     
     strings_fr = {
-        "_cls_doc": "Module de recherche de modules! Suivez toutes les actualités FHeta sur @FHeta_Updates!",
+        "_cls_doc": "Module de recherche de modules! Suivez toutes les actualités FHeta sur @NFHeta_Updates!",
         "lang": "fr",
         "author": "par",
         "description": "Description",
@@ -503,7 +503,7 @@ class FHeta(loader.Module):
     }
     
     strings_de = {
-        "_cls_doc": "Modul zur Suche nach Modulen! Verfolgen Sie alle FHeta-Neuigkeiten auf @FHeta_Updates!",
+        "_cls_doc": "Modul zur Suche nach Modulen! Verfolgen Sie alle FHeta-Neuigkeiten auf @NFHeta_Updates!",
         "lang": "de",
         "author": "von",
         "description": "Beschreibung",
@@ -536,7 +536,7 @@ class FHeta(loader.Module):
     }
     
     strings_jp = {
-        "_cls_doc": "モジュール検索用モジュール！@FHeta_UpdatesでFHetaのすべてのニュースをフォローしてください！",
+        "_cls_doc": "モジュール検索用モジュール！@NFHeta_UpdatesでFHetaのすべてのニュースをフォローしてください！",
         "lang": "jp",
         "author": "作成者",
         "description": "説明",
