@@ -8443,34 +8443,6 @@
       "has_on_unload": true,
       "class_cmd_names": {}
     },
-    "Fixyres/FModules/LFSecurity.py": {
-      "name": "FSecurity",
-      "description": "Module for automatic AI-based security checks of installed modules.",
-      "cls_doc": {
-        "ru": "Модуль для автоматической проверки устанавливаемых модулей через ИИ.",
-        "ua": "Модуль для автоматичної перевірки встановлюваних модулів через ШІ.",
-        "de": "Modul zur automatischen Prüfung installierter Module mit KI.",
-        "jp": "AIでインストールされるモジュールを自動チェックするモジュール。",
-        "tr": "Kurulan modülleri yapay zeka ile otomatik kontrol eden modül.",
-        "uz": "O'rnatilayotgan modullarni AI orqali avtomatik tekshiruvchi modul.",
-        "kz": "Орнатылатын модульдерді ЖИ арқылы автоматты тексеретін модуль."
-      },
-      "meta": {
-        "pic": null,
-        "banner": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FSecurity/banner.png",
-        "developer": "@NFModules",
-        "fhsdesc": "security, guard, antiscam, antivirus"
-      },
-      "commands": [],
-      "new_commands": [],
-      "inline_handlers": [],
-      "strings": {
-        "name": "FSecurity"
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
-      "class_cmd_names": {}
-    },
     "Fixyres/FModules/FSecurity.py": {
       "name": "FSecurity",
       "description": "Module for automatic AI-based security checks of installed modules.",
@@ -84523,7 +84495,7 @@
     }
   },
   "meta": {
-    "total_modules": 1050,
-    "generated_at": "2026-04-19T02:02:03.488953"
+    "total_modules": 1049,
+    "generated_at": "2026-04-19T13:13:46.353025"
   }
 }
