@@ -8443,34 +8443,6 @@
       "has_on_unload": true,
       "class_cmd_names": {}
     },
-    "Fixyres/FModules/LFSecurity.py": {
-      "name": "FSecurity",
-      "description": "Module for automatic AI-based security checks of installed modules.",
-      "cls_doc": {
-        "ru": "Модуль для автоматической проверки устанавливаемых модулей через ИИ.",
-        "ua": "Модуль для автоматичної перевірки встановлюваних модулів через ШІ.",
-        "de": "Modul zur automatischen Prüfung installierter Module mit KI.",
-        "jp": "AIでインストールされるモジュールを自動チェックするモジュール。",
-        "tr": "Kurulan modülleri yapay zeka ile otomatik kontrol eden modül.",
-        "uz": "O'rnatilayotgan modullarni AI orqali avtomatik tekshiruvchi modul.",
-        "kz": "Орнатылатын модульдерді ЖИ арқылы автоматты тексеретін модуль."
-      },
-      "meta": {
-        "pic": null,
-        "banner": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FSecurity/banner.png",
-        "developer": "@NFModules",
-        "fhsdesc": "security, guard, antiscam, antivirus"
-      },
-      "commands": [],
-      "new_commands": [],
-      "inline_handlers": [],
-      "strings": {
-        "name": "FSecurity"
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
-      "class_cmd_names": {}
-    },
     "Fixyres/FModules/FSecurity.py": {
       "name": "FSecurity",
       "description": "Module for automatic AI-based security checks of installed modules.",
@@ -12847,6 +12819,65 @@
         "loading_ru": "<emoji document_id=5348399448017871250>🔍</emoji> Ищу вам kaomoji",
         "random_face_ru": "<emoji document_id=5208878706717636743>🗿</emoji> Вот ваш рандомный kaomoji\n<code>{}</code>",
         "error_ru": "Произошла ошибка!"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
+    "archquise/q.mods/UniversalDownloader.py": {
+      "name": "UniversalDownloaderMod",
+      "description": "Downloads media from YouTube, VK, TikTok, and all yt-dlp supported sites",
+      "cls_doc": {
+        "default": "Downloads media from YouTube, VK, TikTok, and all yt-dlp supported sites",
+        "ru": "Скачивает медиа из YouTube, VK, TikTok и всех поддерживаемых yt-dlp сайтов"
+      },
+      "meta": {
+        "pic": null,
+        "banner": "https://raw.githubusercontent.com/archquise/qmods_meta/main/UniversalDownloader.png",
+        "developer": "@quise_m"
+      },
+      "commands": [
+        {
+          "unidl": "(EN) Download media | (RU) Скачать медиа"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "unidl",
+          "original_name": "unidlcmd",
+          "description": {
+            "default": "",
+            "en": "Download media",
+            "ru": "Скачать медиа"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "UniversalDownloader",
+        "_cls_doc": "Downloads media from YouTube, VK, TikTok, and all yt-dlp supported sites",
+        "select_download_type": "<tg-emoji emoji-id=5879883461711367869>⬇️</tg-emoji> <b>Select download type:</b>",
+        "invalid_args": "<emoji document_id=5854929766146118183>❌</emoji> There is no arguments or they are invalid",
+        "downloading": "<emoji document_id=5215484787325676090>🕐</emoji> Downloading...",
+        "cookie_desc": "Cookie account (helps downloading video with strict age rating restricrions)",
+        "deno_err": "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> <b>Error!</b> The <a href=\"http://deno.land/\">Deno</a> JavaScript engine was not install automatically.\nThis is a required dependency for <a href=\"https://github.com/yt-dlp/yt-dlp\">yt-dlp</a> (a library for downloading video/audio) to work correctly.\n\n<b>To continue, you need to install the engine manually, or resolve any issues preventing automatic installation and restart the userbot.</b>",
+        "err": "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> <b>Error!</b>\n\nAdditional info: {}",
+        "video": "video",
+        "audio": "audio",
+        "select_download_type_ru": "<tg-emoji emoji-id=5879883461711367869>⬇️</tg-emoji> <b>Выберите тип загрузки:</b>",
+        "invalid_args_ru": "<emoji document_id=5854929766146118183>❌</emoji> Нет аргументов или они неверны",
+        "downloading_ru": "<emoji document_id=5215484787325676090>🕐</emoji> Скачиваю...",
+        "cookie_desc_ru": "Куки аккаунта (помогает скачивать видео с жесткими возрастными ограничениями)",
+        "deno_err_ru": "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> <b>Ошибка!</b> JS-движок <a href=\"http://deno.land/\">Deno</a> не установился автоматически.\nЭто необходимая зависимость для корректной работы <a href=\"https://github.com/yt-dlp/yt-dlp\">yt-dlp</a> (библиотека для скачивания видео/аудио).\n\n<b>Для продолжения вам необходимо установить движок вручную, или устранить препятствия для автоматической установки и перезагрузить юзербота.</b>",
+        "err_ru": "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> <b>Ошибка!</b>\n\nДоп.информация: {}",
+        "video_ru": "видео",
+        "audio_ru": "аудио"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -84524,6 +84555,6 @@
   },
   "meta": {
     "total_modules": 1050,
-    "generated_at": "2026-04-19T02:02:03.488953"
+    "generated_at": "2026-04-24T02:01:18.508580"
   }
 }
