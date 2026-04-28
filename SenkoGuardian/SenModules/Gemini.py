@@ -7,7 +7,7 @@
 # meta banner: https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png
 # meta pic: https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png
 
-__version__ = ("6", "3", "0") 
+__version__ = ("6", "5", "0") 
 
 """￣へ￣"""
 
@@ -31,6 +31,7 @@ import json
 import asyncio
 import logging
 import tempfile
+import time
 import aiohttp
 from markdown_it import MarkdownIt
 import pytz
@@ -95,9 +96,13 @@ DB_IMPERSONATION_KEY = "gemini_impersonation_chats"
 DB_PRESETS_KEY = "gemini_prompt_presets"
 DB_PAGER_CACHE_KEY = "gemini_pager_cache"
 DB_KEY_MAP_KEY = "gemini_key_model_map"
+DB_MEMORY_DISABLED_KEY = "gemini_memory_disabled_chats"
+DB_SESSION_STATS_KEY = "gemini_session_stats_v1"
+DB_PROVIDER_MODELS_KEY = "gemini_provider_models_v1"
 GEMINI_TIMEOUT = 840
 MAX_FFMPEG_SIZE = 90 * 1024 * 1024
 CHECK_MODEL = "gemini-2.5-pro"  
+MODEL_PROFILE_CHOICES = ("auto", "balanced", "fast", "reasoning", "coding", "vision", "manual")
 
 # requires: google-genai google-api-core pytz markdown_it_py
 
@@ -119,6 +124,11 @@ class Gemini(loader.Module):
         "cfg_google_search_doc": "Включить поиск Google (Grounding) для актуальной информации.",
         "cfg_image_model_doc": "Модель Gemini для генерации изображений (например: gemini-2.5-flash-image).",
         "cfg_inline_pagination_doc": "Использовать инлайн-кнопки для длинных ответов.",
+        "cfg_global_memory_doc": "Включить ОБЩУЮ память для всех чатов.",
+        "cfg_show_tokens_doc": "Показывать токены в ответе, если провайдер их вернул.",
+        "cfg_show_time_doc": "Показывать время выполнения запроса.",
+        "cfg_auto_model_doc": "Автоматически подбирать модель по профилю и запросу.",
+        "cfg_model_profile_doc": "Профиль модели: auto, balanced, fast, reasoning, coding, vision, manual.",
         "no_api_key": (
             '❗️ <b>Api ключ(и) не настроен(ы).</b>\nПолучить Api ключ можно <a href="https://aistudio.google.com/app/apikey">здесь</a>.\n'
             '<b>Добавьте ключ(и) в конфиге модуля:</b> <code>.cfg gemini api_key</code>\n'
@@ -141,9 +151,13 @@ class Gemini(loader.Module):
         "unsupported_media_type": "⚠️ <b>Формат медиа ({}) не поддерживается.</b>",
         "memory_status": "🧠 [{}/{}]",
         "memory_status_unlimited": "🧠 [{}/∞]",
+        "memory_status_global": "🧠 [🌍 GLOBAL/{}]",
         "memory_cleared": "🧹 <b>Память диалога очищена.</b>",
+        "memory_cleared_global": "🧹 <b>Глобальная память очищена.</b>",
         "memory_cleared_gauto": "🧹 <b>Память gauto в этом чате очищена.</b>",
         "no_memory_to_clear": "ℹ️ <b>В этом чате нет истории.</b>",
+        "gres_global_cleared": "🧹 <b>Вся глобальная память очищена.</b>",
+        "gres_no_global": "ℹ️ <b>Глобальная память и так пуста.</b>",
         "no_gauto_memory_to_clear": "ℹ️ <b>В этом чате нет истории gauto.</b>",
         "memory_chats_title": "🧠 <b>Чаты с историей ({}):</b>",
         "memory_chat_line": "  • {} (<code>{}</code>)",
@@ -157,8 +171,8 @@ class Gemini(loader.Module):
         "no_memory_to_fully_clear": "ℹ️ <b>Память Gemini и так пуста.</b>",
         "no_gauto_memory_to_fully_clear": "ℹ️ <b>Память gauto и так пуста.</b>",
         "response_too_long": "Ответ Gemini был слишком длинным и отправлен в виде файла.",
-        "gclear_usage": "ℹ️ <b>Использование:</b> <code>.gclear [auto]</code>",
-        "gres_usage": "ℹ️ <b>Использование:</b> <code>.gres [auto]</code>",
+        "gclear_usage": "ℹ️ <b>Использование:</b> <code>.gclear [global/auto]</code>",
+        "gres_usage": "ℹ️ <b>Использование:</b> <code>.gres [global/auto]</code>",
         "auto_mode_on": "🎭 <b>Режим авто-ответа включен в этом чате.</b>\nЯ буду отвечать на сообщения с вероятностью {}%.",
         "auto_mode_off": "🎭 <b>Режим авто-ответа выключен в этом чате.</b>",
         "auto_mode_chats_title": "🎭 <b>Чаты с активным авто-ответом ({}):</b>",
@@ -174,7 +188,13 @@ class Gemini(loader.Module):
         "gch_result_caption_from_chat": "Анализ последних {} сообщений из чата <b>{}</b>",
         "gch_invalid_args": "❗️ <b>Неверные аргументы.</b>\n{}",
         "gch_chat_error": "❗️ <b>Ошибка доступа к чату</b> <code>{}</code>: <i>{}</i>",
-        "gmodel_usage": "ℹ️ <b>Использование:</b> <code>.gmodel [модель] [-s]</code>\n• [модель] — установить модель.\n• -s — показать список доступных моделей.",
+        "gask_no_prompt": "⚠️ <b>Введите вопрос или ответьте командой на сообщение.</b>",
+        "gprovider_usage": "ℹ️ <b>Использование:</b> <code>.gprovider [gemini/openrouter]</code>",
+        "gprovider_current": "🧩 <b>Текущий провайдер:</b> <code>{}</code>\n🧠 <b>Модель:</b> <code>{}</code>\n\n<code>.gprovider gemini</code>\n<code>.gprovider openrouter</code>",
+        "gprovider_set": "✅ <b>Провайдер:</b> <code>{}</code>\n🧠 <b>Модель:</b> <code>{}</code>",
+        "gprofile_usage": "ℹ️ <b>Использование:</b> <code>.gprofile [auto|balanced|fast|reasoning|coding|vision|manual]</code>",
+        "gprofile_set": "✅ <b>Профиль модели:</b> <code>{}</code>\n🧠 <b>Для текущего провайдера:</b> <code>{}</code>",
+        "gmodel_usage": "ℹ️ <b>Использование:</b> <code>.gmodel [модель] [--s|-s]</code>\n• [модель] — установить модель.\n• --s/-s — показать список доступных моделей.",
         "gmodel_list_title": "📋 <b>Доступные модели Gemini (по вашему API):</b>",
         "gmodel_list_item": "• <code>{}</code> — {} (поддержка: {})",
         "gmodel_img_support": "Поддержка изображений",
@@ -213,15 +233,66 @@ class Gemini(loader.Module):
         "application/javascript", "application/x-sh",
     }
 
+    CORE_PROVIDER_ORDER = ("google", "openrouter")
+
+    PROVIDER_SPECS = {
+        "google": {
+            "label": "Gemini",
+            "default_model": "gemini-3-flash-preview",
+            "docs_url": "https://ai.google.dev/gemini-api/docs/models",
+            "model_prefixes": ("gemini", "imagen", "lyria", "veo"),
+            "profiles": {
+                "balanced": "gemini-3-flash-preview",
+                "fast": "gemini-2.5-flash",
+                "reasoning": "gemini-3.1-pro-preview",
+                "coding": "gemini-3.1-pro-preview-custom-tools",
+                "vision": "gemini-3-flash-preview",
+            },
+            "fallback_models": (
+                "gemini-3-flash-preview",
+                "gemini-2.5-flash",
+                "gemini-2.5-pro",
+                "gemini-2.5-flash-lite",
+                "gemini-2.5-flash-image",
+            ),
+        },
+        "openrouter": {
+            "label": "OpenRouter",
+            "default_model": "google/gemini-3-flash-preview",
+            "docs_url": "https://openrouter.ai/docs/docs/overview/models",
+            "model_prefixes": ("/",),
+            "profiles": {
+                "balanced": "google/gemini-3-flash-preview",
+                "fast": "google/gemini-3.1-flash-lite-preview",
+                "reasoning": "google/gemini-3.1-pro-preview",
+                "coding": "anthropic/claude-sonnet-4.6",
+                "vision": "google/gemini-3-flash-preview",
+            },
+            "fallback_models": (
+                "google/gemini-3-flash-preview",
+                "google/gemini-2.5-flash",
+                "google/gemini-2.5-pro",
+                "anthropic/claude-sonnet-4",
+                "openai/gpt-4o",
+                "deepseek/deepseek-r1",
+            ),
+        },
+    }
+
     def __init__(self):
         self.config = loader.ModuleConfig(
             loader.ConfigValue("api_key", "", self.strings["cfg_api_key_doc"], validator=loader.validators.Hidden()),
             loader.ConfigValue("Openrouter_api_key", "", "API Key от OpenRouter (получить <a href='https://openrouter.ai/settings/keys'>тут</a>).", validator=loader.validators.Hidden()),
-            loader.ConfigValue("provider", "google", "Провайдер API: 'google' или 'openrouter'.", validator=loader.validators.Choice(["google", "openrouter"])),
-            loader.ConfigValue("model_name", "gemini-2.5-flash", self.strings["cfg_model_name_doc"]),
+            loader.ConfigValue("provider", "google", "Провайдер API: Gemini или OpenRouter.", validator=loader.validators.Choice(["google", "openrouter"])),
+            loader.ConfigValue("model_name", "gemini-3-flash-preview", self.strings["cfg_model_name_doc"]),
             loader.ConfigValue("interactive_buttons", True, self.strings["cfg_buttons_doc"], validator=loader.validators.Boolean()),
             loader.ConfigValue("system_instruction", "", self.strings["cfg_system_instruction_doc"], validator=loader.validators.String()),
             loader.ConfigValue("max_history_length", 800, self.strings["cfg_max_history_length_doc"], validator=loader.validators.Integer(minimum=0)),
+            loader.ConfigValue("global_memory", False, self.strings["cfg_global_memory_doc"], validator=loader.validators.Boolean()),
+            loader.ConfigValue("show_tokens", True, self.strings["cfg_show_tokens_doc"], validator=loader.validators.Boolean()),
+            loader.ConfigValue("show_time", True, self.strings["cfg_show_time_doc"], validator=loader.validators.Boolean()),
+            loader.ConfigValue("auto_model", False, self.strings["cfg_auto_model_doc"], validator=loader.validators.Boolean()),
+            loader.ConfigValue("model_profile", "manual", self.strings["cfg_model_profile_doc"], validator=loader.validators.Choice(list(MODEL_PROFILE_CHOICES))),
             loader.ConfigValue("timezone", "Europe/Moscow", self.strings["cfg_timezone_doc"]),
             loader.ConfigValue("proxy", "", self.strings["cfg_proxy_doc"]),
             loader.ConfigValue(
@@ -252,6 +323,9 @@ class Gemini(loader.Module):
         self.memory_disabled_chats = set()
         self.pager_cache = {}
         self.key_model_map = {}
+        self.provider_models = {}
+        self.key_cooldowns = {}
+        self.session_stats = {"requests": 0, "tokens_in": 0, "tokens_out": 0, "times": [], "start_time": time.time()}
         self.api_keys =[] 
 
     async def client_ready(self, client, db):
@@ -261,6 +335,19 @@ class Gemini(loader.Module):
         api_key_str = self.config["api_key"]
         self.api_keys =[k.strip() for k in api_key_str.split(",") if k.strip()] if api_key_str else[]
         self.key_model_map = self.db.get(self.strings["name"], DB_KEY_MAP_KEY, {})
+        self.provider_models = self.db.get(self.strings["name"], DB_PROVIDER_MODELS_KEY, {})
+        if not isinstance(self.provider_models, dict):
+            self.provider_models = {}
+        self.memory_disabled_chats = set(self.db.get(self.strings["name"], DB_MEMORY_DISABLED_KEY, []))
+        saved_stats = self.db.get(self.strings["name"], DB_SESSION_STATS_KEY, {})
+        if isinstance(saved_stats, dict):
+            self.session_stats.update({
+                "requests": int(saved_stats.get("requests", 0) or 0),
+                "tokens_in": int(saved_stats.get("tokens_in", 0) or 0),
+                "tokens_out": int(saved_stats.get("tokens_out", 0) or 0),
+                "times": list(saved_stats.get("times", []) or [])[-200:],
+                "start_time": time.time(),
+            })
         keys_to_remove =[k for k in self.key_model_map if k not in self.api_keys]
         if keys_to_remove:
             for k in keys_to_remove: del self.key_model_map[k]
@@ -295,6 +382,181 @@ class Gemini(loader.Module):
                 _gemini_log_topic_id = notif_topic.id
         except Exception:
             pass
+
+    def _normalize_provider_name(self, provider: str = None) -> str:
+        provider = str(provider or self.config["provider"] or "google").strip().lower()
+        return {"gemini": "google", "google": "google", "or": "openrouter", "openrouter": "openrouter"}.get(provider, provider)
+
+    def _provider_spec(self, provider: str = None) -> dict:
+        return self.PROVIDER_SPECS.get(self._normalize_provider_name(provider), self.PROVIDER_SPECS["google"])
+
+    def _provider_label(self, provider: str = None) -> str:
+        return self._provider_spec(provider).get("label", "Gemini")
+
+    def _provider_default_model(self, provider: str = None) -> str:
+        return self._provider_spec(provider).get("default_model", "gemini-3-flash-preview")
+
+    def _save_provider_models(self):
+        self.db.set(self.strings["name"], DB_PROVIDER_MODELS_KEY, self.provider_models)
+
+    def _provider_model_entry(self, provider: str = None) -> dict:
+        provider = self._normalize_provider_name(provider)
+        entry = self.provider_models.get(provider, "")
+        if isinstance(entry, dict):
+            return {
+                "model": str(entry.get("model") or "").strip(),
+                "manual": bool(entry.get("manual", True)),
+                "profile": str(entry.get("profile") or "manual").strip().lower(),
+                "auto_model": bool(entry.get("auto_model", False)),
+            }
+        value = str(entry or "").strip()
+        return {"model": value, "manual": bool(value), "profile": "manual", "auto_model": False}
+
+    def _remember_provider_model(self, provider: str = None, model_name: str = None, manual: bool = None):
+        provider = self._normalize_provider_name(provider)
+        if provider not in self.PROVIDER_SPECS:
+            return
+        model_name = str(model_name or self.config.get("model_name") or "").strip()
+        if not model_name:
+            return
+        if manual is None:
+            manual = (not self.config.get("auto_model", False)) or str(self.config.get("model_profile") or "").lower() == "manual"
+        self.provider_models[provider] = {
+            "model": model_name,
+            "manual": bool(manual),
+            "profile": str(self.config.get("model_profile") or ("manual" if manual else "auto")).strip().lower(),
+            "auto_model": bool(self.config.get("auto_model", False)) if not manual else False,
+        }
+        self._save_provider_models()
+
+    def _restore_provider_model(self, provider: str) -> str:
+        provider = self._normalize_provider_name(provider)
+        entry = self._provider_model_entry(provider)
+        saved = entry.get("model")
+        if saved:
+            self.config["model_name"] = saved
+            self.config["auto_model"] = bool(entry.get("auto_model", False)) if not entry.get("manual", True) else False
+            profile = str(entry.get("profile") or "manual").lower()
+            self.config["model_profile"] = profile if profile in MODEL_PROFILE_CHOICES else "manual"
+            return saved
+        default = self._provider_default_model(provider)
+        self.config["model_name"] = default
+        return default
+
+    def _provider_profile_models(self, provider: str = None) -> dict:
+        provider = self._normalize_provider_name(provider)
+        profiles = dict(self._provider_spec(provider).get("profiles", {}) or {})
+        default = self._provider_default_model(provider)
+        profiles.setdefault("auto", default)
+        profiles.setdefault("balanced", default)
+        profiles.setdefault("manual", self.config.get("model_name") or default)
+        return profiles
+
+    def _provider_curated_models(self, provider: str = None) -> list:
+        models = list(self._provider_spec(provider).get("fallback_models", ()) or ())
+        return list(dict.fromkeys([str(model).strip() for model in models if str(model).strip()]))
+
+    def _model_matches_provider(self, model_name: str, provider: str) -> bool:
+        model = str(model_name or "").strip().lower()
+        provider = self._normalize_provider_name(provider)
+        if not model:
+            return True
+        if provider == "google":
+            return model.startswith(("gemini", "imagen", "lyria", "veo")) and "/" not in model
+        if provider == "openrouter":
+            return "/" in model or model.startswith(("openrouter/", "google/", "anthropic/", "openai/", "deepseek/"))
+        return False
+
+    def _parts_have_image_like_media(self, parts: list) -> bool:
+        for part in parts or []:
+            inline = getattr(part, "inline_data", None)
+            if not inline:
+                continue
+            mime = str(getattr(inline, "mime_type", "") or "").lower()
+            if mime.startswith(("image/", "video/")):
+                return True
+        return False
+
+    def _guess_model_profile_from_request(self, parts: list, request_text: str = "") -> str:
+        if self._parts_have_image_like_media(parts):
+            return "vision"
+        text = str(request_text or "")
+        for part in parts or []:
+            if getattr(part, "text", None):
+                text += "\n" + str(part.text)
+        low = text.lower()
+        if any(h in low for h in ("код", "скрипт", "traceback", "stack trace", "python", "javascript", "typescript", "api", "regex", "pytest", "docker")):
+            return "coding"
+        if any(h in low for h in ("объясни", "проанализируй", "сравни", "докажи", "архитектур", "reason", "solve", "proof")):
+            return "reasoning"
+        return "balanced"
+
+    def _resolve_effective_model(self, provider: str, configured_model: str = None, parts: list = None, request_text: str = "") -> str:
+        provider = self._normalize_provider_name(provider)
+        configured = str(configured_model or self.config.get("model_name") or "").strip()
+        default = self._provider_default_model(provider)
+        if configured and not self._model_matches_provider(configured, provider):
+            configured = ""
+        if not self.config.get("auto_model", False):
+            return configured or default
+        profile = str(self.config.get("model_profile") or "auto").strip().lower()
+        if profile not in MODEL_PROFILE_CHOICES:
+            profile = "auto"
+        if profile == "manual":
+            return configured or default
+        selected = self._guess_model_profile_from_request(parts or [], request_text) if profile == "auto" else profile
+        profiles = self._provider_profile_models(provider)
+        return profiles.get(selected) or profiles.get("balanced") or configured or default
+
+    def _extract_request_text_for_display(self, parts: list, fallback: str = None) -> str:
+        if fallback:
+            return fallback
+        chunks = []
+        for part in parts or []:
+            text = getattr(part, "text", None)
+            if text:
+                chunks.append(str(text))
+        return "\n".join(chunks).strip() or "[медиа-запрос]"
+
+    def _record_session_usage(self, tokens_in: int = 0, tokens_out: int = 0, elapsed: float = 0.0):
+        self.session_stats["requests"] = int(self.session_stats.get("requests", 0) or 0) + 1
+        self.session_stats["tokens_in"] = int(self.session_stats.get("tokens_in", 0) or 0) + int(tokens_in or 0)
+        self.session_stats["tokens_out"] = int(self.session_stats.get("tokens_out", 0) or 0) + int(tokens_out or 0)
+        times = list(self.session_stats.get("times", []) or [])
+        times.append(float(elapsed or 0))
+        self.session_stats["times"] = times[-200:]
+        self.db.set(self.strings["name"], DB_SESSION_STATS_KEY, {
+            "requests": self.session_stats["requests"],
+            "tokens_in": self.session_stats["tokens_in"],
+            "tokens_out": self.session_stats["tokens_out"],
+            "times": self.session_stats["times"],
+        })
+
+    def _model_info_line(self, provider: str, model: str, elapsed: float = 0.0, tokens_in: int = 0, tokens_out: int = 0) -> str:
+        extra = ""
+        if self.config.get("show_time", True):
+            extra += f" ⏱️{round(float(elapsed or 0), 1)}с"
+        if self.config.get("show_tokens", True) and (tokens_in or tokens_out):
+            extra += f" 🪙{int(tokens_in or 0) + int(tokens_out or 0)}"
+        return f"<i>{self._provider_label(provider)}: <code>{utils.escape_html(str(model))}</code>{extra}</i>"
+
+    def _extract_retry_delay_seconds(self, text: str, default: int = 3600) -> int:
+        raw = str(text or "")
+        match = re.search(r"retryDelay['\"]?\s*[:=]\s*['\"]?(\d+)s", raw, flags=re.IGNORECASE)
+        if match:
+            return max(60, min(int(match.group(1)), 86400))
+        match = re.search(r"retry after\s+(\d+)", raw, flags=re.IGNORECASE)
+        if match:
+            return max(60, min(int(match.group(1)), 86400))
+        return default
+
+    def _set_key_cooldown(self, key: str, seconds: int):
+        if key:
+            self.key_cooldowns[str(key)] = time.time() + max(60, int(seconds or 3600))
+
+    def _get_openrouter_keys(self) -> list:
+        raw = str(self.config.get("Openrouter_api_key") or "")
+        return [key.strip() for key in raw.split(",") if key.strip()]
 
     async def _prepare_parts(self, message: Message, custom_text: str=None):
         final_parts, warnings = [], []
@@ -411,34 +673,38 @@ class Gemini(loader.Module):
             final_parts.insert(0, types.Part(text=full_prompt_text))
         return final_parts, warnings
 
-    async def _send_to_gemini(self, message, parts: list, regeneration: bool=False, call: InlineCall=None, status_msg=None, chat_id_override: int=None, impersonation_mode: bool=False, use_url_context: bool=False, display_prompt: str=None): 
+    async def _send_to_gemini(self, message, parts: list, regeneration: bool=False, call: InlineCall=None, status_msg=None, chat_id_override: int=None, impersonation_mode: bool=False, use_url_context: bool=False, display_prompt: str=None, attempt: int = 1, is_retry: bool = False, ephemeral: bool = False): 
         msg_obj = None
-        if regeneration:
+        if regeneration or is_retry:
             chat_id = chat_id_override; base_message_id = message
             try: msg_obj = await self.client.get_messages(chat_id, ids=base_message_id)
             except Exception: msg_obj = None
         else:
             chat_id = utils.get_chat_id(message); base_message_id = message.id; msg_obj = message
-        target_model = self.config["model_name"]
-        if self.config["provider"] == "openrouter":
-            if regeneration:
+        provider = self._normalize_provider_name()
+        is_global = self.config["global_memory"] and not impersonation_mode
+        history_key = "global_context" if is_global else str(chat_id)
+        target_model = self._resolve_effective_model(provider, self.config["model_name"], parts, display_prompt or "")
+        if provider == "openrouter":
+            if regeneration or is_retry:
                 current_turn_parts, request_text_for_display = self.last_requests.get(f"{chat_id}:{base_message_id}", (parts, "[регенерация]"))
             else:
                 current_turn_parts = parts
-                user_text_from_parts = " ".join([p.text for p in parts if hasattr(p, "text") and p.text])
-                request_text_for_display = display_prompt or user_text_from_parts or "[медиа-запрос]"
+                request_text_for_display = self._extract_request_text_for_display(parts, display_prompt)
                 self.last_requests[f"{chat_id}:{base_message_id}"] = (current_turn_parts, request_text_for_display)
             try:
+                target_model = self._resolve_effective_model("openrouter", self.config["model_name"], current_turn_parts, request_text_for_display)
                 sys_instruct = self.config["system_instruction"] or None
                 if impersonation_mode:
                     my_name = get_display_name(self.me)
                     chat_history_text = await self._get_recent_chat_text(chat_id)
                     sys_instruct = self.config["impersonation_prompt"].format(my_name=my_name, chat_history=chat_history_text)
                 
-                raw_hist = self._get_structured_history(chat_id, gauto=impersonation_mode)
+                raw_hist = self._get_structured_history(history_key, gauto=impersonation_mode)
                 if regeneration and raw_hist: raw_hist = raw_hist[:-2]
                 openai_messages = self._convert_google_history_to_openai(raw_hist, sys_instruct)
                 content_list =[]
+                media_notes = []
                 for p in current_turn_parts:
                     if hasattr(p, "text") and p.text:
                         content_list.append({"type": "text", "text": p.text})
@@ -451,24 +717,48 @@ class Gemini(loader.Module):
                                  "type": "image_url", 
                                  "image_url": {"url": f"data:{mime};base64,{b64_img}"}
                              })
+                         elif mime.startswith("audio/"):
+                             media_notes.append("[аудиофайл]")
+                         elif mime.startswith("video/"):
+                             media_notes.append("[видеофайл]")
+                         else:
+                             media_notes.append("[файл]")
+                if media_notes:
+                    note = "Контекст медиа для OpenRouter: " + ", ".join(media_notes)
+                    if content_list and isinstance(content_list, list) and content_list[0].get("type") == "text":
+                        content_list[0]["text"] = note + "\n\n" + content_list[0]["text"]
+                    else:
+                        content_list.insert(0, {"type": "text", "text": note})
                 if not content_list:
                     content_list = request_text_for_display
                 openai_messages.append({"role": "user", "content": content_list})
-                result_text = await self._send_to_Openrouter_api(target_model, openai_messages, self.config["temperature"])
+                _t_start = time.time()
+                result_text, usage = await self._send_to_Openrouter_api(target_model, openai_messages, self.config["temperature"])
+                _elapsed = round(time.time() - _t_start, 1)
+                _tokens_in = int(usage.get("prompt_tokens") or usage.get("input_tokens") or 0)
+                _tokens_out = int(usage.get("completion_tokens") or usage.get("output_tokens") or 0)
+                if not (_tokens_in or _tokens_out) and usage.get("total_tokens"):
+                    _tokens_out = int(usage.get("total_tokens") or 0)
                 result_text = result_text.strip()
                 result_text = re.sub(r"^\[System Info:.*?\]\s*", "", result_text, flags=re.IGNORECASE)
                 result_text = re.sub(r"^\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
                 result_text = re.sub(r"^\[\d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
-                if self._is_memory_enabled(str(chat_id)):
-                    self._update_history(chat_id, current_turn_parts, result_text, regeneration, msg_obj, gauto=impersonation_mode)
+                if not impersonation_mode:
+                    self._record_session_usage(_tokens_in, _tokens_out, _elapsed)
+                if self._is_memory_enabled(str(chat_id)) and not ephemeral:
+                    self._update_history(history_key, current_turn_parts, result_text, regeneration, msg_obj, gauto=impersonation_mode)
                 if impersonation_mode: return result_text
-                hist_len = len(self._get_structured_history(chat_id)) // 2
+                hist_len = len(self._get_structured_history(history_key)) // 2
                 max_hist = self.config["max_history_length"]
-                if max_hist <= 0:
+                if is_global:
+                    mem_indicator = self.strings["memory_status_global"].format(hist_len)
+                elif max_hist <= 0:
                     mem_indicator = self.strings["memory_status_unlimited"].format(hist_len)
                 else:
                     mem_indicator = self.strings["memory_status"].format(hist_len, max_hist)
-                model_info = f"<i>OpenRouter: <code>{target_model}</code></i>"
+                model_info = self._model_info_line("openrouter", target_model, _elapsed, _tokens_in, _tokens_out)
+                if attempt > 1:
+                    model_info += f" <i>(Успешно с {attempt}-й попытки)</i>"
                 response_html = self._markdown_to_html(result_text)
                 formatted_body = self._format_response_with_smart_separation(response_html)
                 question_html = f"<blockquote>{utils.escape_html(request_text_for_display[:200])}</blockquote>"
@@ -488,25 +778,36 @@ class Gemini(loader.Module):
                 return ""
             except Exception as e:
                 error_text = self._handle_error(e)
+                error_buttons = None
+                if not impersonation_mode and base_message_id:
+                    btn_action = "regen_att" if regeneration else "retry"
+                    is_regen_flag = "1" if regeneration else "0"
+                    error_buttons = [[
+                        {"text": f"🔄 Повторить ({attempt + 1})", "data": f"gemini:{btn_action}:{chat_id}:{base_message_id}:{attempt + 1}"},
+                        {"text": "👁 Запрос", "data": f"gemini:shreq:{is_regen_flag}:{chat_id}:{base_message_id}:{attempt + 1}"}
+                    ]]
                 if impersonation_mode: logger.error(f"Gauto/Openrouter error: {error_text}")
-                elif call: await call.edit(error_text)
-                elif status_msg: await utils.answer(status_msg, error_text)
+                elif call: await call.edit(error_text, reply_markup=error_buttons)
+                elif status_msg: await utils.answer(status_msg, error_text, reply_markup=error_buttons)
                 return None
         api_keys_to_use = self._get_sorted_keys()
         if not api_keys_to_use:
             if not impersonation_mode and status_msg: await utils.answer(status_msg, self.strings['no_api_key'])
             return None if impersonation_mode else ""
-        if regeneration:
+        if regeneration or is_retry:
             current_turn_parts, request_text_for_display = self.last_requests.get(f"{chat_id}:{base_message_id}", (parts, "[регенерация]"))
         else:
             current_turn_parts = parts
-            request_text_for_display = display_prompt or (self.strings["media_reply_placeholder"] if any(getattr(p, 'inline_data', None) for p in parts) else "")
+            request_text_for_display = self._extract_request_text_for_display(parts, display_prompt)
             self.last_requests[f"{chat_id}:{base_message_id}"] = (current_turn_parts, request_text_for_display)
+        target_model = self._resolve_effective_model("google", self.config["model_name"], current_turn_parts, request_text_for_display)
         result_text = ""
         last_error = None
         was_successful = False
         search_icon = ""
         max_retries = len(api_keys_to_use)
+        _tokens_in = 0
+        _tokens_out = 0
         if impersonation_mode:
             my_name = get_display_name(self.me)
             chat_history_text = await self._get_recent_chat_text(chat_id)
@@ -515,7 +816,7 @@ class Gemini(loader.Module):
             sys_val = self.config["system_instruction"]
             sys_instruct = (sys_val.strip() if isinstance(sys_val, str) else "") or None
         contents =[]
-        raw_hist = self._get_structured_history(chat_id, gauto=impersonation_mode)
+        raw_hist = self._get_structured_history(history_key, gauto=impersonation_mode)
         if regeneration and raw_hist: raw_hist = raw_hist[:-2]
         try: 
             user_tz = pytz.timezone(self.config["timezone"])
@@ -551,6 +852,7 @@ class Gemini(loader.Module):
             ]
         )
         proxy_config = self._get_proxy_config()
+        _t_start = time.time()
         for i in range(max_retries):
             api_key = api_keys_to_use[i]
             try:
@@ -565,6 +867,9 @@ class Gemini(loader.Module):
                 )
                 if response.text:
                     result_text = response.text
+                    if getattr(response, "usage_metadata", None):
+                        _tokens_in = getattr(response.usage_metadata, "prompt_token_count", 0) or 0
+                        _tokens_out = getattr(response.usage_metadata, "candidates_token_count", 0) or 0
                     result_text = result_text.strip()
                     result_text = re.sub(r"^\[System Info:.*?\]\s*", "", result_text, flags=re.IGNORECASE)
                     result_text = re.sub(r"^\[\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\]\s*(?:Gemini:|Model:|Ассистент:|AI:)?\s*", "", result_text, flags=re.IGNORECASE)
@@ -575,24 +880,46 @@ class Gemini(loader.Module):
                 else: raise ValueError("Empty response")
             except Exception as e:
                 err_str = str(e).lower()
-                if any(x in err_str for x in["quota", "exhausted", "429", "permission_denied", "blocked", "403", "client application", "bad request", "400", "INVALID_ARGUMENT"]):
-                     if i == max_retries - 1: last_error = RuntimeError(f"All keys exhausted or blocked. Last: {e}")
-                     continue
+                if any(x in err_str for x in["quota", "exhausted", "429"]):
+                    self._set_key_cooldown(api_key, self._extract_retry_delay_seconds(str(e), 3600))
+                    self.key_model_map[api_key] = 0
+                    self.db.set(self.strings["name"], DB_KEY_MAP_KEY, self.key_model_map)
+                    if i == max_retries - 1: last_error = RuntimeError(f"All keys exhausted or blocked. Last: {e}")
+                    continue
+                if any(x in err_str for x in["permission_denied", "api key not valid", "api_key_invalid", "client application"]) and "model" not in err_str:
+                    self._set_key_cooldown(api_key, 86400 * 365)
+                    self.key_model_map[api_key] = -1
+                    self.db.set(self.strings["name"], DB_KEY_MAP_KEY, self.key_model_map)
+                    if i == max_retries - 1: last_error = RuntimeError(f"All keys invalid or blocked. Last: {e}")
+                    continue
+                if any(x in err_str for x in["blocked", "403", "bad request", "400", "invalid_argument"]):
+                    if i == max_retries - 1: last_error = RuntimeError(f"All keys exhausted or blocked. Last: {e}")
+                    continue
+                if any(x in err_str for x in["500", "503", "internal", "unavailable", "timeout"]):
+                    if i == max_retries - 1: last_error = RuntimeError(f"Google API is currently unstable. Last: {e}")
+                    continue
                 else:
                     last_error = e
                     break
+        _elapsed = round(time.time() - _t_start, 1)
         try:
             if not was_successful: raise last_error or RuntimeError("Unknown generation error")
-            if self._is_memory_enabled(str(chat_id)):
-                self._update_history(chat_id, current_turn_parts, result_text, regeneration, msg_obj, gauto=impersonation_mode)
+            if not impersonation_mode:
+                self._record_session_usage(_tokens_in, _tokens_out, _elapsed)
+            if self._is_memory_enabled(str(chat_id)) and not ephemeral:
+                self._update_history(history_key, current_turn_parts, result_text, regeneration, msg_obj, gauto=impersonation_mode)
             if impersonation_mode: return result_text
-            hist_len_pairs = len(self._get_structured_history(chat_id, gauto=False)) // 2
+            hist_len_pairs = len(self._get_structured_history(history_key, gauto=False)) // 2
             max_hist = self.config["max_history_length"]
-            if max_hist <= 0:
+            if is_global:
+                mem_indicator = self.strings["memory_status_global"].format(hist_len_pairs)
+            elif max_hist <= 0:
                 mem_indicator = self.strings["memory_status_unlimited"].format(hist_len_pairs)
             else:
                 mem_indicator = self.strings["memory_status"].format(hist_len_pairs, max_hist)
-            model_info = f"<i>Модель: <code>{self.config['model_name']}</code></i>"
+            model_info = self._model_info_line("google", target_model, _elapsed, _tokens_in, _tokens_out)
+            if attempt > 1:
+                model_info += f" <i>(Успешно с {attempt}-й попытки)</i>"
             is_long_text = len(result_text) > 3500
             if is_long_text and self.config["inline_pagination"]:
                 chunks = self._paginate_text(result_text, 3000)
@@ -627,9 +954,17 @@ class Gemini(loader.Module):
                 elif status_msg: await utils.answer(status_msg, text_to_send, reply_markup=buttons)
         except Exception as e:
             error_text = self._handle_error(e)
+            error_buttons = None
+            if not impersonation_mode and base_message_id:
+                btn_action = "regen_att" if regeneration else "retry"
+                is_regen_flag = "1" if regeneration else "0"
+                error_buttons = [[
+                    {"text": f"🔄 Повторить ({attempt + 1})", "data": f"gemini:{btn_action}:{chat_id}:{base_message_id}:{attempt + 1}"},
+                    {"text": "👁 Запрос", "data": f"gemini:shreq:{is_regen_flag}:{chat_id}:{base_message_id}:{attempt + 1}"}
+                ]]
             if impersonation_mode: logger.error(f"Gauto error: {error_text}")
-            elif call: await call.edit(error_text, reply_markup=None)
-            elif status_msg: await utils.answer(status_msg, error_text)
+            elif call: await call.edit(error_text, reply_markup=error_buttons)
+            elif status_msg: await utils.answer(status_msg, error_text, reply_markup=error_buttons)
         return None if impersonation_mode else ""
 
     @loader.command()
@@ -655,6 +990,84 @@ class Gemini(loader.Module):
             message=message, parts=parts, status_msg=status_msg, 
             use_url_context=use_url_context, display_prompt=clean_args or None
         )
+
+    @loader.command()
+    async def gask(self, message: Message):
+        """[текст или reply] — быстрый вопрос без сохранения в память."""
+        clean_args = utils.get_args_raw(message)
+        if not clean_args and not await message.get_reply_message():
+            return await utils.answer(message, self.strings["gask_no_prompt"])
+        status_msg = await utils.answer(message, self.strings["processing"])
+        status_msg = await self.client.get_messages(status_msg.chat_id, ids=status_msg.id)
+        parts, warnings = await self._prepare_parts(message, custom_text=clean_args)
+        if warnings and status_msg:
+            try: await status_msg.edit(f"{status_msg.text}\n\n" + "\n".join(warnings))
+            except: pass
+        if not parts:
+            return await utils.answer(status_msg, self.strings["no_prompt_or_media"])
+        await self._send_to_gemini(
+            message=message,
+            parts=parts,
+            status_msg=status_msg,
+            display_prompt=clean_args or None,
+            ephemeral=True,
+        )
+
+    @loader.command()
+    async def gmusic(self, message: Message):
+        """<промпт> — сгенерировать музыку/аудио через Gemini Lyria."""
+        args = utils.get_args_raw(message)
+        if not args:
+            return await utils.answer(message, "🎵 <b>Введите промпт для генерации музыки.</b>\nПример: <code>.gmusic веселая мелодия на гитаре</code>")
+        m = await utils.answer(message, "🎵 <b>Генерация аудио...</b>")
+        keys = self._get_sorted_keys()
+        if not keys:
+            return await utils.answer(m, self.strings["all_keys_exhausted"].format(len(self.api_keys)))
+        audio_bytes = None
+        lyrics_text = ""
+        last_error = None
+        for key in keys:
+            try:
+                client = genai.Client(api_key=key)
+                interaction = await client.aio.interactions.create(
+                    model="lyria-3-clip-preview",
+                    input=args,
+                )
+                for output in getattr(interaction, "outputs", []) or []:
+                    if getattr(output, "type", None) == "audio" and getattr(output, "data", None):
+                        audio_bytes = base64.b64decode(output.data)
+                    elif getattr(output, "type", None) == "text" and getattr(output, "text", None):
+                        lyrics_text = output.text
+                if audio_bytes:
+                    break
+                raise ValueError("Модель не вернула аудио-данные.")
+            except Exception as e:
+                err_str = str(e).lower()
+                if any(x in err_str for x in ("429", "quota", "exhausted")):
+                    self._set_key_cooldown(key, self._extract_retry_delay_seconds(str(e), 3600))
+                    self.key_model_map[key] = 0
+                    self.db.set(self.strings["name"], DB_KEY_MAP_KEY, self.key_model_map)
+                elif any(x in err_str for x in ("api key not valid", "api_key_invalid", "permission_denied", "client application")) and "model" not in err_str:
+                    self._set_key_cooldown(key, 86400 * 365)
+                    self.key_model_map[key] = -1
+                    self.db.set(self.strings["name"], DB_KEY_MAP_KEY, self.key_model_map)
+                last_error = e
+                continue
+        if not audio_bytes:
+            return await utils.answer(m, f"❌ <b>Ошибка генерации музыки:</b> <code>{utils.escape_html(str(last_error or 'Не удалось получить аудио'))}</code>")
+        out = io.BytesIO(audio_bytes)
+        out.name = f"gemini_music_{uuid.uuid4().hex[:6]}.mp3"
+        caption = f"🎵 <b>Gemini Music (Lyria)</b>\n📜 <code>{utils.escape_html(args[:100])}</code>"
+        if lyrics_text:
+            caption += f"\n\n🎤 <b>Текст:</b>\n<blockquote>{utils.escape_html(lyrics_text[:800])}</blockquote>"
+        await self.client.send_file(
+            utils.get_chat_id(message),
+            out,
+            caption=caption,
+            reply_to=message.id,
+            voice=True,
+        )
+        await m.delete()
 
     @loader.command()
     async def gimg(self, message: Message):
@@ -775,46 +1188,15 @@ class Gemini(loader.Module):
             f"ВОПРОС ПОЛЬЗОВАТЕЛЯ: \"{user_prompt}\"\n\n"
             f"ИСТОРИЯ ЧАТА:\n---\n{chat_log}\n---"
         )
-        try:
-            response_text = None
-            max_retries = len(self.api_keys)
-            analysis_config = types.GenerateContentConfig(
-                temperature=self.config["temperature"],
-                safety_settings=[
-                    types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="BLOCK_NONE"),
-                    types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="BLOCK_NONE"),
-                    types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="BLOCK_NONE"),
-                    types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="BLOCK_NONE"),
-                ]
-            )
-            proxy_config = self._get_proxy_config()
-            for i in range(max_retries):
-                key = self.api_keys[(self.current_api_key_index + i) % max_retries]
-                try:
-                    async with httpx.AsyncClient(proxies=proxy_config) if proxy_config else httpx.AsyncClient() as http_client:
-                        client = genai.Client(api_key=key, http_client=http_client)
-                        resp = await client.aio.models.generate_content(
-                            model=self.config["model_name"],
-                            contents=full_prompt,
-                            config=analysis_config
-                        )
-                    if resp.text:
-                        response_text = resp.text
-                        self.current_api_key_index = (self.current_api_key_index + i) % max_retries
-                        break
-                except Exception: continue
-            if not response_text: raise RuntimeError("Failed to generate answer (all keys or error).")
-            header = self.strings["gch_result_caption_from_chat"].format(count, chat_name)
-            response_html = self._markdown_to_html(response_text)
-            text_to_send = f"<b>{header}</b>\n\nQ: <blockquote>{utils.escape_html(user_prompt)}</blockquote>\n\nGemini:\n{self._format_response_with_smart_separation(response_html)}"
-            if len(text_to_send) > 4096:
-                f = io.BytesIO(response_text.encode('utf-8'))
-                await status_msg.delete()
-                await message.reply(file=f, caption=f"📝 {header}")
-            else:
-                await utils.answer(status_msg, text_to_send)
-        except Exception as e: 
-            await utils.answer(status_msg, self._handle_error(e))
+        header = self.strings["gch_result_caption_from_chat"].format(count, chat_name)
+        full_prompt = f"{header}\n\n{full_prompt}"
+        await self._send_to_gemini(
+            message=message,
+            parts=[types.Part(text=full_prompt)],
+            status_msg=status_msg,
+            display_prompt=f"{count} сообщений: {user_prompt}",
+            ephemeral=True,
+        )
 
     @loader.command()
     async def gprompt(self, message: Message):
@@ -893,9 +1275,17 @@ class Gemini(loader.Module):
 
     @loader.command()
     async def gclear(self, message: Message):
-        """[auto] — очистить память в чате. auto для памяти gauto."""
+        """[global/auto] — очистить память в чате. auto для памяти gauto."""
         args = utils.get_args_raw(message).lower()
         chat_id = utils.get_chat_id(message)
+        if args == "global":
+            if "global_context" in self.conversations:
+                del self.conversations["global_context"]
+                self._save_history_sync(False)
+                await utils.answer(message, self.strings["memory_cleared_global"])
+            else:
+                await utils.answer(message, self.strings["gres_no_global"])
+            return
         if args == "auto":
             if str(chat_id) in self.gauto_conversations:
                 self._clear_history(chat_id, gauto=True)
@@ -903,12 +1293,13 @@ class Gemini(loader.Module):
             else:
                 await utils.answer(message, self.strings["no_gauto_memory_to_clear"])
             return
-        if str(chat_id) in self.conversations:
-            self._clear_history(chat_id)
+        hist_key = "global_context" if self.config["global_memory"] else str(chat_id)
+        if hist_key in self.conversations:
+            self._clear_history(hist_key)
             keys_to_del =[k for k, v in self.pager_cache.items() if v.get("chat_id") == chat_id]
             for k in keys_to_del: del self.pager_cache[k]
             if keys_to_del: self.db.set(self.strings["name"], DB_PAGER_CACHE_KEY, self.pager_cache)
-            await utils.answer(message, self.strings["memory_cleared"])
+            await utils.answer(message, self.strings["memory_cleared_global"] if hist_key == "global_context" else self.strings["memory_cleared"])
         else:
             await utils.answer(message, self.strings["no_memory_to_clear"])
 
@@ -975,7 +1366,7 @@ class Gemini(loader.Module):
         """[N] — удалить последние N пар сообщений из памяти."""
         try: n = int(utils.get_args_raw(message) or 1)
         except: n = 1
-        cid = utils.get_chat_id(message)
+        cid = "global_context" if self.config["global_memory"] else utils.get_chat_id(message)
         hist = self._get_structured_history(cid)
         if n > 0 and len(hist) >= n*2:
             self.conversations[str(cid)] = hist[:-n*2]
@@ -1123,7 +1514,7 @@ class Gemini(loader.Module):
         """[слово] — Поиск в памяти текущего чата по ключевому слову или фразе."""
         q = utils.get_args_raw(message).lower()
         if not q: return await utils.answer(message, "Укажите слово для поиска.")
-        cid = utils.get_chat_id(message)
+        cid = "global_context" if self.config["global_memory"] else utils.get_chat_id(message)
         hist = self._get_structured_history(cid)
         found = [f"{e['role']}: {e.get('content','')[:200]}" for e in hist if q in str(e.get('content','')).lower()]
         if not found: await utils.answer(message, "Ничего не найдено.")
@@ -1133,19 +1524,22 @@ class Gemini(loader.Module):
     async def gmemoff(self, message: Message):
         """— Отключить память в этом чате"""
         self.memory_disabled_chats.add(str(utils.get_chat_id(message)))
+        self.db.set(self.strings["name"], DB_MEMORY_DISABLED_KEY, list(self.memory_disabled_chats))
         await utils.answer(message, "Память в этом чате отключена.")
 
     @loader.command()
     async def gmemon(self, message: Message):
         """— Включить память в этом чате"""
         self.memory_disabled_chats.discard(str(utils.get_chat_id(message)))
+        self.db.set(self.strings["name"], DB_MEMORY_DISABLED_KEY, list(self.memory_disabled_chats))
         await utils.answer(message, "Память в этом чате включена.")
 
     @loader.command()
     async def gmemshow(self, message: Message):
         """[auto] — Показать память чата (до 20 последних запросов). auto для gauto."""
-        gauto = "auto" in utils.get_args_raw(message)
-        cid = utils.get_chat_id(message)
+        args = utils.get_args_raw(message).lower()
+        gauto = "auto" in args
+        cid = "global_context" if ("global" in args or (self.config["global_memory"] and not gauto)) else utils.get_chat_id(message)
         hist = self._get_structured_history(cid, gauto=gauto)
         if not hist: return await utils.answer(message, "Память пуста.")
         out = []
@@ -1157,86 +1551,111 @@ class Gemini(loader.Module):
         await utils.answer(message, "<blockquote expandable='true'>" + "\n".join(out) + "</blockquote>")
 
     @loader.command()
+    async def gprovider(self, message: Message):
+        """[gemini/openrouter] — сменить провайдера API."""
+        args = utils.get_args_raw(message).strip().lower()
+        if not args:
+            provider = self._normalize_provider_name()
+            effective = self._resolve_effective_model(provider, self.config["model_name"], [], "")
+            return await utils.answer(
+                message,
+                self.strings["gprovider_current"].format(self._provider_label(provider), utils.escape_html(effective)),
+            )
+        provider = self._normalize_provider_name(args)
+        if provider not in ("google", "openrouter"):
+            return await utils.answer(message, self.strings["gprovider_usage"])
+        prev = self._normalize_provider_name()
+        self._remember_provider_model(prev, self.config["model_name"], manual=not self.config["auto_model"])
+        self.config["provider"] = provider
+        restored = self._restore_provider_model(provider)
+        await utils.answer(message, self.strings["gprovider_set"].format(self._provider_label(provider), utils.escape_html(restored)))
+
+    @loader.command()
+    async def gprofile(self, message: Message):
+        """[auto|balanced|fast|reasoning|coding|vision|manual] — профиль авто-подбора модели."""
+        args = utils.get_args_raw(message).strip().lower()
+        provider = self._normalize_provider_name()
+        if not args:
+            effective = self._resolve_effective_model(provider, self.config["model_name"], [], "")
+            return await utils.answer(
+                message,
+                "🧭 <b>Профиль авто-модели</b>\n"
+                f"• <b>Текущий:</b> <code>{utils.escape_html(str(self.config['model_profile']))}</code>\n"
+                f"• <b>Auto:</b> <code>{'on' if self.config['auto_model'] else 'off'}</code>\n"
+                f"• <b>Провайдер:</b> <code>{self._provider_label(provider)}</code>\n"
+                f"• <b>Сейчас выберет:</b> <code>{utils.escape_html(effective)}</code>\n\n"
+                f"{self.strings['gprofile_usage']}",
+            )
+        if args not in MODEL_PROFILE_CHOICES:
+            return await utils.answer(message, self.strings["gprofile_usage"])
+        self.config["model_profile"] = args
+        self.config["auto_model"] = args != "manual"
+        effective = self._resolve_effective_model(provider, self.config["model_name"], [], "")
+        self._remember_provider_model(provider, effective, manual=args == "manual")
+        await utils.answer(message, self.strings["gprofile_set"].format(utils.escape_html(args), utils.escape_html(effective)))
+
+    @loader.command()
     async def gmodel(self, message: Message):
         """[model] [-s] — Узнать/сменить модель. -s — список. Авто-проверка совместимости."""
-        args_raw = utils.get_args_raw(message).strip().lower()
-        args_list = args_raw.split()
-        is_list_request = "-s" in args_list
-        provider = self.config["provider"]
-        if is_list_request:
+        args_raw = utils.get_args_raw(message).strip()
+        args = args_raw.lower()
+        provider = self._normalize_provider_name()
+        if args in ("-s", "--s", "s", "list"):
             status_msg = await utils.answer(message, self.strings["processing"])
             try:
-                if provider == "openrouter":
-                    api_key = self.config["Openrouter_api_key"]
-                    if not api_key: return await utils.answer(status_msg, self.strings['no_api_key_Openrouter'])
-                    async with aiohttp.ClientSession() as session:
-                        async with session.get(
-                            "https://openrouter.ai/api/v1/models",
-                            headers={"Authorization": f"Bearer {api_key}"}
-                        ) as resp:
-                            if resp.status != 200: raise ValueError(f"HTTP {resp.status}")
-                            data = await resp.json()
-                    models_data = data.get("data",[])
-                    models_data.sort(key=lambda x: x["id"])
-                    top_list = []
-                    other_list = []
-                    favs =["google/gemini-2.0-flash-001", "openai/gpt-4o", "anthropic/claude-3.5-sonnet", "deepseek/deepseek-r1"]
-                    for m in models_data:
-                        mid = m["id"]
-                        line = f"• <code>{mid}</code>"
-                        if mid in favs: top_list.append(line)
-                        elif any(x in mid for x in ["gemini", "gpt", "claude", "deepseek", "llama"]): other_list.append(line)
-                    text = self.strings.get("gmodel_list_title_Openrouter", "📋 Models:") + "\n" + "\n".join(top_list) + "\n\n"
-                    text += "\n".join(other_list[:50])
-                    if len(other_list) > 50: text += f"\n\n<i>...и еще {len(other_list)-50} моделей.</i>"
-                    file = io.BytesIO(text.encode("utf-8"))
-                    await self.client.send_file(message.chat_id, file=file, caption="📋 OpenRouter Models", reply_to=message.id)
-                    await status_msg.delete()
-                else:
-                    if not self.api_keys: return await utils.answer(status_msg, self.strings['no_api_key'])
-                    client = genai.Client(api_key=self.api_keys[self.current_api_key_index])
-                    models = await asyncio.to_thread(client.models.list)
-                    txt = "\n".join([f"• <code>{m.name.split('/')[-1]}</code>" for m in models])
-                    f = io.BytesIO((self.strings["gmodel_list_title"] + "\n" + txt).encode('utf-8'))
-                    f.name = "models_list.txt"
-                    await self.client.send_file(message.chat_id, file=f, caption="📋 Список доступных моделей", reply_to=message.id)
-                    await status_msg.delete()
+                await self._show_provider_model_catalog(status_msg, provider)
             except Exception as e: 
                 await utils.answer(status_msg, self.strings["gmodel_list_error"].format(self._handle_error(e)))
             return
         if not args_raw: 
-            return await utils.answer(message, f"🔮 <b>Провайдер:</b> <code>{provider}</code>\n🧠 <b>Модель:</b> <code>{self.config['model_name']}</code>")
+            effective = self._resolve_effective_model(provider, self.config["model_name"], [], "")
+            return await utils.answer(
+                message,
+                f"🔮 <b>Провайдер:</b> <code>{self._provider_label(provider)}</code>\n"
+                f"🧠 <b>Модель в конфиге:</b> <code>{utils.escape_html(str(self.config['model_name']))}</code>\n"
+                f"🎯 <b>Эффективная модель:</b> <code>{utils.escape_html(effective)}</code>\n"
+                f"🧭 <b>Профиль:</b> <code>{utils.escape_html(str(self.config['model_profile']))}</code>"
+            )
         self.config["model_name"] = args_raw
+        self.config["model_profile"] = "manual"
+        self.config["auto_model"] = False
+        self._remember_provider_model(provider, args_raw, manual=True)
         warning = ""
-        if provider == "google" and ("/" in args_raw or any(x in args_raw for x in["gpt", "claude", "deepseek", "llama"])):
+        if not self._model_matches_provider(args_raw, provider):
             warning = (
-                "\n\n⚠️ <b>Конфликт настроек!</b>\n"
-                f"Вы установили модель <code>{args_raw}</code>, но провайдер остался <b>Google</b>.\n"
-                "Смените провайдера командой:\n<code>.cfg gemini provider openrouter</code>"
+                "\n\n⚠️ <b>Возможна несовместимость.</b>\n"
+                f"Модель <code>{utils.escape_html(args_raw)}</code> может не поддерживаться провайдером <b>{self._provider_label(provider)}</b>.\n"
+                "Если не работает, смените провайдера: <code>.gprovider</code>"
             )
-        elif provider == "openrouter" and "/" not in args_raw and "gemini" in args_raw:
-             warning = (
-                "\n\n⚠️ <b>Совет:</b> Для OpenRouter лучше использовать полные ID.\n"
-                f"Например: <code>google/{args_raw}</code>"
-            )
-        await utils.answer(message, f"✅ Модель установлена: <code>{args_raw}</code>{warning}")
+        await utils.answer(message, f"✅ Модель установлена: <code>{utils.escape_html(args_raw)}</code>\n🧭 Авто-подбор переключен в <code>manual</code>. Вернуть: <code>.gprofile auto</code>{warning}")
 
     @loader.command()
     async def gres(self, message: Message):
-        """[auto] — Очистить ВСЮ память. auto для всей памяти gauto."""
-        if utils.get_args_raw(message) == "auto":
+        """[global/auto] — Очистить ВСЮ память. auto для всей памяти gauto."""
+        args = utils.get_args_raw(message).lower()
+        if args == "global":
+            if "global_context" in self.conversations:
+                del self.conversations["global_context"]
+                self._save_history_sync(False)
+                await utils.answer(message, self.strings["gres_global_cleared"])
+            else:
+                await utils.answer(message, self.strings["gres_no_global"])
+            return
+        if args == "auto":
             if not self.gauto_conversations: return await utils.answer(message, self.strings["no_gauto_memory_to_fully_clear"])
             n = len(self.gauto_conversations)
             self.gauto_conversations.clear()
             self._save_history_sync(True)
             await utils.answer(message, self.strings["gauto_memory_fully_cleared"].format(n))
-        else:
-            if not self.conversations: return await utils.answer(message, self.strings["no_memory_to_fully_clear"])
-            n = len(self.conversations)
-            self.conversations.clear()
+        elif not args:
+            keys_to_delete = [k for k in self.conversations.keys() if k != "global_context"]
+            if not keys_to_delete: return await utils.answer(message, self.strings["no_memory_to_fully_clear"])
+            for key in keys_to_delete:
+                del self.conversations[key]
             self._save_history_sync(False)
-            await utils.answer(message, self.strings["memory_fully_cleared"].format(n))
-
+            await utils.answer(message, self.strings["memory_fully_cleared"].format(len(keys_to_delete)))
+        else:
+            await utils.answer(message, self.strings["gres_usage"])
 
     @loader.callback_handler()
     async def gemini_callback_handler(self, call: InlineCall):
@@ -1270,9 +1689,10 @@ class Gemini(loader.Module):
             page = int(parts[3])
             await self._render_page(uid, page, call)
             return
-        if action == "regen":
+        if action in ("regen", "regen_att"):
             chat_id = int(parts[2])
             msg_id = int(parts[3])
+            attempt = int(parts[4]) if action == "regen_att" and len(parts) > 4 else 1
             key = f"{chat_id}:{msg_id}"
             last_request_tuple = self.last_requests.get(key)
             if not last_request_tuple:
@@ -1280,7 +1700,10 @@ class Gemini(loader.Module):
                 return
             last_parts, display_prompt = last_request_tuple
             use_url_context = bool(re.search(r'https?://\S+', display_prompt or ""))
-            await call.edit(f"<tg-emoji emoji-id=5386367538735104399>⌛️</tg-emoji> <b>Регенерация...</b>", reply_markup=None)
+            await call.edit(
+                f"<tg-emoji emoji-id=5386367538735104399>⌛️</tg-emoji> <b>Регенерация (попытка {attempt})...</b>" if attempt > 1 else f"<tg-emoji emoji-id=5386367538735104399>⌛️</tg-emoji> <b>Регенерация...</b>",
+                reply_markup=None,
+            )
             await self._send_to_gemini(
                 message=msg_id, 
                 parts=last_parts, 
@@ -1288,7 +1711,49 @@ class Gemini(loader.Module):
                 call=call, 
                 chat_id_override=chat_id, 
                 use_url_context=use_url_context, 
-                display_prompt=display_prompt
+                display_prompt=display_prompt,
+                attempt=attempt,
+            )
+            return
+        if action == "retry":
+            chat_id = int(parts[2])
+            msg_id = int(parts[3])
+            attempt = int(parts[4]) if len(parts) > 4 else 1
+            key = f"{chat_id}:{msg_id}"
+            last_request_tuple = self.last_requests.get(key)
+            if not last_request_tuple:
+                await call.answer(self.strings["no_last_request"], show_alert=True)
+                return
+            last_parts, display_prompt = last_request_tuple
+            use_url_context = bool(re.search(r'https?://\S+', display_prompt or ""))
+            await call.edit(f"<tg-emoji emoji-id=5386367538735104399>⌛️</tg-emoji> <b>Обработка (попытка {attempt})...</b>", reply_markup=None)
+            await self._send_to_gemini(
+                message=msg_id,
+                parts=last_parts,
+                regeneration=False,
+                call=call,
+                chat_id_override=chat_id,
+                use_url_context=use_url_context,
+                display_prompt=display_prompt,
+                attempt=attempt,
+                is_retry=True,
+            )
+            return
+        if action == "shreq":
+            is_regen_flag = parts[2]
+            chat_id = int(parts[3])
+            msg_id = int(parts[4])
+            attempt = int(parts[5]) if len(parts) > 5 else 1
+            key = f"{chat_id}:{msg_id}"
+            last_request_tuple = self.last_requests.get(key)
+            if not last_request_tuple:
+                await call.answer(self.strings["no_last_request"], show_alert=True)
+                return
+            _, display_prompt = last_request_tuple
+            btn_action = "regen_att" if is_regen_flag == "1" else "retry"
+            await call.edit(
+                f"📝 <b>Ваш запрос:</b>\n<code>{utils.escape_html(display_prompt)}</code>",
+                reply_markup=[[{"text": f"🔄 Повторить ({attempt})", "data": f"gemini:{btn_action}:{chat_id}:{msg_id}:{attempt}"}]],
             )
             return
 
@@ -1664,8 +2129,9 @@ class Gemini(loader.Module):
         except Exception as e: logger.warning(f"Ошибка удаления сообщения: {e}")
 
     async def _clear_callback(self, call: InlineCall, chat_id: int):
-        self._clear_history(chat_id, gauto=False)
-        await call.edit(self.strings["memory_cleared"], reply_markup=None)
+        hist_key = "global_context" if self.config["global_memory"] else chat_id
+        self._clear_history(hist_key, gauto=False)
+        await call.edit(self.strings["memory_cleared_global"] if hist_key == "global_context" else self.strings["memory_cleared"], reply_markup=None)
 
     async def _scan_keys(self, force=False):
         """
@@ -1714,13 +2180,18 @@ class Gemini(loader.Module):
 
     def _get_sorted_keys(self):
         valid_keys = []
+        now = time.time()
         for key in self.api_keys:
+            if self.key_cooldowns.get(str(key), 0) > now:
+                continue
             if key not in self.key_model_map:
-                if not self.key_model_map: valid_keys.append((key, 0, random.random()))
+                valid_keys.append((key, 0, random.random()))
                 continue
             tier = self.key_model_map[key]
+            if tier == -1:
+                continue
             valid_keys.append((key, tier, random.random()))
-        valid_keys.sort(key=lambda x: (x[1], x[2]))
+        valid_keys.sort(key=lambda x: (-x[1], x[2]))
         return [item[0] for item in valid_keys]
 
     async def _call_google_rest(self, model_name: str, prompt: str, input_image_bytes=None):
@@ -1772,42 +2243,164 @@ class Gemini(loader.Module):
             return out.getvalue()
         except: return img_bytes
 
+    async def _get_provider_model_catalog(self, provider: str) -> list:
+        provider = self._normalize_provider_name(provider)
+        if provider == "openrouter":
+            api_key = next(iter(self._get_openrouter_keys()), "")
+            if api_key:
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(
+                            "https://openrouter.ai/api/v1/models",
+                            headers={"Authorization": f"Bearer {api_key}"},
+                            timeout=aiohttp.ClientTimeout(total=30),
+                        ) as resp:
+                            if resp.status == 200:
+                                data = await resp.json()
+                                models = sorted({m.get("id") for m in data.get("data", []) if m.get("id")})
+                                filtered = [
+                                    model for model in models
+                                    if any(token in model.lower() for token in ("gemini", "claude", "gpt", "deepseek", "qwen"))
+                                ]
+                                return filtered or models
+                except Exception:
+                    pass
+            return self._provider_curated_models(provider)
+        if provider == "google":
+            if self.api_keys:
+                try:
+                    client = genai.Client(api_key=self.api_keys[self.current_api_key_index % len(self.api_keys)])
+                    models = await asyncio.to_thread(client.models.list)
+                    listed = sorted({m.name.split("/")[-1] for m in models if getattr(m, "name", None)})
+                    if listed:
+                        return listed
+                except Exception:
+                    pass
+            return self._provider_curated_models(provider)
+        return self._provider_curated_models(provider)
+
+    async def _show_provider_model_catalog(self, entity, provider: str):
+        provider = self._normalize_provider_name(provider)
+        models = await self._get_provider_model_catalog(provider)
+        if not models:
+            raise ValueError(self.strings["gmodel_no_models"])
+        profiles = self._provider_profile_models(provider)
+        profile_index = {}
+        for profile_name, profile_model in profiles.items():
+            profile_index.setdefault(profile_model, []).append(profile_name)
+        lines = [
+            f"📋 <b>{self._provider_label(provider)} Models</b>",
+            f"🧭 <b>Профиль:</b> <code>{utils.escape_html(str(self.config['model_profile']))}</code> · <b>Auto:</b> <code>{'on' if self.config['auto_model'] else 'off'}</code>",
+            "",
+        ]
+        current = str(self.config["model_name"] or "")
+        for model in models[:300]:
+            marker = "✓" if model == current else "•"
+            tags = ", ".join(profile_index.get(model, []))
+            suffix = f" <i>{utils.escape_html(tags)}</i>" if tags else ""
+            lines.append(f"{marker} <code>{utils.escape_html(model)}</code>{suffix}")
+        if len(models) > 300:
+            lines.append(f"\n<i>...и еще {len(models) - 300} моделей.</i>")
+        text = "\n".join(lines)
+        if len(text) <= 3800:
+            await utils.answer(entity, text)
+            return
+        chunks = self._paginate_text(text, 3400)
+        uid = uuid.uuid4().hex[:6]
+        self.pager_cache[uid] = {
+            "chunks": chunks,
+            "total": len(chunks),
+            "header": "",
+            "chat_id": getattr(entity, "chat_id", 0),
+            "msg_id": getattr(entity, "id", None),
+        }
+        self.db.set(self.strings["name"], DB_PAGER_CACHE_KEY, self.pager_cache)
+        await self._render_page(uid, 0, entity)
+
     async def _send_to_Openrouter_api(self, model, messages, temperature):
-        """Отправка запроса в OpenRouter (OpenAI format)"""
-        api_key = self.config["Openrouter_api_key"]
-        if not api_key:
+        """Отправка запроса в OpenRouter (OpenAI format) с ротацией ключей."""
+        keys = self._get_openrouter_keys()
+        if not keys:
             raise ValueError("Не указан OpenRouter API Key! Установите его в .cfg")
         url = "https://openrouter.ai/api/v1/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com/SenkoGuardian",
-            "X-Title": "Gemini Module for Heroku Telegram-userbot",
-        }
-        payload = {
-            "model": model,
-            "messages": messages,
-            "temperature": min(temperature, 1.0)
-        }
+        now = time.time()
+        last_error = None
         async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload, timeout=GEMINI_TIMEOUT) as resp:
-                text = await resp.text()
-                if resp.status != 200:
+            for api_key in keys:
+                cd_key = f"openrouter:{api_key}"
+                if self.key_cooldowns.get(cd_key, 0) > now:
+                    continue
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://github.com/SenkoGuardian",
+                    "X-Title": "Gemini Module for Heroku Telegram-userbot",
+                }
+                payload = {
+                    "model": model,
+                    "messages": messages,
+                    "temperature": min(float(temperature), 2.0),
+                    "max_tokens": 4096,
+                }
+                for attempt in range(2):
                     try:
-                        err_json = json.loads(text)
-                        err_msg = err_json.get('error', {}).get('message', text)
-                    except:
-                        err_msg = text
-                    raise ConnectionError(f"OpenRouter API Error {resp.status}: {err_msg}")
-                try:
-                    result = json.loads(text)
-                except json.JSONDecodeError:
-                    raise ValueError(f"OpenRouter вернул не JSON: {text[:100]}...")
-                if "choices" not in result or not result["choices"]:
-                    if "error" in result:
-                        raise ValueError(f"OpenRouter Logic Error: {result['error']}")
-                    raise ValueError(f"Пустой ответ (нет 'choices'). Raw: {text}")
-                return result["choices"][0]["message"]["content"]
+                        async with session.post(
+                            url,
+                            headers=headers,
+                            json=payload,
+                            timeout=aiohttp.ClientTimeout(total=GEMINI_TIMEOUT),
+                        ) as resp:
+                            text = await resp.text()
+                            if resp.status == 402 and attempt == 0:
+                                try:
+                                    err_msg = json.loads(text).get("error", {}).get("message", text)
+                                    match = re.search(r"can only afford (\d+)", err_msg)
+                                    if match:
+                                        payload["max_tokens"] = max(1, int(match.group(1)))
+                                        continue
+                                except Exception:
+                                    pass
+                            if resp.status == 429:
+                                self._set_key_cooldown(cd_key, 3600)
+                                last_error = ConnectionError(f"OpenRouter 429: лимит ключа ...{api_key[-6:]}")
+                                break
+                            if resp.status in (401, 403):
+                                self._set_key_cooldown(cd_key, 86400 * 365)
+                                try:
+                                    err_msg = json.loads(text).get("error", {}).get("message", text)
+                                except Exception:
+                                    err_msg = text
+                                last_error = ConnectionError(f"OpenRouter API Error {resp.status}: {err_msg}")
+                                break
+                            if resp.status != 200:
+                                try:
+                                    err_msg = json.loads(text).get("error", {}).get("message", text)
+                                except Exception:
+                                    err_msg = text
+                                last_error = ConnectionError(f"OpenRouter API Error {resp.status}: {err_msg}")
+                                break
+                            try:
+                                result = json.loads(text)
+                            except json.JSONDecodeError:
+                                raise ValueError(f"OpenRouter вернул не JSON: {text[:200]}...")
+                            if "choices" not in result or not result["choices"]:
+                                if "error" in result:
+                                    raise ValueError(f"OpenRouter Logic Error: {result['error']}")
+                                raise ValueError(f"Пустой ответ (нет 'choices'). Raw: {text[:200]}")
+                            message_obj = result["choices"][0].get("message") or {}
+                            content = message_obj.get("content")
+                            if isinstance(content, list):
+                                content = "\n".join(str(part.get("text") or part.get("content") or "") for part in content if isinstance(part, dict)).strip()
+                            content = str(content or "").strip()
+                            if not content:
+                                raise ValueError(f"Пустой ответ OpenRouter. Raw: {text[:200]}")
+                            return content, (result.get("usage") or {})
+                    except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+                        last_error = e
+                        break
+                if last_error:
+                    continue
+        raise last_error or ValueError(f"Все OpenRouter ключи ({len(keys)}) исчерпаны или недоступны")
 
     def _convert_google_history_to_openai(self, history: list, system_prompt: str) -> list:
         """Конвертирует историю из формата Google в формат OpenAI."""
@@ -1827,7 +2420,10 @@ class Gemini(loader.Module):
             messages.append({"role": role, "content": content})
         return messages
 
-
     def _is_memory_enabled(self, chat_id: str) -> bool: return chat_id not in self.memory_disabled_chats
-    def _disable_memory(self, chat_id: int): self.memory_disabled_chats.add(str(chat_id))
-    def _enable_memory(self, chat_id: int): self.memory_disabled_chats.discard(str(chat_id))
+    def _disable_memory(self, chat_id: int):
+        self.memory_disabled_chats.add(str(chat_id))
+        self.db.set(self.strings["name"], DB_MEMORY_DISABLED_KEY, list(self.memory_disabled_chats))
+    def _enable_memory(self, chat_id: int):
+        self.memory_disabled_chats.discard(str(chat_id))
+        self.db.set(self.strings["name"], DB_MEMORY_DISABLED_KEY, list(self.memory_disabled_chats))
