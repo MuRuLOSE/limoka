@@ -12020,6 +12020,12 @@
           "g": "[текст или reply] — спросить у Gemini. Может анализировать ссылки."
         },
         {
+          "gask": "[текст или reply] — быстрый вопрос без сохранения в память."
+        },
+        {
+          "gmusic": "<промпт> — сгенерировать музыку/аудио через Gemini Lyria."
+        },
+        {
           "gimg": "<промпт> [реплай на фото] — Генерация/Редактирование изображений через Gemini."
         },
         {
@@ -12038,7 +12044,7 @@
           "gautochats": "— Показать чаты с активным режимом авто-ответа."
         },
         {
-          "gclear": "[auto] — очистить память в чате. auto для памяти gauto."
+          "gclear": "[global/auto] — очистить память в чате. auto для памяти gauto."
         },
         {
           "gpresets": "<save/load/del/list> — Управление пресетами (профилями)."
@@ -12068,10 +12074,16 @@
           "gmemshow": "[auto] — Показать память чата (до 20 последних запросов). auto для gauto."
         },
         {
+          "gprovider": "[gemini/openrouter] — сменить провайдера API."
+        },
+        {
+          "gprofile": "[auto|balanced|fast|reasoning|coding|vision|manual] — профиль авто-подбора модели."
+        },
+        {
           "gmodel": "[model] [-s] — Узнать/сменить модель. -s — список. Авто-проверка совместимости."
         },
         {
-          "gres": "[auto] — Очистить ВСЮ память. auto для всей памяти gauto."
+          "gres": "[global/auto] — Очистить ВСЮ память. auto для всей памяти gauto."
         }
       ],
       "new_commands": [
@@ -12080,6 +12092,32 @@
           "original_name": "g",
           "description": {
             "default": "[текст или reply] — спросить у Gemini. Может анализировать ссылки."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "gask",
+          "original_name": "gask",
+          "description": {
+            "default": "[текст или reply] — быстрый вопрос без сохранения в память."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "gmusic",
+          "original_name": "gmusic",
+          "description": {
+            "default": "<промпт> — сгенерировать музыку/аудио через Gemini Lyria."
           },
           "cmd_names": {},
           "aliases": [],
@@ -12170,7 +12208,7 @@
           "name": "gclear",
           "original_name": "gclear",
           "description": {
-            "default": "[auto] — очистить память в чате. auto для памяти gauto."
+            "default": "[global/auto] — очистить память в чате. auto для памяти gauto."
           },
           "cmd_names": {},
           "aliases": [],
@@ -12297,6 +12335,32 @@
           "decorators": []
         },
         {
+          "name": "gprovider",
+          "original_name": "gprovider",
+          "description": {
+            "default": "[gemini/openrouter] — сменить провайдера API."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "gprofile",
+          "original_name": "gprofile",
+          "description": {
+            "default": "[auto|balanced|fast|reasoning|coding|vision|manual] — профиль авто-подбора модели."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
           "name": "gmodel",
           "original_name": "gmodel",
           "description": {
@@ -12313,7 +12377,7 @@
           "name": "gres",
           "original_name": "gres",
           "description": {
-            "default": "[auto] — Очистить ВСЮ память. auto для всей памяти gauto."
+            "default": "[global/auto] — Очистить ВСЮ память. auto для всей памяти gauto."
           },
           "cmd_names": {},
           "aliases": [],
@@ -12377,10 +12441,10 @@
       },
       "commands": [
         {
-          "chatcopy": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь. --now: начать сразу, без полного подсчёта."
+          "chatcopy": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
         },
         {
-          "ccwatch": "<src> <dest> [start_id:final_id] [-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+          "ccwatch": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
         },
         {
           "cchelp": "— Подробная документация по модулю ChatCopy"
@@ -12397,7 +12461,7 @@
           "name": "chatcopy",
           "original_name": "chatcopy",
           "description": {
-            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь. --now: начать сразу, без полного подсчёта."
+            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
           },
           "cmd_names": {},
           "aliases": [],
@@ -12410,7 +12474,7 @@
           "name": "ccwatch",
           "original_name": "ccwatch",
           "description": {
-            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc][--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
           },
           "cmd_names": {},
           "aliases": [],
@@ -12465,8 +12529,9 @@
         "cfg_batch": "Размер пачки сообщений (1-100)",
         "cfg_delay": "Задержка ОТПРАВКИ между пачками (сек)",
         "cfg_flood_buffer": "Дополнительное время к FloodWait (сек)",
-        "copy_start_prem": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
-        "copy_start_no_prem": "🚀 <b>ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n⏬⏬⏬⏬\n<b>Цель:</b> {dest}\n\n⚙️ <b>Режим:</b> {mode}\n🔢 <b>Старт с ID:</b> {start_id}\n👤 <b>Без автора:</b> {no_auth}\n💬 <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "cfg_timezone": "Часовой пояс для времени в статусах (UTC offset, например 3 для MSK)",
+        "copy_start_prem": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n🚫 <b>Игнор топиков:</b> {ignored_topics}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "copy_start_no_prem": "🚀 <b>ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n⏬⏬⏬⏬\n<b>Цель:</b> {dest}\n\n⚙️ <b>Режим:</b> {mode}\n🔢 <b>Старт с ID:</b> {start_id}\n👤 <b>Без автора:</b> {no_auth}\n💬 <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n🚫 <b>Игнор топиков:</b> {ignored_topics}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
         "copy_done_detailed_prem": "<emoji document_id=5208422125924275090>✅</emoji> <b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n<emoji document_id=5123248930124989216>✅</emoji> <b>Перенесено сообщений: {count}</b> <emoji document_id=5123248930124989216>✅</emoji>\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
         "copy_done_detailed_no_prem": "<b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n✔️ <b>Перенесено сообщений: {count}</b> ✔️\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
         "flood_wait_notice": "⏸ <b>FloodWait</b>\n📊 <b>Задержка:</b> <code>{minutes}m {seconds}s</code>\n🕐 <b>Возобновление:</b> <code>{resume_time}</code>\n📨 <b>Переслано:</b> <code>{count}</code> сообщений\n⏳ <b>Осталось:</b> <code>{remaining}</code> сообщений\n⚡ <b>Скорость:</b> <code>{speed}</code> сообщений/мин",
@@ -12485,8 +12550,9 @@
         "forum_enable_failed": "❌ Не удалось включить топики в {chat}. Нужны права администратора.",
         "forum_not_channel": "❌ {chat} не является каналом/группой",
         "err_ent": "❌ Ошибка: Чат не найден или нет доступа.",
-        "args_err": "❌ Синтаксис: .chatcopy <src> <dest>[start_id:final_id] [-n] [-dmc] [--now] [--media|--photo_video|--docs|--text]",
-        "watch_added": "<b>👀 Наблюдение активировано</b>\nID: <code>{src_id}</code>\n{src} -> {dest}\nРежим топиков: {topics}\nБез подписей: {no_capt}\nФильтр: {filter_type}",
+        "args_err": "❌ Синтаксис: .chatcopy <src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1|\"Имя\"] [-theme123] [--media|--photo_video|--docs|--text]",
+        "watch_added": "<b>👀 Наблюдение активировано</b>\nID: <code>{src_id}</code>\n{src} -> {dest}\nРежим топиков: {topics}\nБез подписей: {no_capt}\nФильтр: {filter_type}\nИгнор топиков: {ignored}",
+        "copy_restricted": "❌ <b>Источник защищён запретом копирования/пересылки Telegram.</b>\n\nМодуль остановлен до добавления в очередь: скрытый обход этой защиты не выполняется. Используй источник, где копирование разрешено, или отключи защиту в своём чате.",
         "queue_wait": "⏳ <b>Задача в очереди...</b> ({pos})",
         "topic_created": "📂 Создан топик: <b>{title}</b>",
         "topic_error": "❌ Ошибка создания топика: {error}",
@@ -78702,6 +78768,6 @@
   },
   "meta": {
     "total_modules": 995,
-    "generated_at": "2026-04-24T17:42:27.132273"
+    "generated_at": "2026-04-29T02:14:49.839380"
   }
 }
