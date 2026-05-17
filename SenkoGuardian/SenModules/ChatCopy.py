@@ -919,7 +919,7 @@ class ChatCopy(loader.Module):
                     idx = next((i for i, t in enumerate(self.task_queue) if t.get('tid') == tid), None)
                     if idx is not None:
                         self.task_queue[idx]['status'] = 'running'
-                        self.task_queue[idx]['start_time'] = self._now()
+                        self.task_queue[idx]['start_time'] = time.time()
                         self.current_task_index = idx
                     if tid:
                         self.active_dumps[tid] = {
@@ -2074,6 +2074,18 @@ class ChatCopy(loader.Module):
         btns = [[{"text": "🔙 К списку", "callback": self._panel_tasks}]]
         await call.edit(text, reply_markup=btns)
 
+    @staticmethod
+    def _ms(obj):
+        if isinstance(obj, dict):
+            return {k: ChatCopy._ms(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [ChatCopy._ms(v) for v in obj]
+        if isinstance(obj, datetime):
+            return obj.timestamp()
+        if isinstance(obj, (int, float, str, bool)) or obj is None:
+            return obj
+        return str(obj)
+
     def _save_tasks(self):
         """Saves the current task queue to DB, including live progress from active_dumps."""
         tasks_to_save = []
@@ -2086,7 +2098,7 @@ class ChatCopy(loader.Module):
                 live = self.active_dumps[tid]
                 snapshot['current'] = live.get('current', snapshot.get('current', 0))
                 snapshot['total_msgs'] = live.get('total_estimated', snapshot.get('total_msgs', 0))
-            tasks_to_save.append(snapshot)
+            tasks_to_save.append(self._ms(snapshot))
         self.db.set("ChatCopy", "persistent_queue", tasks_to_save)
 
     async def _action_task(self, call, tid, action): # вот эта хрень держит все что находится в панели, лучше не трогать
