@@ -70,14 +70,14 @@ class FHetaAPI:
                 return {}
         except Exception:
             return {}
-
+            
 
 class MInstaller:
     async def execute(self, plugin: 'loader.Module', url: str) -> Tuple[str, List[str]]:
         try:
             code = await plugin._storage.fetch(url, auth=plugin.config.get("basic_auth"))
         except Exception:
-            return "error", []
+            return "error",[]
             
         for step in range(5):
             state = await self.load(plugin, code, url, step)
@@ -85,10 +85,10 @@ class MInstaller:
             if state == "success":
                 if plugin.fully_loaded:
                     plugin.update_modules_in_db()
-                return "success", []
+                return "success",[]
                 
             if state == "overwrite":
-                return "overwrite", []
+                return "overwrite",[]
                 
             if isinstance(state, list):
                 return "dependency", state
@@ -98,35 +98,37 @@ class MInstaller:
                 
             await asyncio.sleep(0.5)
             
-        return "dependency", []
+        return "dependency",[]
 
     async def load(self, plugin: 'loader.Module', code: str, origin: str, step: int) -> Union[str, List[str]]:
         if step == 0:
             try:
-                dependencies = list(filter(
-                    lambda requirement: not requirement.startswith(("-", "_", ".")),
-                    map(lambda raw: raw.strip().rstrip(','), loader.VALID_PIP_PACKAGES.search(code)[1].split())
-                ))
-                
-                if dependencies:
-                    if not await plugin.install_requirements(dependencies):
-                        return dependencies
-                    importlib.invalidate_caches()
-                    return "retry"
+                raw_pip = loader.VALID_PIP_PACKAGES.search(code)
+                if raw_pip:
+                    dependencies = [
+                        dep.strip() for dep in raw_pip[1].replace(',', ' ').split()
+                        if dep.strip() and not dep.strip().startswith(("-", "_", "."))
+                    ]
+                    
+                    if dependencies:
+                        await plugin.install_requirements(dependencies)
+                        importlib.invalidate_caches()
+                        return "retry"
             except Exception:
                 pass
                 
             try:
-                packages = list(filter(
-                    lambda requirement: not requirement.startswith(("-", "_", ".")),
-                    map(lambda raw: raw.strip().rstrip(','), loader.VALID_APT_PACKAGES.search(code)[1].split())
-                ))
-                
-                if packages:
-                    if not await plugin.install_packages(packages):
-                        return packages
-                    importlib.invalidate_caches()
-                    return "retry"
+                raw_apt = loader.VALID_APT_PACKAGES.search(code)
+                if raw_apt:
+                    packages = [
+                        pkg.strip() for pkg in raw_apt[1].replace(',', ' ').split()
+                        if pkg.strip() and not pkg.strip().startswith(("-", "_", "."))
+                    ]
+                    
+                    if packages:
+                        await plugin.install_packages(packages)
+                        importlib.invalidate_caches()
+                        return "retry"
             except Exception:
                 pass
         
@@ -362,7 +364,7 @@ class FHeta(loader.Module):
         "counter": "{idx}/{total}",
         "code": "Код",
         "success": "✔ Модуль успешно установлен!",
-        "error": "✘ Ошибка, возможно, модуль поломан!",
+        "error": "✘ Ошибка, возможно, модуль сломан!",
         "overwrite": "✘ Ошибка, модуль пытался перезаписать встроенный модуль!",
         "dependency": "✘ Ошибка установки зависимостей! {deps}",
         "docdevs": "Использовать только модули от официальных разработчиков Heroku при поиске?",
