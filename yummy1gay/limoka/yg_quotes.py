@@ -1,4 +1,4 @@
-__version__ = (1, 2, 0, 0)
+__version__ = (1, 3, 0, 0)
 
 # This file is a part of Hikka Userbot!
 # This product includes software developed by t.me/Fl1yd and t.me/spypm.
@@ -18,6 +18,10 @@ __version__ = (1, 2, 0, 0)
 # Changelog v1.2:
 # - Added: Proxy for users from RF
 # - Fixed: Correct reply author resolving for forwarded messages
+
+# Changelog v1.3:
+# - Added: Message grouping for consecutive messages from the same user (hides avatar/name)
+# - Changed: Replaced RU endpoint logic with direct proxy support via module config
 
 # █▄█ █░█ █▀▄▀█ █▀▄▀█ █▄█   █▀▄▀█ █▀█ █▀▄ █▀
 # ░█░ █▄█ █░▀░█ █░▀░█ ░█░   █░▀░█ █▄█ █▄▀ ▄█
@@ -155,9 +159,10 @@ class Dick:
         return None
 
     @staticmethod
-    async def post(url: str, data: dict):
+    async def post(url: str, data: dict, proxy: Optional[str] = None):
         try:
-            return await utils.run_sync(requests.post, url, json=data, timeout=30)
+            px = {"http": proxy, "https": proxy} if proxy else None
+            return await utils.run_sync(requests.post, url, json=data, timeout=30, proxies=px)
         except Exception:
             return None
 
@@ -199,12 +204,8 @@ class Quotes(loader.Module):
         loader.ConfigValue("endpoint","https://kok.gay/gayotes/generate",
                             lambda:"URL API-эндпоинта (можешь поднять локально - github.com/yummy1gay/quote-api)",
                             validator=loader.validators.Link()),
-        loader.ConfigValue("use_rf_proxy", False,
-                            lambda:'Включает прокси для РФ, если основной эндпоинт возвращает ошибку "Нетворк еррорь", и при этом сервер с юзерботом находится в России или ты сам сидишь в России с ограниченным доступом к зарубежным ресурсам (Termux / UserLAnd)',
-                            validator=loader.validators.Boolean()),
-        loader.ConfigValue("rf_endpoint", "https://ru.kok.gay/gayotes/generate",
-                            lambda:"URL API-эндпоинта для РФ",
-                            validator=loader.validators.Link()))
+        loader.ConfigValue("proxy", "",
+                            lambda:"Прокси для обхода блокировок (например: http://user:pass@ip:port). Оставь пустым, если не нужно."))
 
     async def client_ready(self, client, db):
         self.client=client; self.db=db
@@ -236,11 +237,11 @@ class Quotes(loader.Module):
                  "format": "webp" if not doc else "png", "type": self.config["type"]}
 
             await utils.answer(st,self.strings["api_processing"])
-            endpoint=self.config['rf_endpoint'] if self.config['use_rf_proxy'] else self.config['endpoint']
-            r=await Dick.post(f"{endpoint}.webp",pay)
+            prx = self.config["proxy"] if self.config["proxy"] else None
+            r=await Dick.post(f"{self.config['endpoint']}.webp",pay,proxy=prx)
             if not r or r.status_code!=200:
-                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
-                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
+                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй указать прокси в конфиге)"
+                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй указать прокси в конфиге)"
                 return await utils.answer(st,self.strings["api_error"].format(err))
 
             buf=io.BytesIO(r.content); buf.name="YgQuote"+(".png" if doc else ".webp")
@@ -270,11 +271,11 @@ class Quotes(loader.Module):
                 "format": "webp","type":self.config["type"]}
 
             await utils.answer(st,self.strings["api_processing"])
-            endpoint=self.config['rf_endpoint'] if self.config['use_rf_proxy'] else self.config['endpoint']
-            r=await Dick.post(f"{endpoint}.webp",dickk)
+            prx = self.config["proxy"] if self.config["proxy"] else None
+            r=await Dick.post(f"{self.config['endpoint']}.webp",dickk,proxy=prx)
             if not r or r.status_code!=200:
-                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
-                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй включить <code>use_rf_proxy</code> в конфиге)"
+                try: err=r.json().get("error",f"HTTP {r.status_code}") if r else "Нетворк еррорь (попробуй указать прокси в конфиге)"
+                except Exception: err=f"HTTP {r.status_code}" if r else "Нетворк еррорь (попробуй указать прокси в конфиге)"
                 return await utils.answer(st,self.strings["api_error"].format(err))
 
             buf=io.BytesIO(r.content); buf.name="YgQuote.webp"
@@ -290,12 +291,18 @@ class Quotes(loader.Module):
             return None
 
         out: List[dict]=[]
+        prev_sender_id = None
+
         for mm in lst:
             try:
                 u=await self.who(mm)
                 if not u: continue
+                current_sender_id = getattr(u,"id",0)
+                
+                is_chained = (current_sender_id == prev_sender_id) if current_sender_id else False
                 name=telethon.utils.get_display_name(u); f,l=Dick.split(name)
-                ava=await Dick.ava(self.client,getattr(u,"id",0)) if getattr(u,"id",None) else None
+                
+                ava = await Dick.ava(self.client,current_sender_id) if (not is_chained and current_sender_id) else None
 
                 rb=None
                 try:
@@ -315,10 +322,16 @@ class Quotes(loader.Module):
                 txt=mm.raw_text or ""; ad=Dick.desc(mm)
                 if ad: txt=f"{txt}\n\n{ad}" if txt else ad
 
-                item={"from":{"id":getattr(u,"id", 0),"first_name":getattr(u,"first_name","") or f,"last_name":getattr(u,"last_name","") or l,
-                               "username":getattr(u,"username",None),"name":name,"photo":{"url":ava} if ava else {}},
-                      "text":txt,"entities":Dick.ents(mm.entities),"avatar":True}
-
+                if is_chained:
+                    item={"from":{"id":current_sender_id,"name":""},
+                          "text":txt,"entities":Dick.ents(mm.entities),"avatar":False}
+                else:
+                    item={"from":{"id":current_sender_id,"first_name":getattr(u,"first_name","") or f,"last_name":getattr(u,"last_name","") or l,
+                                   "username":getattr(u,"username",None),"name":name,"photo":{"url":ava} if ava else {}},
+                          "text":txt,"entities":Dick.ents(mm.entities),"avatar":True}
+                    
+                    es=getattr(u,"emoji_status",None)
+                    if getattr(es,"document_id",None): item["from"]["emoji_status"]=str(es.document_id)
                 try:
                     if mm.voice:
                         a = next((a for a in mm.voice.attributes or [] 
@@ -327,11 +340,10 @@ class Quotes(loader.Module):
                 except Exception: pass
 
                 if med: item["voice" if "voice" in med else "media"] = med.get("voice", med)
-
-                es=getattr(u,"emoji_status",None)
-                if getattr(es,"document_id",None): item["from"]["emoji_status"]=str(es.document_id)
                 if rb: item["replyMessage"]=rb
                 out.append(item)
+                
+                prev_sender_id = current_sender_id
             except Exception: continue
         return out
 
@@ -378,6 +390,8 @@ class Quotes(loader.Module):
             return await self.fake(f"{getattr(u,'id','')} {args}", None)
 
         out: List[dict]=[]
+        prev_sender_id = None
+        
         for part in args.split("; "):
             try:
                 rb=None
@@ -388,22 +402,32 @@ class Quotes(loader.Module):
                 if not u1: continue
 
                 txt1, ents1 = html.parse(t1) if t1 else ("", [])
+                
+                current_sender_id = u1.id
+                is_chained = (current_sender_id == prev_sender_id)
 
                 name=telethon.utils.get_display_name(u1); f,l=Dick.split(name)
-                ava=await Dick.ava(self.client,u1.id)
+                
+                ava = await Dick.ava(self.client,u1.id) if not is_chained else None
 
                 if u2:
                     txt2, ents2 = html.parse(t2) if t2 else ("", [])
                     name2=telethon.utils.get_display_name(u2); ava2=await Dick.ava(self.client,u2.id)
                     rb={"name":name2,"text":txt2,"entities":Dick.ents(ents2),"chatId":u2.id,"from":{"name":name2,"photo":{"url":ava2} if ava2 else {}}}
 
-                msg={"from":{"id":u1.id,"first_name":getattr(u1,"first_name","") or f,"last_name":getattr(u1,"last_name","") or l,
-                             "username":getattr(u1,"username",None),"name":name,"photo":{"url":ava} if ava else {}},
-                     "text":txt1,"entities":Dick.ents(ents1), "avatar":True}
-
-                es=getattr(u1,"emoji_status",None)
-                if getattr(es,"document_id",None): msg["from"]["emoji_status"]=str(es.document_id)
+                if is_chained:
+                    msg={"from":{"id":current_sender_id,"name":""},
+                         "text":txt1,"entities":Dick.ents(ents1), "avatar":False}
+                else:
+                    msg={"from":{"id":current_sender_id,"first_name":getattr(u1,"first_name","") or f,"last_name":getattr(u1,"last_name","") or l,
+                                 "username":getattr(u1,"username",None),"name":name,"photo":{"url":ava} if ava else {}},
+                         "text":txt1,"entities":Dick.ents(ents1), "avatar":True}
+                    es=getattr(u1,"emoji_status",None)
+                    if getattr(es,"document_id",None): msg["from"]["emoji_status"]=str(es.document_id)
+                
                 if rb: msg["replyMessage"]=rb
                 out.append(msg)
+                
+                prev_sender_id = current_sender_id
             except Exception: continue
         return out
