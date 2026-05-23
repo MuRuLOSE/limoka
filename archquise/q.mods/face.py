@@ -59,7 +59,7 @@ class FaceMod(loader.Module):
         en_doc="Random kaomoji",
     )
     async def rfacecmd(self, message) -> None:  # noqa: D102, ANN001
-        await utils.answer(message, self.strings("loading"))
+        await utils.answer(message, self.strings["loading"])
 
         url = "https://files.archquise.ru/kaomoji.txt"
 
@@ -72,7 +72,7 @@ class FaceMod(loader.Module):
                 kaomoji = random.choice(kaomoji_list)  # noqa: S311
                 await utils.answer(
                     message,
-                    self.strings("random_face").format(kaomoji),
+                    self.strings["random_face"].format(kaomoji),
                 )
             else:
-                await utils.answer(message, self.strings("error"))
+                await utils.answer(message, self.strings["error"])

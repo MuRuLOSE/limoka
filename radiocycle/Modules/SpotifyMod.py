@@ -16,11 +16,6 @@
 #           @ke_mods
 # =======================================
 #
-#  LICENSE: CC BY-ND 4.0 (Attribution-NoDerivatives 4.0 International)
-#  --------------------------------------
-#  https://creativecommons.org/licenses/by-nd/4.0/legalcode
-# =======================================
-#
 # meta developer: @ke_mods
 # requires: telethon spotipy pillow requests yt-dlp curl_cffi
 # scope: ffmpeg
@@ -1717,13 +1712,16 @@ class SpotifyMod(loader.Module):
 
         next_refresh = self.get("NextRefresh")
         if not next_refresh or next_refresh < time.time():
+            acs_tkn = self.get("acs_tkn")
+            if not acs_tkn or not acs_tkn.get("refresh_token"):
+                self.set("NextRefresh", time.time() + 300)
+                return
             try:
-                self.set(
-                    "acs_tkn",
-                    self.sp_auth.refresh_access_token(self.get("acs_tkn")["refresh_token"]),
-                )
+                new_token = self.sp_auth.refresh_access_token(acs_tkn["refresh_token"])
+                self.set("acs_tkn", new_token)
                 self.set("NextRefresh", time.time() + 45 * 60)
-                self.sp = spotipy.Spotify(auth=self.get("acs_tkn")["access_token"])
+                if new_token and new_token.get("access_token"):
+                    self.sp = spotipy.Spotify(auth=new_token["access_token"])
             except Exception as e:
                 logger.error(f"Spotify watcher error: {e}")
                 if "Refresh token revoked" in str(e):
