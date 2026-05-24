@@ -113,24 +113,24 @@ class ShortenerMod(loader.Module):
     async def shortencmd(self, message):  # noqa: ANN001, ANN201
         """Shorten URL using bit.ly API."""
         if self.config["token"] is None:
-            await utils.answer(message, self.strings("no_api"))
+            await utils.answer(message, self.strings["no_api"])
             return
 
         args = utils.get_args_raw(message)
         if not args:
-            await utils.answer(message, self.strings("no_args"))
+            await utils.answer(message, self.strings["no_args"])
             return
 
         if not self._validate_url(args):
-            await utils.answer(message, self.strings("invalid_url"))
+            await utils.answer(message, self.strings["invalid_url"])
             return
 
         try:
             short_url = await self.shorten_url(url=args, token=self.config["token"])
-            await utils.answer(message, self.strings("shortencmd").format(c=short_url))
+            await utils.answer(message, self.strings["shortencmd"].format(c=short_url))
         except Exception as e:
             logger.exception("Error shortening URL!")
-            await utils.answer(message, self.strings("api_error").format(error=str(e)))
+            await utils.answer(message, self.strings["api_error"].format(error=str(e)))
 
     @loader.command(
         ru_doc="Посмотреть статистику ссылки через bit.ly (ссылка без https:// | Доступно только на платных аккаунтах)",
@@ -139,22 +139,22 @@ class ShortenerMod(loader.Module):
     async def statclcmd(self, message):  # noqa: ANN001, ANN201
         """Get click statistics for shortened URL."""
         if self.config["token"] is None:
-            await utils.answer(message, self.strings("no_api"))
+            await utils.answer(message, self.strings["no_api"])
             return
 
         args = utils.get_args_raw(message)
         if not args:
-            await utils.answer(message, self.strings("no_args"))
+            await utils.answer(message, self.strings["no_args"])
             return
 
         try:
             if not args.startswith("bit.ly/"):
-                await utils.answer(message, self.strings("invalid_url"))
+                await utils.answer(message, self.strings["invalid_url"])
                 return
             clicks = await self.get_bitlink_stats(
                 bitlink=args, token=self.config["token"]
             )
-            await utils.answer(message, self.strings("statclcmd").format(c=clicks))
+            await utils.answer(message, self.strings["statclcmd"].format(c=clicks))
         except Exception as e:
             logger.exception("Error getting statistics!")
-            await utils.answer(message, self.strings("api_error").format(error=str(e)))
+            await utils.answer(message, self.strings["api_error"].format(error=str(e)))

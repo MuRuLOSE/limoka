@@ -8,6 +8,7 @@ __version__ = (1, 0, 0)
 
 # meta banner: https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/SCD/banner.png
 # meta developer: @NFModules
+# meta fhsdesc: SoundCloud, Music, Music downloader, Downloader
 
 # requires: curl_cffi
 
@@ -105,15 +106,15 @@ class SCD(loader.Module):
         '''(link) - download a song from SoundCloud.'''
         args = utils.get_args_raw(message)
         if not args:
-            await utils.answer(message, self.strings("no_args").format(prefix=self.get_prefix()))
+            await utils.answer(message, self.strings["no_args"].format(prefix=self.get_prefix()))
             return
 
         m = re.search(r"(https?://(?:[a-zA-Z0-9-]+\.)?soundcloud\.com/[^\s]+)", args)
         if not m:
-            await utils.answer(message, self.strings("not_found"))
+            await utils.answer(message, self.strings["not_found"])
             return
 
-        msg = await utils.answer(message, self.strings("downloading"))
+        msg = await utils.answer(message, self.strings["downloading"])
 
         try:
             async with requests.AsyncSession(impersonate="chrome120") as ses:
@@ -194,4 +195,4 @@ class SCD(loader.Module):
                 await msg.delete()
 
         except:
-            await utils.answer(msg, self.strings("not_found"))
+            await utils.answer(msg, self.strings["not_found"])
