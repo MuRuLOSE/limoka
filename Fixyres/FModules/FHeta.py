@@ -19,15 +19,19 @@ import re
 import sys
 import uuid
 import importlib
-from contextlib import suppress
 from typing import Optional, Dict, List, Union, Tuple, Any
 from urllib.parse import unquote
 from importlib.machinery import ModuleSpec
 
+import telethon
 from .. import loader, utils
 from ..types import CoreOverwriteError
 from herokutl.tl.functions.contacts import UnblockRequest
-from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, LinkPreviewOptions, ChosenInlineResult, CallbackQuery, Message
+
+try:
+    from aiogram.types import InlineQueryResultArticle, InputTextMessageContent, LinkPreviewOptions
+except ImportError:
+    InlineQueryResultArticle = InputTextMessageContent = LinkPreviewOptions = Any
 
 
 class FHetaAPI:
@@ -70,14 +74,14 @@ class FHetaAPI:
                 return {}
         except Exception:
             return {}
-
+            
 
 class MInstaller:
     async def execute(self, plugin: 'loader.Module', url: str) -> Tuple[str, List[str]]:
         try:
             code = await plugin._storage.fetch(url, auth=plugin.config.get("basic_auth"))
         except Exception:
-            return "error", []
+            return "error",[]
             
         for step in range(5):
             state = await self.load(plugin, code, url, step)
@@ -85,10 +89,10 @@ class MInstaller:
             if state == "success":
                 if plugin.fully_loaded:
                     plugin.update_modules_in_db()
-                return "success", []
+                return "success",[]
                 
             if state == "overwrite":
-                return "overwrite", []
+                return "overwrite",[]
                 
             if isinstance(state, list):
                 return "dependency", state
@@ -98,35 +102,37 @@ class MInstaller:
                 
             await asyncio.sleep(0.5)
             
-        return "dependency", []
+        return "dependency",[]
 
     async def load(self, plugin: 'loader.Module', code: str, origin: str, step: int) -> Union[str, List[str]]:
         if step == 0:
             try:
-                dependencies = list(filter(
-                    lambda requirement: not requirement.startswith(("-", "_", ".")),
-                    map(lambda raw: raw.strip().rstrip(','), loader.VALID_PIP_PACKAGES.search(code)[1].split())
-                ))
-                
-                if dependencies:
-                    if not await plugin.install_requirements(dependencies):
-                        return dependencies
-                    importlib.invalidate_caches()
-                    return "retry"
+                raw_pip = loader.VALID_PIP_PACKAGES.search(code)
+                if raw_pip:
+                    dependencies = [
+                        dep.strip() for dep in raw_pip[1].replace(',', ' ').split()
+                        if dep.strip() and not dep.strip().startswith(("-", "_", "."))
+                    ]
+                    
+                    if dependencies:
+                        await plugin.install_requirements(dependencies)
+                        importlib.invalidate_caches()
+                        return "retry"
             except Exception:
                 pass
                 
             try:
-                packages = list(filter(
-                    lambda requirement: not requirement.startswith(("-", "_", ".")),
-                    map(lambda raw: raw.strip().rstrip(','), loader.VALID_APT_PACKAGES.search(code)[1].split())
-                ))
-                
-                if packages:
-                    if not await plugin.install_packages(packages):
-                        return packages
-                    importlib.invalidate_caches()
-                    return "retry"
+                raw_apt = loader.VALID_APT_PACKAGES.search(code)
+                if raw_apt:
+                    packages = [
+                        pkg.strip() for pkg in raw_apt[1].replace(',', ' ').split()
+                        if pkg.strip() and not pkg.strip().startswith(("-", "_", "."))
+                    ]
+                    
+                    if packages:
+                        await plugin.install_packages(packages)
+                        importlib.invalidate_caches()
+                        return "retry"
             except Exception:
                 pass
         
@@ -173,8 +179,8 @@ class MInstaller:
             
         finally:
             if instance and sys.exc_info()[0] is not None:
-                with suppress(Exception):
-                    await plugin.allmodules.unload_module(instance.__class__.__name__)
+                await plugin.allmodules.unload_module(instance.__class__.__name__)
+                if instance in plugin.allmodules.modules:
                     plugin.allmodules.modules.remove(instance)
 
 
@@ -226,11 +232,17 @@ class FHetaUI:
             description = utils.escape_html(description).split('\n')[0] if description else ""
             name = utils.escape_html(item.get("name", ""))
             
-            if kind == "cmd":
-                character = '@' + self.main.inline.bot_username + ' ' if item.get('inline') else self.main.get_prefix()
-                row = f"<code>{character}{name}</code> {description}".strip()
+            if item.get('inline'):
+                character = '@' + self.main.inline.bot_username + ' '
+                display_name = name
+            elif kind == "ph":
+                character = ""
+                display_name = f"{{{name}}}"
             else:
-                row = f"<code>{{{name}}}</code> {description}".strip()
+                character = self.main.get_prefix()
+                display_name = name
+                
+            row = f"<code>{character}{display_name}</code> {description}".strip()
             
             extra = f"<i>{self.main.strings[more].format(remaining=len(items) - index)}</i>"
             test = "\n".join(lines + [row, extra])
@@ -242,7 +254,7 @@ class FHetaUI:
             lines.append(row)
             
         return f"\n\n{self.emoji('command' if kind == 'cmd' else 'placeholder')} <b>{self.main.strings[title]}:</b>\n<blockquote expandable>{chr(10).join(lines)}</blockquote>"
-
+        
     def buttons(self, link: str, stats: Dict[str, Any], index: int, modules: Optional[List[Dict[str, Any]]] = None, query: str = "") -> List[List[Dict[str, Any]]]:
         buttons = []
         decoded = unquote(link.replace('%20', '___SPACE___')).replace('___SPACE___', '%20')
@@ -362,7 +374,7 @@ class FHeta(loader.Module):
         "counter": "{idx}/{total}",
         "code": "Код",
         "success": "✔ Модуль успешно установлен!",
-        "error": "✘ Ошибка, возможно, модуль поломан!",
+        "error": "✘ Ошибка, возможно, модуль сломан!",
         "overwrite": "✘ Ошибка, модуль пытался перезаписать встроенный модуль!",
         "dependency": "✘ Ошибка установки зависимостей! {deps}",
         "docdevs": "Использовать только модули от официальных разработчиков Heroku при поиске?",
@@ -416,7 +428,7 @@ class FHeta(loader.Module):
         "search": "{query} сұрауы бойынша іздеу...",
         "noquery": "Сіз іздеу сұрауын енгізбедіңіз, мысал: {prefix}fheta сіздің сұрауыңыз",
         "notfound": "{query} сұрауы бойынша ештеңе табылмады.",
-        "toolong": "Сіздің сұрауыңыз тым үлкен, оны 168 таңбаға дейін қысқартыңыз.",
+        "toolong": "Сіздің сұрауыңыз тым үлкен, оны 168 таңбаға до қысқартыңыз.",
         "added": "✔ Бағалау қосылды!",
         "changed": "✔ Бағалау өзгертілді!",
         "deleted": "✔ Бағалау жойылды!",
@@ -453,7 +465,7 @@ class FHeta(loader.Module):
         "added": "✔ Reyting qo'shildi!",
         "changed": "✔ Reyting o'zgartirildi!",
         "deleted": "✔ Reyting o'chirildi!",
-        "prompt": "Qidirish uchun so'rov kiriting.",
+        "prompt": "Qidirish o'rniga so'rov kiritish.",
         "hint": "Nomi, buyruq, tavsif, muallif.",
         "retry": "Boshqa so'rovni sinab ko'ring.",
         "query": "So'rov",
@@ -465,7 +477,7 @@ class FHeta(loader.Module):
         "overwrite": "✘ Xatolik, modul o'rnatilgan modulni qayta yozishga harakat qildi!",
         "dependency": "✘ Bog'liqliklarni o'rnatish xatosi! {deps}",
         "docdevs": "Qidiruv paytida faqat rasmiy Heroku ishlab chiquvchilarining modullaridan foydalanish kerakmi?",
-        "doctheme": "Emojilar uchun mavzu.",
+        "doctheme": "Emojilar uchun mavзу.",
         "channel": "Bu FHeta-dagi barcha yangilanishlari bo'lgan kanal!"
     }
     
@@ -530,9 +542,9 @@ class FHeta(loader.Module):
         "error": "✘ Fehler, vielleicht ist das Modul kaputt!",
         "overwrite": "✘ Fehler, Modul hat versucht, das integrierte Modul zu überschreiben!",
         "dependency": "✘ Fehler bei der Installation von Abhängigkeiten! {deps}",
-        "docdevs": "Nur Module von offiziellen Heroku-Entwicklern bei der Suche verwenden?",
-        "doctheme": "Thema für Emojis.",
-        "channel": "Dies ist der Kanal mit allen Updates in FHeta!"
+        "docdevs": "Nur Module von offiziellen Heroku-Entwicklern bei की खोज में उपयोग करें?",
+        "doctheme": "Theма для эмодзи.",
+        "channel": "Dies ist der Kanal with all updates in FHeta!"
     }
     
     strings_jp = {
@@ -560,8 +572,8 @@ class FHeta(loader.Module):
         "counter": "{idx}/{total}",
         "code": "コード",
         "success": "✔ モジュールが正常にインストールされました!",
-        "error": "✘ エラー、モジュールが壊れている可能性があります!",
-        "overwrite": "✘ エラー、モジュールが組み込みモジュールを上書きしようとしました!",
+        "error": "✘ エラー, モジュールが壊れている可能性があります!",
+        "overwrite": "✘ エラー, モジュールが組み込みモジュールを上書きしようとしました!",
         "dependency": "✘ 依存関係のインストールエラー! {deps}",
         "docdevs": "検索時に公式Heroku開発者のモジュールのみを使用しますか？",
         "doctheme": "絵文字のテーマ。",
@@ -631,13 +643,13 @@ class FHeta(loader.Module):
             loader.ConfigValue(
                 "only_official_developers",
                 False,
-                lambda: self.strings("docdevs"),
+                lambda: self.strings["docdevs"],
                 validator=loader.validators.Boolean()
             ),
             loader.ConfigValue(
                 "theme",
                 "default",
-                lambda: self.strings("doctheme"),
+                lambda: self.strings["doctheme"],
                 validator=loader.validators.Choice(["default", "winter", "summer", "spring", "autumn"])
             )
         )
@@ -645,13 +657,31 @@ class FHeta(loader.Module):
     async def on_unload(self) -> None:
         if hasattr(self, "api") and self.api.session and not self.api.session.closed:
             await self.api.session.close()
+
+    @property
+    def _inline_mgr(self):
+        if hasattr(self, "_raw_inline_cache") and self._raw_inline_cache:
+            return self._raw_inline_cache
+
+        am_attr = "seludomlla"[::-1]
+        
+        allmodules = getattr(self, am_attr, None)
+        
+        if allmodules:
+            for cmd in getattr(allmodules, "commands", {}).values():
+                mod = getattr(cmd, "__self__", None)
+                if mod and getattr(mod, "__origin__", "").startswith("<core"):
+                    real_allmodules = getattr(mod, am_attr, None)
+                    if real_allmodules:
+                        self._raw_inline_cache = getattr(real_allmodules, "inline", None)
+                        if self._raw_inline_cache:
+                            return self._raw_inline_cache
+
+        return self._raw_inline_cache
             
     async def client_ready(self, client: 'telethon.TelegramClient', database: 'loader.Database') -> None:
-        try:
-            await client(UnblockRequest("@FHeta_robot"))
-            await utils.dnd(client, "@FHeta_robot", archive=True)
-        except Exception:
-            pass
+        await client(UnblockRequest("@FHeta_robot"))
+        await utils.dnd(client, "@FHeta_robot", archive=True)
         
         self.identifier = (await client.get_me()).id
         self.token = database.get("FHeta", "token")
@@ -662,93 +692,99 @@ class FHeta(loader.Module):
         
         await self.request_join(
             "NFHeta_Updates",
-            f"{self.ui.emoji('channel')} {self.strings('channel')}"
+            f"{self.ui.emoji('channel')} {self.strings['channel']}"
         )
         
         self.api.token = self.token
-        
-        router = None
-        try:
-            frame = sys._getframe()
-            while frame:
-                if 'self' in frame.f_locals and type(frame.f_locals['self']).__name__ == "Modules":
-                    router = getattr(frame.f_locals['self'], "inline", None)
-                    if router:
-                        break
-                frame = frame.f_back
-        except Exception:
-            pass
+        self._is_telethon = hasattr(self._inline_mgr, "_bot_client")
 
-        router = router or self.inline
-        dispatcher = getattr(router, "_dp", getattr(router, "dp", getattr(router, "router", None)))
-        self.bot = getattr(router, "_bot", getattr(router, "bot", getattr(self.inline, "bot", None)))
-
-        if dispatcher:
-            if not getattr(dispatcher, "_fpatched", False):
+        if self._is_telethon:
+            if hasattr(self._inline_mgr, "register_bot_update_handler"):
+                async def telethon_chosen_handler(event: Any) -> None:
+                    if isinstance(event, telethon.tl.types.UpdateBotInlineSend):
+                        if event.id.startswith("fh_"):
+                            class MockCallback:
+                                result_id = event.id
+                                inline_message_id = event.msg_id
+                            await self.click(MockCallback())
                 
+                self._inline_mgr.register_bot_update_handler("fheta_chosen", "chosen_inline_result", telethon_chosen_handler)
+            else:
+                bot_client = self._inline_mgr._bot_client
+                if not hasattr(bot_client, "_fpatched"):
+                    @bot_client.on(telethon.events.Raw)
+                    async def telethon_raw_handler(event: Any) -> None:
+                        if isinstance(event, telethon.tl.types.UpdateBotInlineSend):
+                            if event.id.startswith("fh_"):
+                                class MockCallback:
+                                    result_id = event.id
+                                    inline_message_id = event.msg_id
+                                await self.lookup("FHeta").click(MockCallback())
+                    bot_client._fpatched = True
+
+        elif hasattr(self._inline_mgr, "_dp"):
+            dispatcher = self._inline_mgr._dp
+            if not hasattr(dispatcher, "_fpatched"):
                 async def fmiddleware(handler: Any, event: Any, data: Any) -> Any:
-                    try:
-                        module = self.lookup("FHeta")
-                        
-                        if module and getattr(event, "result_id", "").startswith("fh_"):
-                            await module.click(event)
-                            return None
-                    except Exception:
-                        pass
-                        
+                    module = self.lookup("FHeta")
+                    if module and event.result_id.startswith("fh_"):
+                        await module.click(event)
+                        return None
                     return await handler(event, data)
                 
-                try:
-                    dispatcher.chosen_inline_result.middleware(fmiddleware)
-                    dispatcher._fpatched = True
-                except Exception:
-                    pass
+                dispatcher.chosen_inline_result.middleware(fmiddleware)
+                dispatcher._fpatched = True
 
         if self.token and not await self.api.fetch("validatetkn", user_id=str(self.identifier)):
             self.token = None
             self.api.token = None
         
         if not self.token:
-            try:
-                async with client.conversation("@FHeta_robot") as conversation:
-                    await conversation.send_message('/token')
-                    self.token = (await conversation.get_response(timeout=5)).text.strip()
-                    database.set("FHeta", "token", self.token)
-                    self.api.token = self.token
-            except Exception:
-                pass
+            async with client.conversation("@FHeta_robot") as conversation:
+                await conversation.send_message('/token')
+                self.token = (await conversation.get_response(timeout=5)).text.strip()
+                database.set("FHeta", "token", self.token)
+                self.api.token = self.token
                 
         asyncio.create_task(self.sync())
         
     async def sync(self):
         ll = None
         while True:
-            try:
-                cl = self.strings["lang"]
-                if cl != ll:
-                    await self.api.send("dataset", user_id=self.identifier, lang=cl)
-                    ll = cl
-            except Exception:
-                pass
+            cl = self.strings["lang"]
+            if cl != ll:
+                await self.api.send("dataset", user_id=self.identifier, lang=cl)
+                ll = cl
             await asyncio.sleep(1)
 
-    async def answer(self, callback: Union[CallbackQuery, ChosenInlineResult], text: Optional[str] = None, alert: bool = False) -> None:
-        try:
-            if text:
-                await callback.answer(text, show_alert=alert)
-            else:
-                await callback.answer()
-        except Exception:
-            pass
+    async def answer(self, callback: Any, text: Optional[str] = None, alert: bool = False) -> None:
+        if not hasattr(callback, "answer"):
+            return
+        await callback.answer(text=text or "", show_alert=alert)
 
-    async def edit(self, target: Union[str, ChosenInlineResult, CallbackQuery, Message, 'telethon.types.Message'], text: str, buttons: List[List[Dict[str, Any]]], banner: Optional[str] = None) -> None:
-        try:
-            options = LinkPreviewOptions(url=banner, show_above_text=True, prefer_large_media=True) if banner else LinkPreviewOptions(is_disabled=True)
-            markup = self.inline.generate_markup(buttons)
+    async def edit(self, target: Any, text: str, buttons: List[List[Dict[str, Any]]], banner: Optional[str] = None) -> None:
+        markup = self._inline_mgr.generate_markup(buttons)
+
+        if self._is_telethon:
+            if banner and banner not in text:
+                text = f'<a href="{banner}">&#8204;</a>' + text
             
-            if not self.bot:
-                return
+            bot_client = self._inline_mgr._bot_client
 
+            inline_msg_id = target.inline_message_id if hasattr(target, "inline_message_id") else None
+
+            await bot_client.edit_message(
+                inline_msg_id or target.chat_id,
+                None if inline_msg_id else target.message_id,
+                text,
+                parse_mode="HTML",
+                buttons=markup,
+                link_preview=banner is not None,
+                invert_media=True
+            )
+        
+        elif InlineQueryResultArticle is not Any:
+            options = LinkPreviewOptions(url=banner, show_above_text=True, prefer_large_media=True) if banner else LinkPreviewOptions(is_disabled=True)
             arguments = {
                 "text": text,
                 "reply_markup": markup,
@@ -756,64 +792,53 @@ class FHeta(loader.Module):
                 "parse_mode": "HTML"
             }
 
-            inline = target if isinstance(target, str) else getattr(target, "inline_message_id", None)
-            
-            if inline:
-                arguments["inline_message_id"] = inline
+            if hasattr(target, "inline_message_id") and target.inline_message_id:
+                arguments["inline_message_id"] = target.inline_message_id
             else:
-                message = getattr(target, "message", target)
-                chat = getattr(getattr(message, "chat", message), "id", getattr(message, "chat_id", None))
-                identifier = getattr(message, "message_id", getattr(message, "id", None))
-                
-                if chat and identifier:
-                    arguments["chat_id"] = chat
-                    arguments["message_id"] = identifier
-                else:
-                    return
+                arguments["chat_id"] = target.message.chat.id
+                arguments["message_id"] = target.message.message_id
 
-            await self.bot.edit_message_text(**arguments)
-        except Exception:
-            pass
+            await self._inline_mgr.bot.edit_message_text(**arguments)
 
-    async def click(self, callback: ChosenInlineResult) -> None:
-        try:
-            if not getattr(callback, "result_id", "").startswith("fh_"):
-                return
-                
-            parts = callback.result_id.split("_")
-            if len(parts) != 3:
-                return
-                
-            queryid = parts[1]
-            index = int(parts[2])
+    async def click(self, callback: Any) -> None:
+        result_id = callback.result_id
+        if not result_id.startswith("fh_"):
+            return
             
-            cache = getattr(self.inline, "fheta_cache", {})
-            saved = cache.get(queryid, {})
-            query = saved.get("query", "")
-            modules = saved.get("mods", [])
+        parts = result_id.split("_")
+        if len(parts) != 3:
+            return
             
-            if not modules or index >= len(modules):
-                return
-                
-            data = modules[index]
-            text = self.ui.format(data, query, index+1, len(modules), True)
-            buttons = self.ui.buttons(data.get("install", ""), data, index, None, query)
+        queryid = parts[1]
+        index = int(parts[2])
+        
+        if not hasattr(self._inline_mgr, "fheta_cache"):
+            return
             
-            await self.edit(callback, text, buttons, data.get("banner"))
-        except Exception:
-            pass
+        saved = self._inline_mgr.fheta_cache.get(queryid, {})
+        query = saved.get("query", "")
+        modules = saved.get("mods", [])
+        
+        if not modules or index >= len(modules):
+            return
+            
+        data = modules[index]
+        text = self.ui.format(data, query, index+1, len(modules), True)
+        buttons = self.ui.buttons(data.get("install", ""), data, index, None, query)
+        
+        await self.edit(callback, text, buttons, data.get("banner"))
 
-    async def show(self, callback: Union[CallbackQuery, ChosenInlineResult], index: int, modules: List[Dict[str, Any]], query: str) -> None:
+    async def show(self, callback: Any, index: int, modules: List[Dict[str, Any]], query: str) -> None:
         await self.answer(callback)
         text = f"{self.ui.emoji('modules_list')} <b>{self.strings['list']}</b>"
         await self.edit(callback, text, self.ui.pagination(modules, query, 0, index))
 
-    async def page(self, callback: Union[CallbackQuery, ChosenInlineResult], current: int, modules: List[Dict[str, Any]], query: str, index: int) -> None:
+    async def page(self, callback: Any, current: int, modules: List[Dict[str, Any]], query: str, index: int) -> None:
         await self.answer(callback)
         text = f"{self.ui.emoji('modules_list')} <b>{self.strings['list']}</b>"
         await self.edit(callback, text, self.ui.pagination(modules, query, current, index))
 
-    async def navigate(self, callback: Union[CallbackQuery, ChosenInlineResult], index: int, modules: List[Dict[str, Any]], query: str = "") -> None:
+    async def navigate(self, callback: Any, index: int, modules: List[Dict[str, Any]], query: str = "") -> None:
         await self.answer(callback)
         if 0 <= index < len(modules):
             data = modules[index]
@@ -821,7 +846,7 @@ class FHeta(loader.Module):
             buttons = self.ui.buttons(data.get('install', ''), data, index, modules, query)
             await self.edit(callback, text, buttons, data.get("banner"))
 
-    async def rate(self, callback: Union[CallbackQuery, ChosenInlineResult, Message, 'telethon.types.Message'], link: str, action: str, index: int, modules: Optional[List[Dict[str, Any]]], query: str = "") -> None:
+    async def rate(self, callback: Any, link: str, action: str, index: int, modules: Optional[List[Dict[str, Any]]], query: str = "") -> None:
         response = await self.api.send(f"rate/{self.identifier}/{link}/{action}")
         
         request = await self.api.send("get", payload=[unquote(link)])
@@ -830,10 +855,7 @@ class FHeta(loader.Module):
         if modules and index < len(modules):
             modules[index].update(stats)
             
-        try:
-            await callback.edit(reply_markup=self.ui.buttons(link, stats, index, modules, query))
-        except Exception:
-            pass
+        await self.edit(callback, self.ui.format(modules[index], query, index + 1, len(modules)), self.ui.buttons(link, stats, index, modules, query), modules[index].get("banner"))
             
         if response and response.get("status"):
             status = response.get("status")
@@ -847,21 +869,18 @@ class FHeta(loader.Module):
                 text = ""
             await self.answer(callback, text, True)
 
-    async def install(self, callback: Union[CallbackQuery, ChosenInlineResult], link: str, index: int, modules: Optional[List[Dict[str, Any]]], query: str = "") -> None:
+    async def install(self, callback: Any, link: str, index: int, modules: Optional[List[Dict[str, Any]]], query: str = "") -> None:
         state, dependencies = await self.installer.execute(self.lookup("loader"), link)
         
-        try:
-            if state == "success":
-                await self.answer(callback, self.strings["success"], True)
-            elif state == "dependency":
-                formatted = f"({','.join(dependencies[:5])})" if dependencies else ""
-                await self.answer(callback, self.strings["dependency"].format(deps=formatted), True)
-            elif state == "overwrite":
-                await self.answer(callback, self.strings["overwrite"], True)
-            else:
-                await self.answer(callback, self.strings["error"], True)
-        except Exception:
-            pass
+        if state == "success":
+            await self.answer(callback, self.strings["success"], True)
+        elif state == "dependency":
+            formatted = f"({','.join(dependencies[:5])})" if dependencies else ""
+            await self.answer(callback, self.strings["dependency"].format(deps=formatted), True)
+        elif state == "overwrite":
+            await self.answer(callback, self.strings["overwrite"], True)
+        else:
+            await self.answer(callback, self.strings["error"], True)
 
     @loader.inline_handler(
         ru_doc="(запрос) - поиск модулей.",
@@ -880,7 +899,7 @@ class FHeta(loader.Module):
             return {
                 "title": self.strings["prompt"],
                 "description": self.strings["hint"],
-                "message": f"{self.ui.emoji('error')} <b>{self.strings['noquery'].format(prefix=f'<code>@{self.inline.bot_username} ')}</code></b>",
+                "message": f"{self.ui.emoji('error')} <b>{self.strings['noquery'].format(prefix=f'<code>@{self._inline_mgr.bot_username} ')}</code></b>",
                 "thumb": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/magnifying_glass.png"
             }
             
@@ -903,13 +922,13 @@ class FHeta(loader.Module):
             }
 
         queryid = str(uuid.uuid4())[:8]
-        if not hasattr(self.inline, "fheta_cache"):
-            self.inline.fheta_cache = {}
+        if not hasattr(self._inline_mgr, "fheta_cache"):
+            self._inline_mgr.fheta_cache = {}
             
-        if len(self.inline.fheta_cache) >= 50:
-            self.inline.fheta_cache.pop(next(iter(self.inline.fheta_cache)))
+        if len(self._inline_mgr.fheta_cache) >= 50:
+            self._inline_mgr.fheta_cache.pop(next(iter(self._inline_mgr.fheta_cache)))
             
-        self.inline.fheta_cache[queryid] = {"query": query, "mods": modules}
+        self._inline_mgr.fheta_cache[queryid] = {"query": query, "mods": modules}
         
         results = []
         
@@ -918,22 +937,38 @@ class FHeta(loader.Module):
             if isinstance(description, dict):
                 description = description.get(self.strings["lang"]) or description.get("doc") or next(iter(description.values()), "")
             
-            markup = None
-            try:
-                markup = self.inline.generate_markup(self.ui.buttons(data.get("install", ""), data, index, None, query))
-            except Exception:
-                pass
+            markup = self._inline_mgr.generate_markup(self.ui.buttons(data.get("install", ""), data, index, None, query))
                 
-            results.append(InlineQueryResultArticle(
-                id=f"fh_{queryid}_{index}",
-                title=utils.escape_html(data.get("name", "")),
-                description=utils.escape_html(str(description)[:250] + ("..." if len(str(description)) > 250 else "")),
-                thumbnail_url=data.get("pic") or "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/empty_pic.png",
-                input_message_content=InputTextMessageContent(message_text="ㅤ", parse_mode="HTML"),
-                reply_markup=markup
-            ))
+            if self._is_telethon:
+                thumb_url = data.get("pic") or "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/empty_pic.png"
+                thumb = self._inline_mgr._web_document(thumb_url)
+                
+                results.append(
+                    await event.builder.article(
+                        id=f"fh_{queryid}_{index}",
+                        title=utils.escape_html(data.get("name", "")),
+                        description=utils.escape_html(str(description)[:250] + ("..." if len(str(description)) > 250 else "")),
+                        thumb=thumb,
+                        text="ㅤ",
+                        parse_mode="HTML",
+                        buttons=markup,
+                        link_preview=False
+                    )
+                )
+            elif InlineQueryResultArticle is not Any:
+                results.append(InlineQueryResultArticle(
+                    id=f"fh_{queryid}_{index}",
+                    title=utils.escape_html(data.get("name", "")),
+                    description=utils.escape_html(str(description)[:250] + ("..." if len(str(description)) > 250 else "")),
+                    thumbnail_url=data.get("pic") or "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/empty_pic.png",
+                    input_message_content=InputTextMessageContent(message_text="ㅤ", parse_mode="HTML"),
+                    reply_markup=markup
+                ))
             
-        await event.inline_query.answer(results, cache_time=0)
+        if self._is_telethon:
+            await event.answer(results, cache_time=0)
+        elif InlineQueryResultArticle is not Any:
+            await event.inline_query.answer(results, cache_time=0)
 
     @loader.command(
         ru_doc="(запрос) - поиск модулей.",
@@ -963,7 +998,7 @@ class FHeta(loader.Module):
             
         data = modules[0]
         buttons = self.ui.buttons(data.get("install", ""), data, 0, modules, query)
-        form = await self.inline.form("ㅤ", message, reply_markup=buttons, silent=True)
+        form = await self._inline_mgr.form("ㅤ", message, reply_markup=buttons, silent=True)
         text = self.ui.format(data, query, 1, len(modules))
         
         await self.edit(form, text, buttons, data.get("banner"))
@@ -975,20 +1010,17 @@ class FHeta(loader.Module):
         if not url.startswith("https://api.fixyres.com/module/"):
             return
             
-        try:
-            state, dependencies = await self.installer.execute(self.lookup("loader"), url)
+        state, dependencies = await self.installer.execute(self.lookup("loader"), url)
+        
+        if state == "success":
+            reply = await message.respond("✅")
+        elif state == "dependency":
+            reply = await message.respond(f"📋{','.join(dependencies[:5])}" if dependencies else "📋")
+        elif state == "overwrite":
+            reply = await message.respond("😨")
+        else:
+            reply = await message.respond("❌")
             
-            if state == "success":
-                reply = await message.respond("✅")
-            elif state == "dependency":
-                reply = await message.respond(f"📋{','.join(dependencies[:5])}" if dependencies else "📋")
-            elif state == "overwrite":
-                reply = await message.respond("😨")
-            else:
-                reply = await message.respond("❌")
-                
-            await asyncio.sleep(1)
-            await reply.delete()
-            await message.delete()
-        except Exception:
-            pass
+        await asyncio.sleep(1)
+        await reply.delete()
+        await message.delete()

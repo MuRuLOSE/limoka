@@ -42,6 +42,7 @@ async def to_code(n: int) -> str:
         n_shifted //= 31
     return "X" + "".join(reversed(res))
 
+
 @loader.tds
 class BSR(loader.Module):
     '''Module for finding nearby game rooms in BrawlStars.'''
@@ -139,7 +140,7 @@ class BSR(loader.Module):
         '''(room code/link) (previous) (next) - find rooms.'''
         args = utils.get_args_raw(message).split()
         if not args:
-            return await utils.answer(message, self.strings("invalid_args").format(prefix=self.get_prefix()))
+            return await utils.answer(message, self.strings["invalid_args"].format(prefix=self.get_prefix()))
 
         raw_input = args[0]
         before = 0
@@ -161,13 +162,13 @@ class BSR(loader.Module):
         nxt = max(0, min(nxt, 5000))
 
         if before == 0 and nxt == 0:
-            return await utils.answer(message, self.strings("at_least_one"))
+            return await utils.answer(message, self.strings["at_least_one"])
 
         clean_tag = await extract_code(raw_input)
         base_id = await to_id(clean_tag)
 
         if base_id == 0:
-            return await utils.answer(message, self.strings("invalid_code"))
+            return await utils.answer(message, self.strings["invalid_code"])
 
         text, page, total_pages = await self.get_page_content(base_id, before, nxt, 0)
         kb = self.build_keyboard(base_id, before, nxt, page, total_pages, clean_tag)
@@ -205,10 +206,10 @@ class BSR(loader.Module):
         blocks = []
         
         if prev_list:
-            blocks.append(self.strings("prev_block").format(prev_list="\n".join(prev_list)))
+            blocks.append(self.strings["prev_block"].format(prev_list="\n".join(prev_list)))
             
         if next_list:
-            blocks.append(self.strings("next_block").format(next_list="\n".join(next_list)))
+            blocks.append(self.strings["next_block"].format(next_list="\n".join(next_list)))
             
         res = "\n\n".join(blocks)
         if not res.strip():
@@ -220,7 +221,7 @@ class BSR(loader.Module):
         kb = [
             [
                 {
-                    "text": self.strings("btn_target"),
+                    "text": self.strings["btn_target"],
                     "copy": clean_tag
                 }
             ]
