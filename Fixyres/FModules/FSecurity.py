@@ -112,13 +112,13 @@ class FSecurity(loader.Module):
             loader.ConfigValue(
                 "strict_mode",
                 False,
-                lambda: self.strings("strict_mode_doc"),
+                lambda: self.strings["strict_mode_doc"],
                 validator=loader.validators.Boolean(),
             ),
             loader.ConfigValue(
                 "nvidia_api_key",
                 "",
-                lambda: self.strings("nvidia_api_key_doc"),
+                lambda: self.strings["nvidia_api_key_doc"],
                 validator=loader.validators.Hidden(),
             )
         )
@@ -386,10 +386,10 @@ class FSecurity(loader.Module):
     def format(self, state, reason="", link=""):
         link_part = f' (<code>{utils.escape_html(link)}</code>)' if link else ""
         if state == "unavailable":
-            return f'<b>{self.strings("unavailable").format(link_part)}</b>\n<b>{self.strings("continue")}</b>'
+            return f'<b>{self.strings["unavailable"].format(link_part)}</b>\n<b>{self.strings["continue"]}</b>'
         if state == "suspicious":
-            return f'<b>{self.strings("suspicious").format(link_part)}</b>\n<blockquote expandable><b>{reason}</b></blockquote>\n<b>{self.strings("continue")}</b>'
-        return f'<b>{self.strings("blocked").format(link_part)}</b>\n<blockquote expandable><b>{reason}</b></blockquote>'
+            return f'<b>{self.strings["suspicious"].format(link_part)}</b>\n<blockquote expandable><b>{reason}</b></blockquote>\n<b>{self.strings["continue"]}</b>'
+        return f'<b>{self.strings["blocked"].format(link_part)}</b>\n<blockquote expandable><b>{reason}</b></blockquote>'
 
     def buttons(self, task):
         return [[
