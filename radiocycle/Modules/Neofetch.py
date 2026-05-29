@@ -6,11 +6,6 @@
 #  |_|\_\___|    |_|  |_|\___/ \__,_|___/
 #           @ke_mods
 # =======================================
-#
-#  LICENSE: CC BY-ND 4.0 (Attribution-NoDerivatives 4.0 International)
-#  --------------------------------------
-#  https://creativecommons.org/licenses/by-nd/4.0/legalcode
-# =======================================
 
 # meta developer: @ke_mods
 
@@ -44,5 +39,5 @@ class NeofetchMod(loader.Module):
             await utils.answer(message, f"<pre>{utils.escape_html(output)}</pre>")
             
         except FileNotFoundError:
-            await utils.answer(message, self.strings("not_installed"))
+            await utils.answer(message, self.strings["not_installed"])
     
