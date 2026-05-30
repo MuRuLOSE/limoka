@@ -5,3 +5,5 @@
 ruff.log
 ruff.log.2
 ruff.toml
+# Heroku files
+heroku/
