@@ -6,11 +6,6 @@
 #  |_|\_\___|    |_|  |_|\___/ \__,_|___/
 #           @ke_mods
 # =======================================
-#
-#  LICENSE: CC BY-ND 4.0 (Attribution-NoDerivatives 4.0 International)
-#  --------------------------------------
-#  https://creativecommons.org/licenses/by-nd/4.0/legalcode
-# =======================================
 
 # meta developer: @ke_mods
 # requires: pillow
@@ -55,23 +50,13 @@ class RandomAnimePicMod(loader.Module):
     IMAGES_API_URL = "https://api.nekosapi.com/v4/images"
     CATEGORIES_SCAN_LIMIT = 500
 
-    def __init__(self):
-        self.config = loader.ModuleConfig(
-            loader.ConfigValue(
-                "category",
-                "",
-                "Category",
-                validator=loader.validators.String(),
-            ),
-        )
-
     @loader.command(ru_doc="- получить рандомную аниме-картинку 👀")
     async def rapiccmd(self, message):
         """- fetch random anime-pic 👀"""
-        await utils.answer(message, self.strings("loading"))
+        await utils.answer(message, self.strings["loading"])
 
         try:
-            category = self.config["category"].strip()
+            category = await utils.get_args_raw().strip()
 
             def fetch_image():
                 params = {"limit": 1, "rating": ["safe"]}
@@ -111,7 +96,7 @@ class RandomAnimePicMod(loader.Module):
             url, file = await asyncio.to_thread(fetch_image)
             await utils.answer(
                 message,
-                self.strings("img").format(url),
+                self.strings["img"].format(url),
                 file=file
             )
 
@@ -120,12 +105,12 @@ class RandomAnimePicMod(loader.Module):
                 "Error fetching random anime pic: %s",
                 traceback.format_exc(),
             )
-            await utils.answer(message, self.strings("error"))
+            await utils.answer(message, self.strings["error"])
 
     @loader.command(ru_doc="- получить список категорий из API 👀")
     async def racategoriescmd(self, message):
         """- fetch categories from api 👀"""
-        await utils.answer(message, self.strings("categories_loading"))
+        await utils.answer(message, self.strings["categories_loading"])
 
         try:
             def fetch_categories() -> list[str]:
@@ -162,15 +147,15 @@ class RandomAnimePicMod(loader.Module):
             categories = await asyncio.to_thread(fetch_categories)
 
             if not categories:
-                await utils.answer(message, self.strings("no_categories"))
+                await utils.answer(message, self.strings["no_categories"])
                 return
 
-            formatted_categories = "\n".join(
+            formatted_categories = ", ".join(
                 f"<code>{category}</code>" for category in categories
             )
             await utils.answer(
                 message,
-                self.strings("categories").format(formatted_categories),
+                self.strings["categories"].format(formatted_categories),
             )
 
         except Exception:
@@ -178,4 +163,4 @@ class RandomAnimePicMod(loader.Module):
                 "Error fetching categories: %s",
                 traceback.format_exc(),
             )
-            await utils.answer(message, self.strings("error"))
+            await utils.answer(message, self.strings["error"])
