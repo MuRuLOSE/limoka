@@ -308,7 +308,7 @@ class Akinator(loader.Module):
             loader.ConfigValue(
                 "child_mode",
                 False,
-                lambda: self.strings("child_mode"),
+                lambda: self.strings["child_mode"],
                 validator=loader.validators.Boolean()
             )
         )
@@ -339,17 +339,17 @@ class Akinator(loader.Module):
     async def akinator(self, message):
         '''- start the game.'''
         try:
-            aki = AsyncAki(self.strings("lang"), self.config["child_mode"])
+            aki = AsyncAki(self.strings["lang"], self.config["child_mode"])
             await aki.start()
             
             self.games.setdefault(message.chat_id, {})[message.id] = aki
             
             await self.inline.form(
-                text=self.strings("text"),
+                text=self.strings["text"],
                 message=message,
                 photo="https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/akinator/banner.png",
                 reply_markup={
-                    "text": self.strings("start"),
+                    "text": self.strings["start"],
                     "callback": self._cb,
                     "args": (message,)
                 }
@@ -369,12 +369,12 @@ class Akinator(loader.Module):
             question = aki.q
         
         markup = [[
-                {"text": self.strings("yes"), "callback": self._ans, "args": (0, message)},
-                {"text": self.strings("no"), "callback": self._ans, "args": (1, message)},
-                {"text": self.strings("idk"), "callback": self._ans, "args": (2, message)}
+                {"text": self.strings["yes"], "callback": self._ans, "args": (0, message)},
+                {"text": self.strings["no"], "callback": self._ans, "args": (1, message)},
+                {"text": self.strings["idk"], "callback": self._ans, "args": (2, message)}
             ],[
-                {"text": self.strings("probably"), "callback": self._ans, "args": (3, message)},
-                {"text": self.strings("probably_not"), "callback": self._ans, "args": (4, message)}
+                {"text": self.strings["probably"], "callback": self._ans, "args": (3, message)},
+                {"text": self.strings["probably_not"], "callback": self._ans, "args": (4, message)}
             ]
         ]
         
@@ -393,13 +393,13 @@ class Akinator(loader.Module):
             desc = aki.desc
         
         if desc:
-            text = self.strings("this_is").format(name=name, description=desc)
+            text = self.strings["this_is"].format(name=name, description=desc)
         else:
-            text = self.strings("this_is_no_desc").format(name=name)
+            text = self.strings["this_is_no_desc"].format(name=name)
         
         markup = [[
-                {"text": self.strings("yes"), "callback": self._fin, "args": (True, message, text, aki.photo)},
-                {"text": self.strings("not_right"), "callback": self._rej, "args": (message,)}
+                {"text": self.strings["yes"], "callback": self._fin, "args": (True, message, text, aki.photo)},
+                {"text": self.strings["not_right"], "callback": self._rej, "args": (message,)}
             ]
         ]
         
@@ -450,7 +450,7 @@ class Akinator(loader.Module):
             await call.edit(text, photo=photo, reply_markup=[])
         else: 
             await call.edit(
-                self.strings("failed"),
+                self.strings["failed"],
                 photo="https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/akinator/idk.png",
                 reply_markup=[]
-            )
+        )
