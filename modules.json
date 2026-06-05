@@ -45073,7 +45073,7 @@
         "no_devices_found": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No devices found.</b>",
         "device_changed": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playback transferred to {}.</b>",
         "autobio": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Spotify autobio {}</b>",
-        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found. Install: <code>pip install yt-dlp</code></b>",
         "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Download failed</b>",
         "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Uploading banner...</i>",
         "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Downloading track...</i>",
@@ -45119,7 +45119,7 @@
         "no_devices_found_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Устройства не найдены.</b>",
         "device_changed_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Воспроизведение переключено на {}.</b>",
         "autobio_ru": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Обновление био включено {}</b>",
-        "no_ytdlp_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "no_ytdlp_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден. Установите: <code>pip install yt-dlp</code></b>",
         "snowt_failed_ru": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка скачивания.</b>",
         "uploading_banner_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Загрузка баннера...</i>",
         "downloading_track_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Скачивание трека...</i>",
@@ -79042,6 +79042,6 @@
   },
   "meta": {
     "total_modules": 998,
-    "generated_at": "2026-05-31T02:47:45.912076"
+    "generated_at": "2026-06-05T02:46:14.760765"
   }
 }
