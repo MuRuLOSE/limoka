@@ -17,10 +17,10 @@
 # =======================================
 #
 # meta developer: @ke_mods
-# requires: telethon spotipy pillow requests yt-dlp curl_cffi
+# requires: telethon spotipy pillow requests yt-dlp curl_cffi==0.14.0
 # scope: ffmpeg
 
-__version__ = (1, 0)
+__version__ = (1, 0, 1)
 
 import asyncio
 import contextlib
@@ -28,6 +28,7 @@ import functools
 import io
 import logging
 import re
+import shutil
 import textwrap
 import time
 import traceback
@@ -517,7 +518,7 @@ class SpotifyMod(loader.Module):
         "autobio": (
             "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Spotify autobio {}</b>"
         ),
-        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found. Install: <code>pip install yt-dlp</code></b>",
         "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Download failed</b>",
         "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Uploading banner...</i>",
         "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Downloading track...</i>",
@@ -531,6 +532,12 @@ class SpotifyMod(loader.Module):
         "playlist_deleted": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playlist {} deleted.</b>",
         "no_playlist_name": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a playlist name.</b>",
         "device_select": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Select playback device:</b>",
+        "on-shuffle": (
+            "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Shuffle enabled.</b>"
+        ),
+        "off-shuffle": (
+            "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Shuffle disabled.</b>"
+        ),
     }
 
     strings_ru = {
@@ -641,7 +648,7 @@ class SpotifyMod(loader.Module):
             "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Обновление био"
             " включено {}</b>"
         ),
-        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
+        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден. Установите: <code>pip install yt-dlp</code></b>",
         "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка скачивания.</b>",
         "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Загрузка баннера...</i>",
         "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Скачивание трека...</i>",
@@ -655,6 +662,12 @@ class SpotifyMod(loader.Module):
         "playlist_deleted": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} удален.</b>",
         "no_playlist_name": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите название плейлиста.</b>",
         "device_select": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Выберите устройство для воспроизведения:</b>",
+        "on-shuffle": (
+            "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Перемешивание включено.</b>"
+        ),
+        "off-shuffle": (
+            "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Перемешивание отключено.</b>"
+        ),
     }
 
     def __init__(self):
@@ -942,14 +955,19 @@ class SpotifyMod(loader.Module):
                 await self._client.send_file(chat_id, file_path, caption=caption, reply_to=reply_to_id)
                 return True
 
+        ytdlp = self._get_ytdlp_path()
+        if not ytdlp:
+            await send_text(self.strings["no_ytdlp"])
+            return False
+
         success = False
         try:
             squery = query.replace('"', '').replace("'", "")
             cookies = self.config["cookies_path"]
-            ytdlp_flags = '-x --audio-format mp3 --audio-quality 0 --add-metadata --format "bestaudio/best" --no-playlist'
+            ytdlp_flags = '-x --impersonate="" --audio-format mp3 --audio-quality 0 --add-metadata --format "bestaudio/best" --no-playlist'
             cookies_flag = f"--cookies {cookies} " if cookies else ""
             cmd = (
-                f'{self.config["ytdlp_path"]} {ytdlp_flags} {cookies_flag}'
+                f'{ytdlp} {ytdlp_flags} {cookies_flag}'
                 f'-o "{dl_dir}/%(title)s [%(id)s].%(ext)s" '
                 f'"ytsearch1:{squery}"'
             )
@@ -985,6 +1003,12 @@ class SpotifyMod(loader.Module):
                     os.remove(os.path.join(dl_dir, f))
 
         return success
+
+    def _get_ytdlp_path(self):
+        configured = self.config["ytdlp_path"]
+        if configured:
+            return configured
+        return shutil.which("yt-dlp")
 
     def _short_text(self, text: str, limit: int = 60) -> str:
         text = " ".join(text.split())
@@ -1150,11 +1174,6 @@ class SpotifyMod(loader.Module):
         """<query> - search Spotify track"""
         return await self._inline_search_tracks(query)
 
-    @loader.inline_handler(ru_doc="<запрос> - поиск треков Spotify.")
-    async def ssearch(self, query):
-        """<query> - search Spotify track"""
-        return await self._inline_search_tracks(query)
-                         
     @error_handler
     @tokenized
     @loader.command(
@@ -1426,6 +1445,26 @@ class SpotifyMod(loader.Module):
         """- ✋ Stop repeat"""
         self.sp.repeat("context")
         await utils.answer(message, self.strings["off-repeat"])
+
+    @error_handler
+    @tokenized
+    @loader.command(
+        ru_doc="- 🔀 Включить перемешивание"
+    )
+    async def sshufflecmd(self, message: Message):
+        """- 🔀 Enable shuffle"""
+        self.sp.shuffle(True)
+        await utils.answer(message, self.strings["on-shuffle"])
+
+    @error_handler
+    @tokenized
+    @loader.command(
+        ru_doc="- 🔀 Отключить перемешивание"
+    )
+    async def sdeshufflecmd(self, message: Message):
+        """- 🔀 Disable shuffle"""
+        self.sp.shuffle(False)
+        await utils.answer(message, self.strings["off-shuffle"])
 
     @error_handler
     @tokenized
@@ -1730,11 +1769,10 @@ class SpotifyMod(loader.Module):
     @error_handler
     @tokenized
     @loader.command(
-        ru_doc="| .sq - 🔍 Поиск треков.",
-        alias="sq"
+        ru_doc="- 🔍 Поиск треков."
     )
-    async def ssearchcmd(self, message: Message):
-        """| .sq - 🔍 Search for tracks."""
+    async def sqcmd(self, message: Message):
+        """- 🔍 Search for tracks."""
         args = utils.get_args_raw(message)
         if not args:
             await utils.answer(message, self.strings["no_search_query"])
