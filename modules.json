@@ -44617,6 +44617,12 @@
           "sderepeat": "- ✋ Stop repeat | (RU) - ✋ Остановить повтор"
         },
         {
+          "sshuffle": "- 🔀 Enable shuffle | (RU) - 🔀 Включить перемешивание"
+        },
+        {
+          "sdeshuffle": "- 🔀 Disable shuffle | (RU) - 🔀 Отключить перемешивание"
+        },
+        {
           "snext": "- 👉 Next track | (RU) - 👉 Следующий трек"
         },
         {
@@ -44656,7 +44662,10 @@
           "snowt": "| .snt - 🎧 Download current track. | (RU) | .snt - 🎧 Скачать играющий трек"
         },
         {
-          "ssearch": "| .sq - 🔍 Search for tracks. | (RU) | .sq - 🔍 Поиск треков."
+          "sq": "- 🔍 Search for tracks. | (RU) - 🔍 Поиск треков."
+        },
+        {
+          "ssearch": "- 🔍 Search for tracks. | (RU) - 🔍 Поиск треков."
         }
       ],
       "new_commands": [
@@ -44818,6 +44827,34 @@
           "description": {
             "default": "- ✋ Stop repeat",
             "ru": "- ✋ Остановить повтор"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "sshuffle",
+          "original_name": "sshufflecmd",
+          "description": {
+            "default": "- 🔀 Enable shuffle",
+            "ru": "- 🔀 Включить перемешивание"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "sdeshuffle",
+          "original_name": "sdeshufflecmd",
+          "description": {
+            "default": "- 🔀 Disable shuffle",
+            "ru": "- 🔀 Отключить перемешивание"
           },
           "cmd_names": {},
           "aliases": [],
@@ -45009,11 +45046,25 @@
           "decorators": []
         },
         {
+          "name": "sq",
+          "original_name": "sqcmd",
+          "description": {
+            "default": "- 🔍 Search for tracks.",
+            "ru": "- 🔍 Поиск треков."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
           "name": "ssearch",
           "original_name": "ssearchcmd",
           "description": {
-            "default": "| .sq - 🔍 Search for tracks.",
-            "ru": "| .sq - 🔍 Поиск треков."
+            "default": "- 🔍 Search for tracks.",
+            "ru": "- 🔍 Поиск треков."
           },
           "cmd_names": {},
           "aliases": [],
@@ -45073,7 +45124,6 @@
         "no_devices_found": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No devices found.</b>",
         "device_changed": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playback transferred to {}.</b>",
         "autobio": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Spotify autobio {}</b>",
-        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
         "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Download failed</b>",
         "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Uploading banner...</i>",
         "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Downloading track...</i>",
@@ -45087,6 +45137,8 @@
         "playlist_deleted": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playlist {} deleted.</b>",
         "no_playlist_name": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a playlist name.</b>",
         "device_select": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Select playback device:</b>",
+        "on-shuffle": "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Shuffle enabled.</b>",
+        "off-shuffle": "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Shuffle disabled.</b>",
         "need_auth_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Выполни </b><code>.sauth</code><b> перед выполнением этого действия.</b>",
         "err_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Произошла ошибка.</b>\n<code>{}</code>",
         "on-repeat_ru": "<tg-emoji emoji-id=5258420634785947640>🔄</tg-emoji> <b>Включен повтор трека.</b>",
@@ -45119,7 +45171,6 @@
         "no_devices_found_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Устройства не найдены.</b>",
         "device_changed_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Воспроизведение переключено на {}.</b>",
         "autobio_ru": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Обновление био включено {}</b>",
-        "no_ytdlp_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
         "snowt_failed_ru": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка скачивания.</b>",
         "uploading_banner_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Загрузка баннера...</i>",
         "downloading_track_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Скачивание трека...</i>",
@@ -45132,7 +45183,9 @@
         "playlist_created_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} создан.</b>",
         "playlist_deleted_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} удален.</b>",
         "no_playlist_name_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите название плейлиста.</b>",
-        "device_select_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Выберите устройство для воспроизведения:</b>"
+        "device_select_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Выберите устройство для воспроизведения:</b>",
+        "on-shuffle_ru": "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Перемешивание включено.</b>",
+        "off-shuffle_ru": "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Перемешивание отключено.</b>"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -79042,6 +79095,6 @@
   },
   "meta": {
     "total_modules": 998,
-    "generated_at": "2026-05-31T02:47:45.912076"
+    "generated_at": "2026-06-07T02:52:20.433986"
   }
 }
