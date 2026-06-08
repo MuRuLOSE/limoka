@@ -760,7 +760,7 @@ class Limoka(loader.Module):
                         ),
                     },
                     {
-                        "text": f"{self.strings["body_page"]} {page_body + 1}/{len(body_pages)}",
+                        "text": f"{self.strings['body_page']} {page_body + 1}/{len(body_pages)}",
                         "callback": self._inline_void,
                     },
                     {
