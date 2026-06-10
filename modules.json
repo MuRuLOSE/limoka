@@ -18,18 +18,199 @@
       "class_cmd_names": {}
     },
     "LimokaLegacy.py": {
-      "name": "LimokaLegacy",
-      "description": "",
-      "cls_doc": {},
+      "name": "Limoka",
+      "description": "Modules are now in one place with easy searching!",
+      "cls_doc": {
+        "ru": "Модули теперь в одном месте с простым и удобным поиском!"
+      },
       "meta": {
         "pic": null,
         "banner": null,
         "developer": "@limokanews"
       },
-      "commands": [],
-      "new_commands": [],
+      "commands": [
+        {
+          "limoka": "[query / nothing] - Search modules | (RU) [запрос / ничего] — Поиск модулей"
+        },
+        {
+          "lshistory": "[clear] - Show or clear search history | (RU) [clear] — Показать или очистить историю поиска"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "limoka",
+          "original_name": "limokacmd",
+          "description": {
+            "default": "[query / nothing] - Search modules",
+            "ru": "[запрос / ничего] — Поиск модулей"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "lshistory",
+          "original_name": "lshistorycmd",
+          "description": {
+            "default": "[clear] - Show or clear search history",
+            "ru": "[clear] — Показать или очистить историю поиска"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
       "inline_handlers": [],
-      "strings": {},
+      "strings": {
+        "name": "Limoka",
+        "wait": "<blockquote>Just wait\n<emoji document_id=5404630946563515782>🔍</emoji> A search is underway among {count} modules for the query: <code>{query}</code>\n<i>{fact}</i></blockquote>",
+        "found_header": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> Found module <b>{name}</b> by query: <b>{query}</b>\n\n<b><emoji document_id=5418376169055602355>ℹ️</emoji> Description:</b> {description}\n<b><emoji document_id=5418299289141004396>🧑‍💻</emoji> Developer:</b> {username}\n\n<b><emoji document_id=5418376169055602355>🏷</emoji> Tags:</b> {tags}\n\n</blockquote>",
+        "found_body": "{commands}",
+        "found_footer": "<blockquote>\n<emoji document_id=5411143117711624172>🪄</emoji> <code>{prefix}dlm {url}{module_path}</code></blockquote>",
+        "caption_short": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>{safe_name}</b>\n<b><emoji document_id=5418376169055602355>ℹ️</emoji> Description:</b> {safe_desc}\n<b><emoji document_id=5418299289141004396>🧑‍💻</emoji> Dev:</b> {dev_username}\n<emoji document_id=5411143117711624172>🪄</emoji> <code>{prefix}dlm {module_path}</code></blockquote>",
+        "command_template": "{emoji} <code>{prefix}{command}</code> — {description}\n",
+        "inline_handler_template": "{inline_bot} {command} — {description}\n",
+        "emojis": {
+          "1": "<emoji document_id=5416037945909987712>1️⃣</emoji>",
+          "2": "<emoji document_id=5413855071731470617>2️⃣</emoji>",
+          "3": "<emoji document_id=5416068826724850291>3️⃣</emoji>",
+          "4": "<emoji document_id=5415843998071803071>4️⃣</emoji>",
+          "5": "<emoji document_id=5415684843763686989>5️⃣</emoji>",
+          "6": "<emoji document_id=5415975458430796879>6️⃣</emoji>",
+          "7": "<emoji document_id=5415769763857060166>7️⃣</emoji>",
+          "8": "<emoji document_id=5416006506749383505>8️⃣</emoji>",
+          "9": "<emoji document_id=5415963015910544694>9️⃣</emoji>"
+        },
+        "404": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>Not found by query: <i>{query}</i></b></blockquote>",
+        "noargs": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>No args</b></blockquote>",
+        "?": "<blockquote><emoji document_id=5951895176908640647>🔎</emoji> Request too short / not found</blockquote>",
+        "no_info": "<blockquote>No information</blockquote>",
+        "facts": [
+          "<blockquote><emoji document_id=5472193350520021357>🛡</emoji> The limoka catalog is carefully moderated!</blockquote>",
+          "<blockquote><emoji document_id=5940434198413184876>🚀</emoji> Limoka performance allows you to search for modules quickly!</blockquote>"
+        ],
+        "inline404": "<blockquote>Not found</blockquote>",
+        "inline?": "<blockquote>Request too short / not found</blockquote>",
+        "inlinenoargs": "<blockquote>Please, enter query</blockquote>",
+        "history": "<blockquote><emoji document_id=5879939498149679716>🔎</emoji> <b>Your search history:</b>\n{history}</blockquote>",
+        "filter_menu": "Choose filters",
+        "filter_cat": "📑 Filter by Category",
+        "apply_filters": "✅ Apply Filters",
+        "clear_filters": "🗑 Clear Filters",
+        "back_to_results": "🔙 Back to Results",
+        "empty_history": "<blockquote><emoji document_id=5879939498149679716>🔎</emoji> <b>Your search history is empty!</b></blockquote>",
+        "enter_query": "<blockquote>🔍 Enter new search query:</blockquote>",
+        "global_search": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> Global search for <b>{query}</b> — found <b>{count}</b> modules</blockquote>",
+        "change_query": "🔍 Change query",
+        "no_modules": "<blockquote>No modules available.</blockquote>",
+        "filter_title": "🏷 Filters",
+        "category_title": "📂 Categories",
+        "selected_categories": "<blockquote>✅ Selected categories: {categories}</blockquote>",
+        "no_categories": "<blockquote>No categories found in the module database</blockquote>",
+        "select_category": "<blockquote>Select categories for query: <code>{query}</code>\n(You can select multiple)</blockquote>",
+        "back": "🔙 Back",
+        "category": "📁 {category}",
+        "no_category": "<blockquote>No category</blockquote>",
+        "global_button": "🌍 Results",
+        "filtered_button": "🏷️ Filtered search",
+        "inline_search": "🔍 Search in Limoka",
+        "inline_no_results": "<blockquote>❌ No modules found</blockquote>",
+        "inline_error": "<blockquote>❌ Search error occurred</blockquote>",
+        "inline_short_query": "<blockquote>❌ Query too short (min 2 chars)</blockquote>",
+        "inline_switch_pm": "💬 Open in chat",
+        "inline_switch_pm_text": "🔍 Results for: {query}",
+        "inline_start_message": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Limoka Search</b>\nType module name or keyword</blockquote>",
+        "first_page": "<blockquote>This is the first page!</blockquote>",
+        "last_page": "<blockquote>This is the last page!</blockquote>",
+        "display_error": "<blockquote>Error displaying module. Please try again.</blockquote>",
+        "error_occurred": "<blockquote>An error occurred. Please try again.</blockquote>",
+        "start_search_form": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Limoka Search</b>\nEnter your query to search for modules:</blockquote>",
+        "global_search_form": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Global Search</b>\nEnter your query to search ALL modules without filters:</blockquote>",
+        "history_cleared": "<blockquote><emoji document_id=5427009710268689068>🧹</emoji> <b>Search history cleared!</b></blockquote>",
+        "invalid_history_arg": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>Invalid argument for history command. Use:</b>\n<code>.lshistory</code> - show history\n<code>.lshistory clear</code> - clear history</blockquote>",
+        "close": "❌ Close",
+        "watcher_no_tag": "<blockquote>❌ Invalid message format. No #limoka tag found.</blockquote>",
+        "watcher_invalid_format": "<blockquote>❌ Invalid format. Expected: #limoka:path:signature</blockquote>",
+        "watcher_signature_invalid": "<blockquote>❌ Signature invalid! Installation aborted.</blockquote>",
+        "watcher_loader_missing": "<blockquote>❌ Loader module not found.</blockquote>",
+        "watcher_module_not_found": "<blockquote>❌ Module not found in Limoka database: <code>{path}</code></blockquote>",
+        "watcher_critical": "<blockquote>❌ Critical error: {error}</blockquote>",
+        "tags": {
+          "herokutrusted": "Heroku Trusted",
+          "hikkatrusted": "Hikka Trusted",
+          "nonactive": "Non-Active Repository",
+          "nonlongermaintained": "No Longer Maintained Repository",
+          "newbie": "Newbie"
+        },
+        "indexing_in_progress": "<blockquote>⚠️ Database is busy, try again later. If issue persists, try removing limoka_index in the userbot's root folder. If error persists again, report to developers</blockquote>",
+        "body_page": "Commands",
+        "name_ru": "Limoka",
+        "wait_ru": "<blockquote>Подождите\n<emoji document_id=5404630946563515782>🔍</emoji> Идёт поиск среди {count} модулей по запросу: <code>{query}</code>\n<i>{fact}</i></blockquote>",
+        "found_header_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> Найден модуль <b>{name}</b> по запросу: <b>{query}</b></blockquote>\n\n<blockquote><b><emoji document_id=5418376169055602355>ℹ️</emoji> Описание:</b> {description}</blockquote>\n<blockquote><b><emoji document_id=5418299289141004396>🧑‍💻</emoji> Разработчик:</b> {username}</blockquote>\n\n<blockquote><b><emoji document_id=5418376169055602355>🏷</emoji> Теги:</b> {tags}</blockquote>\n\n",
+        "found_body_ru": "{commands}",
+        "found_footer_ru": "\n<blockquote><emoji document_id=5411143117711624172>🪄</emoji> <code>{prefix}dlm {url}{module_path}</code></blockquote>",
+        "caption_short_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>{safe_name}</b>\n<b><emoji document_id=5418376169055602355>ℹ️</emoji> Описание:</b> {safe_desc}\n<b><emoji document_id=5418299289141004396>🧑‍💻</emoji> Разработчик:</b> {dev_username}\n<emoji document_id=5411143117711624172>🪄</emoji> <code>{prefix}dlm {module_path}</code></blockquote>",
+        "command_template_ru": "<blockquote>{emoji} <code>{prefix}{command}</code> — {description}</blockquote>\n",
+        "inline_handler_template_ru": "{inline_bot} {command} — {description}\n",
+        "404_ru": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>Не найдено по запросу: <i>{query}</i></b></blockquote>",
+        "noargs_ru": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>Нет аргументов</b></blockquote>",
+        "?_ru": "<blockquote><emoji document_id=5951895176908640647>🔎</emoji> Запрос слишком короткий / не найден</blockquote>",
+        "no_info_ru": "<blockquote>Нет информации</blockquote>",
+        "inline404_ru": "<blockquote>Не найдено</blockquote>",
+        "inline?_ru": "<blockquote>Запрос слишком короткий / не найден</blockquote>",
+        "inlinenoargs_ru": "<blockquote>Введите запрос</blockquote>",
+        "history_ru": "<blockquote><emoji document_id=5879939498149679716>🔎</emoji> <b>История поиска:</b>\n{history}</blockquote>",
+        "filter_menu_ru": "Выберите фильтры",
+        "filter_cat_ru": "📑 Фильтр по категориям",
+        "apply_filters_ru": "✅ Применить фильтры",
+        "clear_filters_ru": "🗑 Очистить фильтры",
+        "back_to_results_ru": "🔙 Вернуться к результатам",
+        "empty_history_ru": "<blockquote><emoji document_id=5879939498149679716>🔎</emoji> <b>История поиска пуста!</b></blockquote>",
+        "enter_query_ru": "<blockquote>🔍 Введите новый поисковый запрос:</blockquote>",
+        "global_search_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> Глобальный поиск по <b>{query}</b> — найдено <b>{count}</b> модулей</blockquote>",
+        "change_query_ru": "🔍 Изменить запрос",
+        "no_modules_ru": "<blockquote>Модули недоступны.</blockquote>",
+        "filter_title_ru": "🏷 Фильтры",
+        "category_title_ru": "📂 Категории",
+        "selected_categories_ru": "<blockquote>✅ Выбранные категории: {categories}</blockquote>",
+        "no_categories_ru": "<blockquote>Категории не найдены в базе модулей</blockquote>",
+        "select_category_ru": "<blockquote>Выберите категории для запроса: <code>{query}</code>\n(Можно выбрать несколько)</blockquote>",
+        "back_ru": "🔙 Назад",
+        "category_ru": "📁 {category}",
+        "no_category_ru": "<blockquote>Без категории</blockquote>",
+        "global_button_ru": "🌍 Результаты",
+        "filtered_button_ru": "🏷️ Поиск с фильтрами",
+        "inline_search_ru": "🔍 Поиск в Limoka",
+        "inline_no_results_ru": "<blockquote>❌ Модули не найдены</blockquote>",
+        "inline_error_ru": "<blockquote>❌ Ошибка поиска</blockquote>",
+        "inline_short_query_ru": "<blockquote>❌ Запрос слишком короткий (мин. 2 символа)</blockquote>",
+        "inline_switch_pm_ru": "💬 Открыть в чате",
+        "inline_switch_pm_text_ru": "🔍 Результаты для: {query}",
+        "inline_start_message_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Limoka Поиск</b>\nВведите название модуля или ключевое слово</blockquote>",
+        "first_page_ru": "<blockquote>Это первая страница!</blockquote>",
+        "last_page_ru": "<blockquote>Это последняя страница!</blockquote>",
+        "display_error_ru": "<blockquote>Ошибка отображения модуля. Пожалуйста, попробуйте еще раз.</blockquote>",
+        "error_occurred_ru": "<blockquote>Произошла ошибка. Пожалуйста, попробуйте еще раз.</blockquote>",
+        "start_search_form_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Limoka Поиск</b>\nВведите ваш запрос для поиска модулей:</blockquote>",
+        "global_search_form_ru": "<blockquote><emoji document_id=5413334818047940135>🔍</emoji> <b>Глобальный Поиск</b>\nВведите запрос для поиска ВСЕХ модулей без фильтров:</blockquote>",
+        "history_cleared_ru": "<blockquote><emoji document_id=5427009710268689068>🧹</emoji> <b>История поиска очищена!</b></blockquote>",
+        "invalid_history_arg_ru": "<blockquote><emoji document_id=5210952531676504517>❌</emoji> <b>Неверный аргумент для команды истории. Используйте:</b>\n<code>.lshistory</code> - показать историю\n<code>.lshistory clear</code> - очистить историю</blockquote>",
+        "close_ru": "❌ Закрыть",
+        "watcher_no_tag_ru": "<blockquote>❌ Неверный формат сообщения. Тег #limoka не найден.</blockquote>",
+        "watcher_invalid_format_ru": "<blockquote>❌ Неверный формат. Ожидается: #limoka:path:signature</blockquote>",
+        "watcher_signature_invalid_ru": "<blockquote>❌ Неверная подпись! Установка отменена.</blockquote>",
+        "watcher_loader_missing_ru": "<blockquote>❌ Модуль загрузчика не найден.</blockquote>",
+        "watcher_module_not_found_ru": "<blockquote>❌ Модуль не найден в базе Limoka: <code>{path}</code></blockquote>",
+        "watcher_critical_ru": "<blockquote>❌ Критическая ошибка: {error}</blockquote>",
+        "indexing_in_progress_ru": "<blockquote>⚠️ База данных занята, попробуйте снова через несколько секунд. Если ошибка сохраняется, попробуйте удалить limoka_index в корневой папке юзербота. Если ошибка сохраняется снова, сообщите разработчикам</blockquote>",
+        "body_page_ru": "Команды"
+      },
       "has_on_load": false,
       "has_on_unload": false,
       "class_cmd_names": {}
@@ -44617,6 +44798,12 @@
           "sderepeat": "- ✋ Stop repeat | (RU) - ✋ Остановить повтор"
         },
         {
+          "sshuffle": "- 🔀 Enable shuffle | (RU) - 🔀 Включить перемешивание"
+        },
+        {
+          "sdeshuffle": "- 🔀 Disable shuffle | (RU) - 🔀 Отключить перемешивание"
+        },
+        {
           "snext": "- 👉 Next track | (RU) - 👉 Следующий трек"
         },
         {
@@ -44656,7 +44843,10 @@
           "snowt": "| .snt - 🎧 Download current track. | (RU) | .snt - 🎧 Скачать играющий трек"
         },
         {
-          "ssearch": "| .sq - 🔍 Search for tracks. | (RU) | .sq - 🔍 Поиск треков."
+          "sq": "- 🔍 Search for tracks. | (RU) - 🔍 Поиск треков."
+        },
+        {
+          "ssearch": "- 🔍 Search for tracks. | (RU) - 🔍 Поиск треков."
         }
       ],
       "new_commands": [
@@ -44818,6 +45008,34 @@
           "description": {
             "default": "- ✋ Stop repeat",
             "ru": "- ✋ Остановить повтор"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "sshuffle",
+          "original_name": "sshufflecmd",
+          "description": {
+            "default": "- 🔀 Enable shuffle",
+            "ru": "- 🔀 Включить перемешивание"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "sdeshuffle",
+          "original_name": "sdeshufflecmd",
+          "description": {
+            "default": "- 🔀 Disable shuffle",
+            "ru": "- 🔀 Отключить перемешивание"
           },
           "cmd_names": {},
           "aliases": [],
@@ -45009,11 +45227,25 @@
           "decorators": []
         },
         {
+          "name": "sq",
+          "original_name": "sqcmd",
+          "description": {
+            "default": "- 🔍 Search for tracks.",
+            "ru": "- 🔍 Поиск треков."
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
           "name": "ssearch",
           "original_name": "ssearchcmd",
           "description": {
-            "default": "| .sq - 🔍 Search for tracks.",
-            "ru": "| .sq - 🔍 Поиск треков."
+            "default": "- 🔍 Search for tracks.",
+            "ru": "- 🔍 Поиск треков."
           },
           "cmd_names": {},
           "aliases": [],
@@ -45073,7 +45305,6 @@
         "no_devices_found": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>No devices found.</b>",
         "device_changed": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playback transferred to {}.</b>",
         "autobio": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Spotify autobio {}</b>",
-        "no_ytdlp": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp not found... Check config or install yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
         "snowt_failed": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Download failed</b>",
         "uploading_banner": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Uploading banner...</i>",
         "downloading_track": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Downloading track...</i>",
@@ -45087,6 +45318,8 @@
         "playlist_deleted": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Playlist {} deleted.</b>",
         "no_playlist_name": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Please specify a playlist name.</b>",
         "device_select": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Select playback device:</b>",
+        "on-shuffle": "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Shuffle enabled.</b>",
+        "off-shuffle": "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Shuffle disabled.</b>",
         "need_auth_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Выполни </b><code>.sauth</code><b> перед выполнением этого действия.</b>",
         "err_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Произошла ошибка.</b>\n<code>{}</code>",
         "on-repeat_ru": "<tg-emoji emoji-id=5258420634785947640>🔄</tg-emoji> <b>Включен повтор трека.</b>",
@@ -45119,7 +45352,6 @@
         "no_devices_found_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Устройства не найдены.</b>",
         "device_changed_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Воспроизведение переключено на {}.</b>",
         "autobio_ru": "<tg-emoji emoji-id=6319076999105087378>🎧</tg-emoji> <b>Обновление био включено {}</b>",
-        "no_ytdlp_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>yt-dlp не найден... Проверьте конфиг или установите yt-dlp (<code>{}terminal pip install yt-dlp</code>)</b>",
         "snowt_failed_ru": "\n\n<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка скачивания.</b>",
         "uploading_banner_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Загрузка баннера...</i>",
         "downloading_track_ru": "\n\n<tg-emoji emoji-id=5841359499146825803>🕔</tg-emoji> <i>Скачивание трека...</i>",
@@ -45132,7 +45364,9 @@
         "playlist_created_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} создан.</b>",
         "playlist_deleted_ru": "<tg-emoji emoji-id=5776375003280838798>✅</tg-emoji> <b>Плейлист {} удален.</b>",
         "no_playlist_name_ru": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Пожалуйста, укажите название плейлиста.</b>",
-        "device_select_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Выберите устройство для воспроизведения:</b>"
+        "device_select_ru": "<tg-emoji emoji-id=5956561916573782596>📄</tg-emoji> <b>Выберите устройство для воспроизведения:</b>",
+        "on-shuffle_ru": "<tg-emoji emoji-id=5267246517701352801>🔀</tg-emoji> <b>Перемешивание включено.</b>",
+        "off-shuffle_ru": "<tg-emoji emoji-id=5265105218806259720>🔀</tg-emoji> <b>Перемешивание отключено.</b>"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -79042,6 +79276,6 @@
   },
   "meta": {
     "total_modules": 998,
-    "generated_at": "2026-05-31T02:47:45.912076"
+    "generated_at": "2026-06-10T02:45:17.844204"
   }
 }
