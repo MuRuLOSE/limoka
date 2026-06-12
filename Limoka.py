@@ -37,7 +37,7 @@ from .. import utils, loader
 from ..types import BotInlineCall, InlineCall
 
 logger = logging.getLogger("Limoka")
-__version__ = (1, 5, 5)
+__version__ = (1, 5, 6)
 
 
 def _parse_version_from_source(source: str):
@@ -879,6 +879,9 @@ class Limoka(loader.Module):
                 except (aiohttp.ClientError, asyncio.TimeoutError) as head_error:
                     logger.debug(f"_validate_url: HEAD failed ({type(head_error).__name__}), will try GET for {url}")
                 
+                def _is_supported_media(content_type: str) -> bool:
+                    return content_type.startswith("image/") or content_type.startswith("video/mp4")
+
                 # If HEAD didn't work or returned non-200, try GET
                 if ct is None:
                     max_retries = 2
@@ -897,7 +900,7 @@ class Limoka(loader.Module):
                                     try:
                                         data = await response.content.read(2048)
                                         mime = filetype.guess_mime(data, mime=True)
-                                        if mime and mime.startswith("image/"):
+                                        if mime and _is_supported_media(mime):
                                             return url
                                         else:
                                             self._invalid_banners.add(url)
@@ -913,7 +916,7 @@ class Limoka(loader.Module):
                                 return None
                 
                 # Check Content-Type from successful request
-                if ct and ct.startswith("image/"):
+                if ct and _is_supported_media(ct):
                     return url
                 elif ct:
                     self._invalid_banners.add(url)

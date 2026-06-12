@@ -523,6 +523,10 @@ class Limoka(loader.Module):
     async def _validate_url(self, url: str) -> Optional[str]:
         if not url or url in self._invalid_banners:
             return None
+
+        def _is_supported_media(content_type: str) -> bool:
+            return content_type.startswith("image/") or content_type.startswith("video/mp4")
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.head(
@@ -532,7 +536,7 @@ class Limoka(loader.Module):
                         self._invalid_banners.add(url)
                         return None
                     ct = response.headers.get("Content-Type", "").lower()
-                    if not ct.startswith("image/"):
+                    if not _is_supported_media(ct):
                         self._invalid_banners.add(url)
                         return None
                     return url
