@@ -1,0 +1,62 @@
+{
+  "prologue_choice_1": {
+    "question": "Иначе никак, иначе сон не закончится, а я – не проснусь. — что выбрать?",
+    "chapter": "prologue",
+    "options": {
+      "Да, я пойду с тобой": {
+        "effects": {}
+      },
+      "Нет, я останусь здесь": {
+        "effects": {}
+      }
+    }
+  },
+  "endings": {
+    "labels": [
+      "main_good_ending",
+      "main_bad_ending",
+      "sl_good_ending",
+      "sl_bad_ending",
+      "dv_good_ending",
+      "dv_bad_ending",
+      "un_good_ending",
+      "un_bad_ending",
+      "us_good_ending",
+      "us_bad_ending",
+      "mi_ending",
+      "uv_ending",
+      "harem_ending"
+    ],
+    "routes": {
+      "sl": {
+        "good": "sl_good_ending",
+        "bad": "sl_bad_ending",
+        "point_key": "sl_points"
+      },
+      "dv": {
+        "good": "dv_good_ending",
+        "bad": "dv_bad_ending",
+        "point_key": "dv_points"
+      },
+      "un": {
+        "good": "un_good_ending",
+        "bad": "un_bad_ending",
+        "point_key": "un_points"
+      },
+      "us": {
+        "good": "us_good_ending",
+        "bad": "us_bad_ending",
+        "point_key": "us_points"
+      },
+      "mi": {
+        "single": "mi_ending",
+        "point_key": "mi_points"
+      },
+      "uv": {
+        "single": "uv_ending",
+        "point_key": "uv_points"
+      }
+    },
+    "fallback": "main_bad_ending"
+  }
+}

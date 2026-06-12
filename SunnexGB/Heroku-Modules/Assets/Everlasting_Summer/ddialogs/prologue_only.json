@@ -1,0 +1,832 @@
+{
+  "prologue": [
+    {
+      "type": "label",
+      "name": "prologue"
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_1",
+      "action": "load_asset",
+      "location": "anim/prolog_1",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_1.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Мне опять снился сон."
+    },
+    {
+      "type": "narration",
+      "text": "<i>Этот</i> сон..."
+    },
+    {
+      "type": "narration",
+      "text": "Каждую ночь одно и то же."
+    },
+    {
+      "type": "narration",
+      "text": "Но наутро, как обычно, всё забудется."
+    },
+    {
+      "type": "narration",
+      "text": "Может быть, оно и к лучшему..."
+    },
+    {
+      "type": "narration",
+      "text": "Останутся только туманные воспоминания о приоткрытых, словно приглашающих куда-то воротах, рядом с которыми в камне застыли два пионера."
+    },
+    {
+      "type": "narration",
+      "text": "А ещё странная девочка...{w} которая постоянно спрашивает:"
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "anim_prolog1_off",
+      "action": "load_asset",
+      "location": "anim/anim_prolog1_off",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/anim_prolog1_off.gif?raw=true"
+    },
+    {
+      "type": "dialogue",
+      "char_id": "dreamgirl",
+      "character": "...",
+      "text": "Ты пойдёшь со мной?"
+    },
+    {
+      "type": "narration",
+      "text": "Пойду?.."
+    },
+    {
+      "type": "narration",
+      "text": "Но куда?"
+    },
+    {
+      "type": "narration",
+      "text": "И зачем?.."
+    },
+    {
+      "type": "narration",
+      "text": "Да и где я вообще нахожусь?"
+    },
+    {
+      "type": "narration",
+      "text": "Конечно, случись всё на самом деле, наяву, стоило бы непременно испугаться."
+    },
+    {
+      "type": "narration",
+      "text": "Как же иначе!"
+    },
+    {
+      "type": "narration",
+      "text": "Но это – всего лишь сон.{w} Тот самый, который я вижу каждую ночь."
+    },
+    {
+      "type": "narration",
+      "text": "А ведь всё это неспроста!"
+    },
+    {
+      "type": "narration",
+      "text": "Необязательно знать <i>где</i> и <i>почему</i>, чтобы понять – что-то происходит."
+    },
+    {
+      "type": "narration",
+      "text": "Нечто, отчаянно требующее моего внимания."
+    },
+    {
+      "type": "narration",
+      "text": "Ведь всё окружающее меня здесь – реально!"
+    },
+    {
+      "type": "narration",
+      "text": "Реально настолько, насколько реальны вещи в моей квартире; я бы мог открыть ворота, услышать скрип петель, смахнуть рукой осыпающуюся ржавчину, потянуть носом свежий прохладный воздух и поёжиться от холода."
+    },
+    {
+      "type": "narration",
+      "text": "Мог бы, но для этого надо сдвинуться с места, сделать шаг, пошевелить рукой..."
+    },
+    {
+      "type": "narration",
+      "text": "А ведь это сон – я понимаю, но что дальше, что изменит моё <i>понимание</i>?"
+    },
+    {
+      "type": "narration",
+      "text": "Ведь здесь – словно по ту сторону потрескавшегося экрана старого телевизора, который из последних сил борется с помехами и силится показать зрителям всё, не упустив ни малейшей детали."
+    },
+    {
+      "type": "narration",
+      "text": "Но вот картинка теряет чёткость...{w} Наверное, скоро просыпаться."
+    },
+    {
+      "type": "narration",
+      "text": "..."
+    },
+    {
+      "type": "narration",
+      "text": "Может быть, спросить у неё что-то?{w} У девочки."
+    },
+    {
+      "type": "narration",
+      "text": "Как же её зовут..."
+    },
+    {
+      "type": "narration",
+      "text": "Например про звёзды..."
+    },
+    {
+      "type": "narration",
+      "text": "Хотя почему про звёзды?"
+    },
+    {
+      "type": "narration",
+      "text": "Можно же спросить про ворота!{w} Да, про ворота!"
+    },
+    {
+      "type": "narration",
+      "text": "Вот она удивится."
+    },
+    {
+      "type": "narration",
+      "text": "Или лучше про букву <i>ё</i>."
+    },
+    {
+      "type": "narration",
+      "text": "Хорошая была буква..."
+    },
+    {
+      "type": "narration",
+      "text": "Как будто её больше нет!"
+    },
+    {
+      "type": "narration",
+      "text": "И какое отношение буквы, ворота и звёзды имеют к этому месту?"
+    },
+    {
+      "type": "narration",
+      "text": "Ведь если мне каждую ночь снится <i>этот</i> сон, который потом всё равно забудется, надо искать разгадку здесь и сейчас!"
+    },
+    {
+      "type": "narration",
+      "text": "А вот, если присмотреться, можно увидеть Магелланово Облако..."
+    },
+    {
+      "type": "narration",
+      "text": "Словно попал в южное полушарие!"
+    },
+    {
+      "type": "narration",
+      "text": "..."
+    },
+    {
+      "type": "narration",
+      "text": "Во сне всегда больше волнуют мелочи: неестественный цвет травы, невозможная кривизна прямых или своё перекошенное отражение – а реальная опасность, готовая оборвать всё здесь и сейчас, кажется пустяком."
+    },
+    {
+      "type": "narration",
+      "text": "Естественно, ведь <i>здесь</i> нельзя умереть."
+    },
+    {
+      "type": "narration",
+      "text": "Я точно знаю – я делал это сотни раз."
+    },
+    {
+      "type": "narration",
+      "text": "Но если нельзя умереть, нет смысла жить?"
+    },
+    {
+      "type": "narration",
+      "text": "Надо будет спросить у девочки: она местная – должна знать!"
+    },
+    {
+      "type": "narration",
+      "text": "Да, именно!{w} Спросить, например, про сову."
+    },
+    {
+      "type": "narration",
+      "text": "Больно уж птица странная..."
+    },
+    {
+      "type": "narration",
+      "text": "А впрочем, неважно..."
+    },
+    {
+      "type": "narration",
+      "text": "..."
+    },
+    {
+      "type": "dialogue",
+      "char_id": "dreamgirl",
+      "character": "...",
+      "text": "Ты пойдёшь со мной?"
+    },
+    {
+      "type": "narration",
+      "text": "И каждый раз надо отвечать."
+    },
+    {
+      "type": "narration",
+      "text": "Иначе никак, иначе сон не закончится, а я – не проснусь."
+    },
+    {
+      "type": "route",
+      "id": "prologue_choice_1"
+    },
+    {
+      "type": "narration",
+      "text": "Каждый раз так сложно решить, что же ответить."
+    },
+    {
+      "type": "narration",
+      "text": "Где я, что я здесь делаю, кто она такая?"
+    },
+    {
+      "type": "narration",
+      "text": "И почему от ответа на этот вопрос зависит так много в моей жизни?"
+    },
+    {
+      "type": "narration",
+      "text": "Или не зависит?.."
+    },
+    {
+      "type": "narration",
+      "text": "Ведь это просто сон..."
+    },
+    {
+      "type": "narration",
+      "text": "Просто сон..."
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "black",
+      "action": "load_asset",
+      "location": "bg/black",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/bg/black.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "1_prologue",
+      "action": "load_asset",
+      "location": "cg/p_kb_1",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/cg/p_kb_1.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "2_prologue",
+      "action": "load_asset",
+      "location": "cg/p_kb_2",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/cg/p_kb_2.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "3_prologue",
+      "action": "load_asset",
+      "location": "cg/p_kb_3",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/cg/p_kb_3.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "4_prologue",
+      "action": "load_asset",
+      "location": "cg/p_kb_4",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/cg/p_kb_4.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "5_prologue",
+      "action": "load_asset",
+      "location": "cg/p_kb_5",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/cg/p_kb_5.png?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Экран монитора смотрел на меня словно живой."
+    },
+    {
+      "type": "narration",
+      "text": "Иногда мне правда казалось, что он обладает сознанием, своими мыслями и желаниями, стремлениями; умеет чувствовать, любить и страдать."
+    },
+    {
+      "type": "narration",
+      "text": "Словно в наших отношениях инструмент не он – неодушевлённый кусок пластика и текстолита, – а я."
+    },
+    {
+      "type": "narration",
+      "text": "Наверное, в этом есть доля правды, ведь компьютер на 90% обеспечивает моё общение с внешним миром."
+    },
+    {
+      "type": "narration",
+      "text": "Анонимные имиджборды, иногда какие-то чаты, редко – аська или джаббер, ещё реже – форумы."
+    },
+    {
+      "type": "narration",
+      "text": "А людей, сидящих по ту сторону сетевого кабеля, попросту не существует!"
+    },
+    {
+      "type": "narration",
+      "text": "Все они – всего лишь плод его больной фантазии, ошибка в программном коде или баг ядра, зажившего собственной жизнью."
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_15",
+      "action": "load_asset",
+      "location": "anim/prolog_15",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_15.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_3",
+      "action": "load_asset",
+      "location": "anim/prolog_3",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_3.png?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_4",
+      "action": "load_asset",
+      "location": "anim/prolog_4",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_4.png?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Если посмотреть со стороны на моё существование, то такие мысли покажутся не столь уж бредовыми, а какой-нибудь психолог наверняка поставит мне кучу заумных диагнозов и, возможно, выпишет направление в жёлтый дом."
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_5",
+      "action": "load_asset",
+      "location": "anim/prolog_5",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_5.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_14",
+      "action": "load_asset",
+      "location": "anim/prolog_14",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_14.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_11",
+      "action": "load_asset",
+      "location": "anim/prolog_11",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_11.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Маленькая квартирка без следов какого бы то ни было ремонта или даже подобия порядка, и вечно одинаковый вид из окна на серый, день и ночь куда-то бегущий мегаполис, – вот условия моей жизни."
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_2",
+      "action": "load_asset",
+      "location": "anim/prolog_2",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_2.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Конечно, всё начиналось не так..."
+    },
+    {
+      "type": "narration",
+      "text": "Я родился, пошёл в школу, закончил её – всё как у людей."
+    },
+    {
+      "type": "narration",
+      "text": "Поступил в институт, где кое-как промучился полтора курса."
+    },
+    {
+      "type": "narration",
+      "text": "Работал на паре-тройке разных работ.{w} Иногда даже и неплохо, иногда даже получая за это достойные деньги."
+    },
+    {
+      "type": "narration",
+      "text": "Однако всё это казалось чужим, словно списанным с биографии другого человека."
+    },
+    {
+      "type": "narration",
+      "text": "Я не ощущал полноту жизни – она словно зациклилась и продолжала идти по кругу.{w} Как в фильме «День сурка»."
+    },
+    {
+      "type": "narration",
+      "text": "Только у меня не было выбора, как именно провести этот день, и каждый раз всё повторялось по одной и той же схеме.{w} Схеме пустоты, уныния и отчаяния."
+    },
+    {
+      "type": "narration",
+      "text": "Последние несколько лет я просто целыми днями сидел за компьютером."
+    },
+    {
+      "type": "narration",
+      "text": "Иногда подворачивались какие-то халтурки, иногда помогали родители."
+    },
+    {
+      "type": "narration",
+      "text": "В общем, на жизнь хватало."
+    },
+    {
+      "type": "narration",
+      "text": "Это и немудрено, ведь потребности у меня небольшие."
+    },
+    {
+      "type": "narration",
+      "text": "На улицу я практически не выхожу, а всё моё общение с людьми сводится к интернет-переписке с <i>анонимами</i>, у которых нет ни реального имени, ни пола, ни возраста."
+    },
+    {
+      "type": "narration",
+      "text": "Короче говоря, достаточно типичная жизнь достаточно типичного асоциального человека своего времени.{w} Этакий Обломов XXI века."
+    },
+    {
+      "type": "narration",
+      "text": "Может быть, маститый писатель напишет обо мне роман, который станет классикой современной литературы.{w} Или напишу я сам…"
+    },
+    {
+      "type": "narration",
+      "text": "Впрочем нет, что себя обманывать – уже не раз пытался, но меня не хватало даже на короткий рассказ."
+    },
+    {
+      "type": "narration",
+      "text": "Изучал я и множество других вещей."
+    },
+    {
+      "type": "narration",
+      "text": "Рисовать – не дано от природы.{w} Программирование – надоело.{w} Иностранные языки – долго и скучно…"
+    },
+    {
+      "type": "narration",
+      "text": "Любил я разве что читать, но даже при этом никогда бы не назвал себя эрудированным человеком."
+    },
+    {
+      "type": "narration",
+      "text": "Возможно, я был асом в просмотре аниме и гроссмейстером неумелых шуточек в интернете."
+    },
+    {
+      "type": "narration",
+      "text": "Плати мне за это деньги, я бы обрадовался (да и заработал неплохо), но вряд ли так просто можно заполнить пустоту в душе."
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "semen_room_window",
+      "action": "load_asset",
+      "location": "bg/semen_room_window",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/bg/semen_room_window.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Сегодня очередной типичный день моей типичной жизни типичного неудачника."
+    },
+    {
+      "type": "narration",
+      "text": "И именно сегодня мне нужно ехать на встречу институтских товарищей."
+    },
+    {
+      "type": "narration",
+      "text": "По правде говоря, совершенно не хотелось."
+    },
+    {
+      "type": "narration",
+      "text": "Да и какой смысл, если вместе с ними я отучился всего ничего?"
+    },
+    {
+      "type": "narration",
+      "text": "Однако меня всё же уговорил друг, бывший одногруппник, один из немногих, с кем я поддерживал контакт не только в интернете."
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_1",
+      "action": "load_asset",
+      "location": "anim/intro_1",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_1.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_2",
+      "action": "load_asset",
+      "location": "anim/intro_2",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_2.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_3",
+      "action": "load_asset",
+      "location": "anim/intro_3",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_3.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_4",
+      "action": "load_asset",
+      "location": "anim/intro_4",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_4.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_5",
+      "action": "load_asset",
+      "location": "anim/intro_5",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_5.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_6",
+      "action": "load_asset",
+      "location": "anim/intro_6",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_6.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_8",
+      "action": "load_asset",
+      "location": "anim/intro_8",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_8.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_7",
+      "action": "load_asset",
+      "location": "anim/intro_7",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_7.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "bus_stop",
+      "action": "load_asset",
+      "location": "bg/bus_stop",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/bg/bus_stop.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Вечер. Мороз.{w} Остановка и ожидание автобуса."
+    },
+    {
+      "type": "narration",
+      "text": "Я никогда не любил зиму.{w} Впрочем, и жаркое лето – тоже не моя стихия."
+    },
+    {
+      "type": "narration",
+      "text": "Просто не вижу смысла выделять какое-то одно время года – не столь важно, какая погода на улице, если ты целыми днями сидишь дома."
+    },
+    {
+      "type": "narration",
+      "text": "Автобус сегодня задерживался так сильно, что я уже был готов плюнуть на всё и потратить последнюю пару сотен на такси (совсем не ехать мне почему-то в голову не пришло)."
+    },
+    {
+      "type": "narration",
+      "text": "В мозгу, как всегда, роились миллионы мыслей, из которых совершенно невозможно выудить хотя бы одну стоящую."
+    },
+    {
+      "type": "narration",
+      "text": "Такую, которую можно закончить, привести в порядок, облечь в форму идеи и претворить в жизнь."
+    },
+    {
+      "type": "narration",
+      "text": "Может быть, заняться бизнесом?{w} Но откуда я возьму деньги?"
+    },
+    {
+      "type": "narration",
+      "text": "Или пойти опять работать в офис?{w} Нет уж!"
+    },
+    {
+      "type": "narration",
+      "text": "Может, стоит попробовать фриланс?{w} Да что я умею, и кому я нужен…"
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "prolog_2",
+      "action": "load_asset",
+      "location": "anim/prolog_2",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/prolog_2.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Вдруг мне вспомнилось детство…{w} Или скорее юношество – 15-17 лет."
+    },
+    {
+      "type": "narration",
+      "text": "Почему именно это время?{w} Не знаю."
+    },
+    {
+      "type": "narration",
+      "text": "Наверное, потому что тогда всё было проще."
+    },
+    {
+      "type": "narration",
+      "text": "Было проще принимать такие сложные сейчас и такие простые тогда решения."
+    },
+    {
+      "type": "narration",
+      "text": "Проснувшись с утра, я чётко знал, как пройдёт мой день, а выходных ждал с нетерпением – смогу отдохнуть, заняться любимыми делами: компьютер, футбол, встречи с друзьями."
+    },
+    {
+      "type": "narration",
+      "text": "А потом, когда наступит новая неделя, вновь примусь за учёбу."
+    },
+    {
+      "type": "narration",
+      "text": "Ведь раньше не возникало этих мучительных вопросов «зачем», «кому это надо», «что изменится, если я это сделаю» или «что не изменится»."
+    },
+    {
+      "type": "narration",
+      "text": "Простой поток жизни, такой привычный для любого нормального человека и такой чуждый для меня теперешнего."
+    },
+    {
+      "type": "narration",
+      "text": "Время беззаботного детства…{w} Тогда же я и встретил свою первую любовь."
+    },
+    {
+      "type": "narration",
+      "text": "Стёрлись из памяти её внешность, характер."
+    },
+    {
+      "type": "narration",
+      "text": "Как строчка из профиля в социальной сети осталось лишь имя, да те чувства, которые захлёстывали меня, когда я был с ней.{w} Теплота, нежность, желание заботиться, защитить…"
+    },
+    {
+      "type": "narration",
+      "text": "Жаль, что это продолжалось так недолго."
+    },
+    {
+      "type": "narration",
+      "text": "Сейчас я уже с трудом могу себе представить что-то подобное."
+    },
+    {
+      "type": "narration",
+      "text": "Наверное, и хочется познакомиться с девушкой, только не знаю, как начать диалог, о чём вообще с ней говорить, чем её заинтересовать."
+    },
+    {
+      "type": "narration",
+      "text": "Да и подходящих девушек я давно не встречал.{w} Хотя где мне их встретить…"
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_9",
+      "action": "load_asset",
+      "location": "anim/intro_9",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_9.jpg"
+    },
+    {
+      "type": "narration",
+      "text": "Звук работающего двигателя вернул меня к реальности."
+    },
+    {
+      "type": "narration",
+      "text": "Подъехал автобус."
+    },
+    {
+      "type": "narration",
+      "text": "«Какой-то он не такой» – мелькнула мысль."
+    },
+    {
+      "type": "narration",
+      "text": "Впрочем, какая разница – по этому маршруту ходит только 410-ый."
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_10",
+      "action": "load_asset",
+      "location": "anim/intro_10",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_10.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_11",
+      "action": "load_asset",
+      "location": "anim/intro_11",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_11.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "anim",
+      "name": "intro_13",
+      "action": "load_asset",
+      "location": "anim/intro_13",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/anim/intro_13.jpg?raw=true",
+      "duration": null
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "intro_xx",
+      "action": "load_asset",
+      "location": "bg/intro_xx",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/bg/intro_xx.jpg?raw=true"
+    },
+    {
+      "type": "narration",
+      "text": "Огни пролетают мимо, их холодный свет словно зажигает внутри давно погасшие чувства."
+    },
+    {
+      "type": "narration",
+      "text": "Или не зажигает, а просто пробуждает…"
+    },
+    {
+      "type": "narration",
+      "text": "Ведь «они» уже давно живут во мне, то затихая, то просыпаясь вновь."
+    },
+    {
+      "type": "narration",
+      "text": "Какая-то очень известная мелодия играла в радиоприёмнике у водителя.{w} Но я её не слушал."
+    },
+    {
+      "type": "narration",
+      "text": "Я смотрел в запотевшее окно автобуса на проезжающие мимо машины."
+    },
+    {
+      "type": "narration",
+      "text": "Ведь люди куда-то спешат, ведь им что-то нужно, и, погружённые в свои дела, они не задумываются о вопросах, мучающих меня."
+    },
+    {
+      "type": "narration",
+      "text": "Наверное, у них тоже есть свои серьёзные проблемы, а может, им живётся куда легче."
+    },
+    {
+      "type": "narration",
+      "text": "Знать наверняка нельзя, так как все люди разные.{w} Или не разные?"
+    },
+    {
+      "type": "narration",
+      "text": "Бывает, поступки человека легко предсказуемы, но, пытаясь заглянуть к нему в душу, видишь лишь непроглядную тьму."
+    },
+    {
+      "type": "narration",
+      "text": "..."
+    },
+    {
+      "type": "narration",
+      "text": "Автобус приближался к центру, и мои мысли прервал яркий свет огней большого города."
+    },
+    {
+      "type": "narration",
+      "text": "Сотни рекламных вывесок, тысячи машин, миллионы людей."
+    },
+    {
+      "type": "narration",
+      "text": "Я смотрел на это светопреставление, и мне почему-то безумно захотелось спать."
+    },
+    {
+      "type": "narration",
+      "text": "Глаза закрылись всего на полсекунды и…"
+    },
+    {
+      "type": "scene",
+      "kind": "bg",
+      "name": "black",
+      "action": "load_asset",
+      "location": "bg/black",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/images/1920/bg/int_bus_black.jpg?raw=true"
+    },
+    {
+      "type": "opening",
+      "kind": "opening",
+      "name": "opening",
+      "action": "load_asset",
+      "location": "opening/opening",
+      "raw_url": "https://raw.githubusercontent.com/SunnexGB/Heroku-Modules/main/Assets/Everlasting_Summer/opening/opening.mp4?raw=true"
+    }
+  ]
+}
