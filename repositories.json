@@ -249,6 +249,11 @@
             "url": "https://github.com/archquise/q.mods",
             "tags": ["herokutrusted"],
             "blacklist": []
+        },
+        {
+            "url": "https://github.com/SunnexGB/Heroku-Modules/",
+            "tags": ["newbie", "herokutrusted"],
+            "blacklist": ["DevStats.py"]
         }
     ]
 }
