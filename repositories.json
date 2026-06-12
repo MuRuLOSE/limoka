@@ -251,7 +251,7 @@
             "blacklist": []
         },
         {
-            "url": "https://github.com/SunnexGB/Heroku-Modules/",
+            "url": "https://github.com/SunnexGB/Heroku-Modules",
             "tags": ["newbie", "herokutrusted"],
             "blacklist": ["DevStats.py"]
         }
