@@ -469,62 +469,6 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
-    "SunnexGB/Heroku-Modules/SpotifyLyrics.py": {
-      "name": "SpotifyLyrics",
-      "description": "life lyrics current song",
-      "cls_doc": {},
-      "meta": {
-        "pic": "https://r2.fakecrime.bio/uploads/f49a9294-36ad-4fc4-801f-48cb049111d6.jpg",
-        "banner": "https://r2.fakecrime.bio/uploads/f49a9294-36ad-4fc4-801f-48cb049111d6.jpg",
-        "developer": "@SunnexGB",
-        "fhsdesc": "Spotify, music, музыка, спотифай,Lyrics, слова, текст, трек, песня"
-      },
-      "commands": [
-        {
-          "snowl": "- show synchronized lyrics for current Spotify track | (RU) - показать синхронизированный текст песни"
-        }
-      ],
-      "new_commands": [
-        {
-          "name": "snowl",
-          "original_name": "snowlcmd",
-          "description": {
-            "default": "- show synchronized lyrics for current Spotify track",
-            "ru": "- показать синхронизированный текст песни"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        }
-      ],
-      "inline_handlers": [],
-      "strings": {
-        "name": "SpotifyLyrics",
-        "no_spotifymod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod not found,but u can install it. You can also support developer: </b> @ke_mods",
-        "no_auth": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages.</b>",
-        "no_spotify": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on Spotify.</b>",
-        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
-        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
-        "finished": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
-        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
-        "cls_doc_ru": "Лайв слова текущей песни.",
-        "no_spotifymod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @ke_mods",
-        "no_auth_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в SpotifyMod, перейдите в Избранное.</b>",
-        "no_spotify_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В Spotify ничего не играет.</b>",
-        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
-        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
-        "finished_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
-        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>."
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
-      "class_cmd_names": {}
-    },
     "SunnexGB/Heroku-Modules/Mikuru.py": {
       "name": "Mikuru",
       "description": "Censors words with phrase Mikuru Asahina",
@@ -646,6 +590,51 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/tgtheme.py": {
+      "name": "tgtheme",
+      "description": "Module that creates an android-theme from a photo",
+      "cls_doc": {
+        "ru": "Модуль который создает тг-тему по фото"
+      },
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/47308ab9-6035-4e7d-bc96-6b58f864bb33.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/47308ab9-6035-4e7d-bc96-6b58f864bb33.jpg",
+        "developer": "@H_SunMods",
+        "fhsdesc": "Theme, Темы, Sunnex, SunnexGB, H_SunMods"
+      },
+      "commands": [
+        {
+          "android": "- Create tg-theme from a photo | (RU) - Создать тг-тему по фото"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "android",
+          "original_name": "android",
+          "description": {
+            "default": "- Create tg-theme from a photo",
+            "ru": "- Создать тг-тему по фото"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "TgTheme (Mega-BETA)",
+        "no_photo": "<b>Reply to a photo/b>",
+        "no_lib": "<b>Library not loaded</b>",
+        "no_photo_ru": "<b>Ответьте на фото</b>",
+        "no_lib_ru": "<b>Библиотека не загружена</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/SpotiSaver.py": {
       "name": "SpotiSaver",
       "description": "Downloading music from Spotify",
@@ -705,6 +694,96 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/LiveLyrics.py": {
+      "name": "LiveLyrics",
+      "description": "life lyrics current song",
+      "cls_doc": {
+        "ru": "Лайв слова текущей песни."
+      },
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/6725e5a0-0c9e-48ed-be85-dfd857c2aa5f.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/6725e5a0-0c9e-48ed-be85-dfd857c2aa5f.jpg",
+        "developer": "@SunnexGB",
+        "fhsdesc": "Spotify, YaMusic, music, музыка, Lyrics, слова, текст, трек, песня"
+      },
+      "commands": [
+        {
+          "snowl": "- show synchronized lyrics for current track | (RU) - показать синхронизированный текст песни"
+        },
+        {
+          "ynowl": "- show synchronized lyrics for current track | (RU) - показать синхронизированный текст песни"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "snowl",
+          "original_name": "snowlcmd",
+          "description": {
+            "default": "- show synchronized lyrics for current track",
+            "ru": "- показать синхронизированный текст песни"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ynowl",
+          "original_name": "ynowlcmd",
+          "description": {
+            "default": "- show synchronized lyrics for current track",
+            "ru": "- показать синхронизированный текст песни"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "LiveLyrics",
+        "no_spotifymod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod not found,but u can install it. You can also support developer: </b> @ke_mods",
+        "no_yamusic": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod not found,but u can install it. You can also support developer: </b> @codrago_m",
+        "no_auth_spotify": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages.</b>",
+        "no_auth_yamusic": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages and setup token to continue.</b>",
+        "no_spotify": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on Spotify.</b>",
+        "no_ym": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on YaMusic.</b>",
+        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
+        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
+        "TrackEnded": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
+        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
+        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
+        "yamusic_installed": "YaMusic installed!",
+        "spotify_installed": "SpotifyMod installed!",
+        "song_link": "🔗 song.link",
+        "close": "❌ Close",
+        "ok": "OK",
+        "no_spotifymod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @ke_mods",
+        "no_yamusic_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod не найден, но его можно установить. Вы также можете поддержать разработчика: </b> @codrago_m",
+        "no_auth_spotify_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji> <b>Вы не авторизованы в SpotifyMod. Перейдите в Избранное.</b>",
+        "no_auth_yamusic_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в YaMusicMod, перейдите в Избранное и установите токен для продолжения работы.</b>",
+        "no_spotify_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В Spotify ничего не играет.</b>",
+        "no_ym_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В YaMusic ничего не играет.</b>",
+        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
+        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
+        "TrackEnded_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
+        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
+        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>.",
+        "yamusic_installed_ru": "YaMusic Установлен!",
+        "spotify_installed_ru": "SpotifyMod Установлен!",
+        "song_link_ru": "🔗 song.link",
+        "close_ru": "❌ Закрыть",
+        "ok_ru": "OK"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/spotify_ph.py": {
       "name": "spotifyph",
       "description": "Progress bar current track in spotify",
@@ -721,8 +800,8 @@
       "inline_handlers": [],
       "strings": {
         "name": "spotify_ph",
-        "start_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
-        "start_full_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
+        "start_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
+        "start_full_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
         "mid_duration": "<tg-emoji emoji-id=5386623003389888935>🎶</tg-emoji>",
         "empty_mid": "<tg-emoji emoji-id=5384267235302870604>🎶</tg-emoji>",
         "end_duration": "<tg-emoji emoji-id=5386826786703186322>🎶</tg-emoji>",
@@ -753,7 +832,14 @@
       "name": "NoChess",
       "description": "NoChess - web module that allows u to launch a web page either as a functional HTML page or as a Telegram Mini-App. This is an add-on for Chess module by @nullmod",
       "cls_doc": {
-        "ru": "NoChess - Веб модуль который позволяет запускать веб-пейдж,как HTML страницу с функционалом,так же в виде Telegram Mini-App. Является дополнением к модулю Chess от @nullmod"
+        "ru": "NoChess - Веб модуль который позволяет запускать веб-пейдж,как HTML страницу с функционалом,так же в виде Telegram Mini-App. Является дополнением к модулю Chess от @nullmod",
+        "de": "NoChess - Webmodul zum Starten einer Webseite als HTML oder Telegram Mini-App. Erweiterung für Chess von @nullmod",
+        "ua": "NoChess - Веб модуль для запуску веб-сторінки як HTML або Telegram Mini-App. Доповнення до Chess від @nullmod",
+        "jp": "NoChess - HTMLまたはTelegram Mini-Appとしてページを起動するモジュール。Chess（@nullmod）のアドオン",
+        "neofit": "NoChess — web module fer launchin' a page as HTML or Telegram Mini-App. Add-on fer Chess by @nullmod",
+        "tiktok": "NoChess — веб-модуль запускает страничку как HTML или мини-апп в телеге. Аддон к Chess от @nullmod",
+        "leet": "NoChess — w3b m0dul3 t0 l4unch p4g3 4s HTML 0r T3l3gr4m M1n1-4pp. 4dd-0n f0r Ch355 by @nullm0d",
+        "uwu": "NoChess — web moduwe tuwu waunch a page as HTML owr Tewegwam Minyi-App. Add-on fowr Chess by @nuwwmod~"
       },
       "meta": {
         "pic": null,
@@ -762,13 +848,13 @@
       },
       "commands": [
         {
-          "nochess": "[-kill] Call web interface to view chess game | (RU) [-kill] Вызываь веб интерфейс для просмотра партии"
+          "nochess": "[-kill] Call web interface to view chess game | (RU) [-kill] Вызвать веб интерфейс для просмотра партии | (DE) [-kill] Webinterface zum Anzeigen der Partie aufrufen | (UA) [-kill] Викликати веб інтерфейс для перегляду партії | (JP) [-kill] チェスゲームを表示するウェブインターフェースを呼び出す | (NEOFIT) [-kill] Yeet the web ui 2 render a game | (TIKTOK) [-kill] Открыть веб-вьюху шахмат, no 🧢 | (LEET) [-kill] C4ll w3b 1nt3rf4c3 f0r ch355 v13w | (UWU) [-kiww] Caww web intewface fow chess viewie~"
         },
         {
-          "cma": "Create and setup mini-app | (RU) Создает и настраивает эпку"
+          "cma": "Create and setup mini-app | (RU) Создаёт и настраивает мини-приложение через BotFather | (DE) Erstellt und konfiguriert Mini-App via BotFather | (UA) Створює і налаштовує міні-застосунок через BotFather | (JP) BotFather経由でミニアプリを作成・設定します | (NEOFIT) Sp00n-feed BotFather 2 forge ya mini app | (TIKTOK) Делает мини-апп через BotFather, изи | (LEET) Cr34t3 & c0nf19 m1n1-4pp v14 B0tF4th3r | (UWU) Cweates & configuwes mini-app via BotFathew~"
         },
         {
-          "about": "IMPORTANT READING | (RU) ВАЖНО К ПРОЧТЕНИЮ"
+          "about": "IMPORTANT READING | (RU) ВАЖНО К ПРОЧТЕНИЮ | (DE) WICHTIG ZU LESEN | (UA) ВАЖЛИВО ДО ПРОЧИТАННЯ | (JP) 重要なお知らせ | (NEOFIT) RTFM BRO | (TIKTOK) ЧИТНИ СЮДА | (LEET) R34D TH15 | (UWU) WEAD ME!!"
         }
       ],
       "new_commands": [
@@ -777,7 +863,14 @@
           "original_name": "nochess",
           "description": {
             "default": "[-kill] Call web interface to view chess game",
-            "ru": "[-kill] Вызываь веб интерфейс для просмотра партии"
+            "ru": "[-kill] Вызвать веб интерфейс для просмотра партии",
+            "de": "[-kill] Webinterface zum Anzeigen der Partie aufrufen",
+            "ua": "[-kill] Викликати веб інтерфейс для перегляду партії",
+            "jp": "[-kill] チェスゲームを表示するウェブインターフェースを呼び出す",
+            "neofit": "[-kill] Yeet the web ui 2 render a game",
+            "tiktok": "[-kill] Открыть веб-вьюху шахмат, no 🧢",
+            "leet": "[-kill] C4ll w3b 1nt3rf4c3 f0r ch355 v13w",
+            "uwu": "[-kiww] Caww web intewface fow chess viewie~"
           },
           "cmd_names": {},
           "aliases": [],
@@ -791,7 +884,14 @@
           "original_name": "cma",
           "description": {
             "default": "Create and setup mini-app",
-            "ru": "Создает и настраивает эпку"
+            "ru": "Создаёт и настраивает мини-приложение через BotFather",
+            "de": "Erstellt und konfiguriert Mini-App via BotFather",
+            "ua": "Створює і налаштовує міні-застосунок через BotFather",
+            "jp": "BotFather経由でミニアプリを作成・設定します",
+            "neofit": "Sp00n-feed BotFather 2 forge ya mini app",
+            "tiktok": "Делает мини-апп через BotFather, изи",
+            "leet": "Cr34t3 & c0nf19 m1n1-4pp v14 B0tF4th3r",
+            "uwu": "Cweates & configuwes mini-app via BotFathew~"
           },
           "cmd_names": {},
           "aliases": [],
@@ -805,7 +905,14 @@
           "original_name": "about",
           "description": {
             "default": "IMPORTANT READING",
-            "ru": "ВАЖНО К ПРОЧТЕНИЮ"
+            "ru": "ВАЖНО К ПРОЧТЕНИЮ",
+            "de": "WICHTIG ZU LESEN",
+            "ua": "ВАЖЛИВО ДО ПРОЧИТАННЯ",
+            "jp": "重要なお知らせ",
+            "neofit": "RTFM BRO",
+            "tiktok": "ЧИТНИ СЮДА",
+            "leet": "R34D TH15",
+            "uwu": "WEAD ME!!"
           },
           "cmd_names": {},
           "aliases": [],
@@ -823,8 +930,7 @@
         "already_running": "ʕᵕᴥᵕʔ <b>NoChess is already running</b>",
         "stopped": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess stopped",
         "not_running": "(✿╹◡╹) NoChess is not running",
-        "ngrok_missing": "Set a <code>ngrok_token</code>",
-        "ngrok_error": "Ngrok start error: <code>{}</code>",
+        "tunnel_error": "Serveo tunnel error: <code>{}</code>",
         "asset_read_error": "Failed to load web assets: <code>{}</code>",
         "open_button": "Open mini-app",
         "stop_button": "Stop",
@@ -840,8 +946,7 @@
         "already_running_ru": "ʕᵕᴥᵕʔ <b>NoChess уже запущен</b>",
         "stopped_ru": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess остановлен",
         "not_running_ru": "(✿╹◡╹) NoChess не запущен",
-        "ngrok_missing_ru": "Укажи <code>ngrok_token</code>",
-        "ngrok_error_ru": "Ошибка запуска ngrok: <code>{}</code>",
+        "tunnel_error_ru": "Ошибка туннеля Serveo: <code>{}</code>",
         "asset_read_error_ru": "Не удалось загрузить веб-ассеты: <code>{}</code>",
         "open_button_ru": "Открыть мини-приложение",
         "stop_button_ru": "Остановить",
@@ -851,66 +956,122 @@
         "cma_done_ru": "(*˘︶˘*) <b>Готово</b>",
         "cma_error_ru": "Ошибка: <code>{}</code>",
         "RuntimeError_ru": "юз инлайн бота не найден",
-        "not_supported_platform_ru": "(┬┬＿┬┬) К сожалению, на эту платформу невозможно установить этот модуль.\n\n(〜^∇^)〜 Это не ошибка, пожалуйста, не обращайтесь в поддержку."
+        "not_supported_platform_ru": "(┬┬＿┬┬) К сожалению, на эту платформу невозможно установить этот модуль.\n\n(〜^∇^)〜 Это не ошибка, пожалуйста, не обращайтесь в поддержку.",
+        "starting_de": "( ﾉ･ｪ･ )ﾉ <b>Starte NoChess...</b>",
+        "online_de": "(*˘︶˘*) <b>NoChess läuft</b>",
+        "already_running_de": "ʕᵕᴥᵕʔ <b>NoChess läuft bereits</b>",
+        "stopped_de": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess gestoppt",
+        "not_running_de": "(✿╹◡╹) NoChess läuft nicht",
+        "tunnel_error_de": "Serveo-Tunnel-Fehler: <code>{}</code>",
+        "asset_read_error_de": "Fehler beim Laden der Web-Assets: <code>{}</code>",
+        "open_button_de": "Mini-App öffnen",
+        "stop_button_de": "Stopp",
+        "about_text_de": "<b>Wichtig zu lesen:</b>\nManchmal startet der Server nicht, weil zu viele Prozesse laufen. <code>cma</code> richtet die App über eine Vorlage ein, musst einige Web-App-Einstellungen selbst setzen.\nUnd außerdem:\n    1. Erster Start beginnt direkt mit einem Seitenlink, nicht als Web-App\n    2. Verwende <code>nochess</code> und dann <code>cma</code> zum Einrichten\n    3. Danach Prozess neustarten mit <code>nochess -kill</code> und nochmal <code>nochess</code>\nPre-Alpha, später 1.0.0 falls die Leute die Idee mögen.",
+        "cma_start_de": "( ﾉ･ｪ･ )ﾉ <b>Erstelle Mini-App im BotFather...</b>",
+        "cma_need_url_de": "Setze zuerst die Mini-App-Web-URL oder führe <code>.nochess</code> aus.",
+        "cma_done_de": "(*˘︶˘*) <b>Fertig.</b>",
+        "cma_error_de": "Fehler: <code>{}</code>",
+        "RuntimeError_de": "Inline-Bot-Benutzername nicht gefunden",
+        "not_supported_platform_de": "(┬┬＿┬┬) Leider unmöglich, dieses Modul auf dieser Plattform zu installieren.\n\n(〜^∇^)〜 Kein Fehler, Support nicht kontaktieren.",
+        "starting_ua": "( ﾉ･ｪ･ )ﾉ <b>Запуск NoChess...</b>",
+        "online_ua": "(*˘︶˘*) <b>NoChess запущено</b>",
+        "already_running_ua": "ʕᵕᴥᵕʔ <b>NoChess вже запущено</b>",
+        "stopped_ua": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess зупинено",
+        "not_running_ua": "(✿╹◡╹) NoChess не запущено",
+        "tunnel_error_ua": "Помилка тунелю Serveo: <code>{}</code>",
+        "asset_read_error_ua": "Не вдалося завантажити веб-ассети: <code>{}</code>",
+        "open_button_ua": "Відкрити міні-застосунок",
+        "stop_button_ua": "Зупинити",
+        "about_text_ua": "<b>Важливо прочитати:</b>\nІноді сервер не запускається через забагато процесів. <code>cma</code> налаштовує за шаблоном — налаштуйте веб-застосунок самостійно.\nА ще:\n    1. Перший запуск — одразу посилання на сайт, не веб-застосунок\n    2. Використовуйте <code>nochess</code>, потім <code>cma</code> для налаштування\n    3. Перезапустіть процес: <code>nochess -kill</code>, потім <code>nochess</code>\nПре-альфа, пізніше 1.0.0 якщо ідея сподобається.",
+        "cma_start_ua": "( ﾉ･ｪ･ )ﾉ <b>Створюю міні-застосунок через BotFather...</b>",
+        "cma_need_url_ua": "Спочатку вкажи URL або запусти <code>.nochess</code>",
+        "cma_done_ua": "(*˘︶˘*) <b>Готово.</b>",
+        "cma_error_ua": "Помилка: <code>{}</code>",
+        "RuntimeError_ua": "юзернейм інлайн-бота не знайдено",
+        "not_supported_platform_ua": "(┬┬＿┬┬) На жаль, неможливо встановити цей модуль на цю платформу.\n\n(〜^∇^)〜 Це не помилка, не звертайтесь у підтримку.",
+        "starting_jp": "( ﾉ･ｪ･ )ﾉ <b>NoChessを起動中...</b>",
+        "online_jp": "(*˘︶˘*) <b>NoChessは実行中です</b>",
+        "already_running_jp": "ʕᵕᴥᵕʔ <b>NoChessはすでに実行中です</b>",
+        "stopped_jp": "･ﾟ･(｡>д<｡)･ﾟ･ NoChessを停止しました",
+        "not_running_jp": "(✿╹◡╹) NoChessは実行されていません",
+        "tunnel_error_jp": "Serveoトンネルエラー: <code>{}</code>",
+        "asset_read_error_jp": "Webアセットの読み込みに失敗: <code>{}</code>",
+        "open_button_jp": "ミニアプリを開く",
+        "stop_button_jp": "停止",
+        "about_text_jp": "<b>重要なお知らせ:</b>\nプロセスが多すぎてサーバーが起動しないことがあります。<code>cma</code>はテンプレートでアプリをセットアップしますが歪なので自分で設定してください。\nさらに:\n    1. 最初の起動はWebアプリではなくサイトリンクで開始\n    2. <code>nochess</code>を使い、<code>cma</code>で設定\n    3. <code>nochess -kill</code>してから再度<code>nochess</code>\nプレアルファ版、後で1.0.0に変更予定。",
+        "cma_start_jp": "( ﾉ･ｪ･ )ﾉ <b>BotFatherでミニアプリを作成中...</b>",
+        "cma_need_url_jp": "最初にミニアプリのURLを設定するか、<code>.nochess</code>を実行してください",
+        "cma_done_jp": "(*˘︶˘*) <b>完了。</b>",
+        "cma_error_jp": "エラー: <code>{}</code>",
+        "RuntimeError_jp": "インラインボットのユーザー名が見つかりません",
+        "not_supported_platform_jp": "(┬┬＿┬┬) このプラットフォームにはインストールできません。\n\n(〜^∇^)〜 エラーではありません。サポートに連絡しないでください。",
+        "starting_neofit": "( ﾉ･ｪ･ )ﾉ <b>Spinnin' up NoChess...</b>",
+        "online_neofit": "(*˘︶˘*) <b>NoChess is live, fam</b>",
+        "already_running_neofit": "ʕᵕᴥᵕʔ <b>NoChess already cookin'</b>",
+        "stopped_neofit": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess iced",
+        "not_running_neofit": "(✿╹◡╹) NoChess ain't up",
+        "tunnel_error_neofit": "Serveo tunnel bricked: <code>{}</code>",
+        "asset_read_error_neofit": "Couldn't snag web assets: <code>{}</code>",
+        "open_button_neofit": "Pop the mini-app",
+        "stop_button_neofit": "Cut it",
+        "about_text_neofit": "<b>RTFM:</b>\nBox won't lift sometimes 'cause too many procs — just reboot. <code>cma</code> uses a jank template so tweak config yerself.\nAlso:\n    1. First run = site link, not web app\n    2. Hit <code>nochess</code> then <code>cma</code> to rig it\n    3. Bounce the proc with <code>nochess -kill</code> + <code>nochess</code>\nPre-alpha slop, gonna bump to 1.0.0 if peeps vibe.",
+        "cma_start_neofit": "( ﾉ･ｪ･ )ﾉ <b>Forgin' mini app via BotFather...</b>",
+        "cma_need_url_neofit": "Drop a mini-app URL first or run <code>.nochess</code>",
+        "cma_done_neofit": "(*˘︶˘*) <b>Ship it.</b>",
+        "cma_error_neofit": "L + ratio: <code>{}</code>",
+        "RuntimeError_neofit": "inline bot handle MIA",
+        "not_supported_platform_neofit": "(┬┬＿┬┬) No shot installin' here.\n\n(〜^∇^)〜 Not a bug, don't ping support.",
+        "starting_tiktok": "( ﾉ･ｪ･ )ﾉ <b>Газуем NoChess...</b>",
+        "online_tiktok": "(*˘︶˘*) <b>NoChess на стиле</b>",
+        "already_running_tiktok": "ʕᵕᴥᵕʔ <b>NoChess уже тащит</b>",
+        "stopped_tiktok": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess слился",
+        "not_running_tiktok": "(✿╹◡╹) NoChess не в теме",
+        "tunnel_error_tiktok": "Serveo тунель крашнулся: <code>{}</code>",
+        "asset_read_error_tiktok": "Не смог забрать ассеты: <code>{}</code>",
+        "open_button_tiktok": "Открыть мини-апп",
+        "stop_button_tiktok": "Стопэ",
+        "about_text_tiktok": "<b>Читни сюда:</b>\nБывает серв не поднимается — процов дофига, ребутаю. <code>cma</code> сетапит криво, конфиг руками.\nИ ещё:\n    1. Первый запуск — сразу ссылка на сайт, не апп\n    2. Юзай <code>nochess</code>, потом <code>cma</code>\n    3. Дропни через <code>nochess -kill</code> и снова <code>nochess</code>\nПре-альфа дичь, потом 1.0.0 если залетит.",
+        "cma_start_tiktok": "( ﾉ･ｪ･ )ﾉ <b>Делаю мини-апп через BotFather...</b>",
+        "cma_need_url_tiktok": "Сначала кинь URL или жмякни <code>.nochess</code>",
+        "cma_done_tiktok": "(*˘︶˘*) <b>Запилил.</b>",
+        "cma_error_tiktok": "Ой фейл: <code>{}</code>",
+        "RuntimeError_tiktok": "юз бота не нашли",
+        "not_supported_platform_tiktok": "(┬┬＿┬┬) Сорян, на эту платформу модуль не встанет.\n\n(〜^∇^)〜 Не ошибка, в саппорт не пиши.",
+        "starting_leet": "( ﾉ･ｪ･ )ﾉ <b>B00t1ng N0Ch355...</b>",
+        "online_leet": "(*˘︶˘*) <b>N0Ch355 15 1n th3 m4tr1x</b>",
+        "already_running_leet": "ʕᵕᴥᵕʔ <b>N0Ch355 4lr34dy 0n</b>",
+        "stopped_leet": "･ﾟ･(｡>д<｡)･ﾟ･ N0Ch355 t3rm1n4t3d",
+        "not_running_leet": "(✿╹◡╹) N0Ch355 0ffl1n3",
+        "tunnel_error_leet": "S3rv30 tunn3l f41l: <code>{}</code>",
+        "asset_read_error_leet": "F41l3d t0 f3tch w3b 4553t5: <code>{}</code>",
+        "open_button_leet": "0p3n m1n1-4pp",
+        "stop_button_leet": "K1ll",
+        "about_text_leet": "<b>R34D TH15:</b>\nB0x w0n't l1ft cuz 2 m4ny pr0c5 — r3b00t. <c0d3>cm4</c0d3> j4nk t3mpl4t3, c0nf1g m4nu4lly.\n4l50:\n    1. F1r5t run = 51t3 l1nk, n0t w3b 4pp\n    2. U53 <c0d3>n0ch355</c0d3> + <c0d3>cm4</c0d3>\n    3. B0unc3 w1th <c0d3>n0ch355 -k1ll</c0d3> + <c0d3>n0ch355</c0d3>\nPr3-4lph4, bump1n t0 1.0.0 1f p33p5 v1b3.",
+        "cma_start_leet": "( ﾉ･ｪ･ )ﾉ <b>C0njur1n9 m1n1 4pp v14 B0tF4th3r...</b>",
+        "cma_need_url_leet": "Dr0p 4 URL f1r5t 0r run <c0d3>.n0ch355</c0d3>",
+        "cma_done_leet": "(*˘︶˘*) <b>5h1pp3d.</b>",
+        "cma_error_leet": "F41l: <code>{}</code>",
+        "RuntimeError_leet": "1nl1n3 b0t h4ndl3 n0t f0und",
+        "not_supported_platform_leet": "(┬┬＿┬┬) N0 5h0t 1n5t4ll1n' h3r3.\n\n(〜^∇^)〜 N0t 4 bu9, d0n't p1n9 5upp0rt.",
+        "starting_uwu": "( ﾉ･ｪ･ )ﾉ <b>Spinning up NoChess-chan...</b>",
+        "online_uwu": "(*˘︶˘*) <b>NoChess is wunning, nyaa~</b>",
+        "already_running_uwu": "ʕᵕᴥᵕʔ <b>NoChess awweady wunning, hehe</b>",
+        "stopped_uwu": "･ﾟ･(｡>д<｡)･ﾟ･ NoChess went bye-bye",
+        "not_running_uwu": "(✿╹◡╹) NoChess is sweepy...",
+        "tunnel_error_uwu": "Serveo tunnew-bun oopsie: <code>{}</code>",
+        "asset_read_error_uwu": "Couwdn't fetch the pwetty assets: <code>{}</code>",
+        "open_button_uwu": "Open minyi-app~",
+        "stop_button_uwu": "Stahp pwease",
+        "about_text_uwu": "<b>Pwease wead cawefuwwy:</b>\nSewvew won't wake up cuz too many pwocesses. <code>cma</code> setups fwom wonky tempwate, tweak config yuwsewf.\nAwso:\n    1. Fiwst waunch = site wink, not web app\n    2. Use <code>nochess</code>, den <code>cma</code>\n    3. Westawt wiff <code>nochess -kill</code> + <code>nochess</code>\nPwe-awpha, watew 1.0.0 if peopwe wike~. ",
+        "cma_start_uwu": "( ﾉ･ｪ･ )ﾉ <b>Making minyi-app in BotFather-chan...</b>",
+        "cma_need_url_uwu": "Set URL fiwst owr wun <code>.nochess</code>, pwease~",
+        "cma_done_uwu": "(*˘︶˘*) <b>Aww done, nya!</b>",
+        "cma_error_uwu": "Oopsie woopsie: <code>{}</code>",
+        "RuntimeError_uwu": "inyine bot usewnyame nyot found",
+        "not_supported_platform_uwu": "(┬┬＿┬┬) Unfowtunyatewy, can't instaww hewe.\n\n(〜^∇^)〜 Nyot an ewwow, don't contact suppowt."
       },
       "has_on_load": false,
       "has_on_unload": true,
-      "class_cmd_names": {}
-    },
-    "SunnexGB/Heroku-Modules/YandexLyrics.py": {
-      "name": "YandexLyrics",
-      "description": "life lyrics current song",
-      "cls_doc": {},
-      "meta": {
-        "pic": "https://r2.fakecrime.bio/uploads/ab42b5e2-91f1-4ed1-8002-51b3184e3839.jpg",
-        "banner": "https://r2.fakecrime.bio/uploads/ab42b5e2-91f1-4ed1-8002-51b3184e3839.jpg",
-        "developer": "@SunnexGB",
-        "fhsdesc": "YaMusic, music, музыка, яндекс музыка,Lyrics, слова, текст, трек, песня"
-      },
-      "commands": [
-        {
-          "ynowl": "- show synchronized lyrics for current YaMusic track | (RU) - показать синхронизированный текст песни"
-        }
-      ],
-      "new_commands": [
-        {
-          "name": "ynowl",
-          "original_name": "ynowlcmd",
-          "description": {
-            "default": "- show synchronized lyrics for current YaMusic track",
-            "ru": "- показать синхронизированный текст песни"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        }
-      ],
-      "inline_handlers": [],
-      "strings": {
-        "name": "YandexLyrics",
-        "no_YaMusicMod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod not found,but u can install it. You can also support developer: </b> @codrago_m",
-        "no_auth": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages and setup token to continue.</b>",
-        "no_ym": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on YaMusic.</b>",
-        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
-        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
-        "finished": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
-        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
-        "cls_doc_ru": "Лайв слова текущей песни.",
-        "no_YaMusicMod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @codrago_m",
-        "no_auth_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в YaMusicMod, перейдите в Избранное и установите токен для продолжения работы.</b>",
-        "no_ym_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В YaMusic ничего не играет.</b>",
-        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
-        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
-        "finished_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
-        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>."
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
       "class_cmd_names": {}
     },
     "SunnexGB/Heroku-Modules/Hangman.py": {
@@ -80017,6 +80178,6 @@
   },
   "meta": {
     "total_modules": 1011,
-    "generated_at": "2026-06-12T08:37:15.698186"
+    "generated_at": "2026-06-26T02:42:20.610422"
   }
 }
