@@ -469,62 +469,6 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
-    "SunnexGB/Heroku-Modules/SpotifyLyrics.py": {
-      "name": "SpotifyLyrics",
-      "description": "life lyrics current song",
-      "cls_doc": {},
-      "meta": {
-        "pic": "https://r2.fakecrime.bio/uploads/f49a9294-36ad-4fc4-801f-48cb049111d6.jpg",
-        "banner": "https://r2.fakecrime.bio/uploads/f49a9294-36ad-4fc4-801f-48cb049111d6.jpg",
-        "developer": "@SunnexGB",
-        "fhsdesc": "Spotify, music, музыка, спотифай,Lyrics, слова, текст, трек, песня"
-      },
-      "commands": [
-        {
-          "snowl": "- show synchronized lyrics for current Spotify track | (RU) - показать синхронизированный текст песни"
-        }
-      ],
-      "new_commands": [
-        {
-          "name": "snowl",
-          "original_name": "snowlcmd",
-          "description": {
-            "default": "- show synchronized lyrics for current Spotify track",
-            "ru": "- показать синхронизированный текст песни"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        }
-      ],
-      "inline_handlers": [],
-      "strings": {
-        "name": "SpotifyLyrics",
-        "no_spotifymod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod not found,but u can install it. You can also support developer: </b> @ke_mods",
-        "no_auth": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages.</b>",
-        "no_spotify": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on Spotify.</b>",
-        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
-        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
-        "finished": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
-        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
-        "cls_doc_ru": "Лайв слова текущей песни.",
-        "no_spotifymod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @ke_mods",
-        "no_auth_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в SpotifyMod, перейдите в Избранное.</b>",
-        "no_spotify_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В Spotify ничего не играет.</b>",
-        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
-        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
-        "finished_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
-        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>."
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
-      "class_cmd_names": {}
-    },
     "SunnexGB/Heroku-Modules/Mikuru.py": {
       "name": "Mikuru",
       "description": "Censors words with phrase Mikuru Asahina",
@@ -646,6 +590,51 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/tgtheme.py": {
+      "name": "tgtheme",
+      "description": "Module that creates an android-theme from a photo",
+      "cls_doc": {
+        "ru": "Модуль который создает тг-тему по фото"
+      },
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/47308ab9-6035-4e7d-bc96-6b58f864bb33.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/47308ab9-6035-4e7d-bc96-6b58f864bb33.jpg",
+        "developer": "@H_SunMods",
+        "fhsdesc": "Theme, Темы, Sunnex, SunnexGB, H_SunMods"
+      },
+      "commands": [
+        {
+          "android": "- Create tg-theme from a photo | (RU) - Создать тг-тему по фото"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "android",
+          "original_name": "android",
+          "description": {
+            "default": "- Create tg-theme from a photo",
+            "ru": "- Создать тг-тему по фото"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "TgTheme (Mega-BETA)",
+        "no_photo": "<b>Reply to a photo/b>",
+        "no_lib": "<b>Library not loaded</b>",
+        "no_photo_ru": "<b>Ответьте на фото</b>",
+        "no_lib_ru": "<b>Библиотека не загружена</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/SpotiSaver.py": {
       "name": "SpotiSaver",
       "description": "Downloading music from Spotify",
@@ -705,6 +694,215 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/DigitalGarden.py": {
+      "name": "DigitalGarden",
+      "description": "Module for publick your notes to web",
+      "cls_doc": {
+        "ru": "Модуль для публикации ваших заметок в веб"
+      },
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/5a53da6e-111c-4174-a468-e71b922075d8.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/5a53da6e-111c-4174-a468-e71b922075d8.jpg",
+        "developer": "@H_SunMods",
+        "fhsdesc": "Obsidian, Notes, Web, H_SunMods, Sunnex, SunnexGB"
+      },
+      "commands": [
+        {
+          "dg": "Publish your note to web .dg Name | (RU) Опубликовать вашу заметку в веб .dg Name"
+        },
+        {
+          "dgc": "Managing status dg-tags | (RU) Управление статусом dg-тегов"
+        },
+        {
+          "guide": "Getting started Guide for module | (RU) Гайд для работы с модулем"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "dg",
+          "original_name": "dg",
+          "description": {
+            "default": "Publish your note to web .dg Name",
+            "ru": "Опубликовать вашу заметку в веб .dg Name"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "dgc",
+          "original_name": "dgc",
+          "description": {
+            "default": "Managing status dg-tags",
+            "ru": "Управление статусом dg-тегов"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "guide",
+          "original_name": "guide",
+          "description": {
+            "default": "Getting started Guide for module",
+            "ru": "Гайд для работы с модулем"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "DigitalGarden",
+        "no_config": "<b>Config not set.</b> Use <code>{prefix}cfg DigitalGarden</code> and enter <code>repo_name</code>, <code>username</code> and <code>github_token</code>",
+        "no_args": "<b>Usage:</b> <code>{prefix}dg Name [tag1,tag2]</code>",
+        "no_reply": "<b>Reply to message or <code>.txt</code> or <code>.md</code></b>",
+        "published": "<b>Note <code>{name}</code> published! Waiting end deploy.</b>",
+        "updated": "<b>Note <code>{name}</code> updated! Waiting end deploy.</b>",
+        "tags_updated": "<b>For note <code>{name}</code> tags be updated.</b>",
+        "not_found": "<b>Note <code>{name}</code> not found in repository.</b>",
+        "unsupported_file": "<b>Only <code>.txt</code> and <code>.md</code> are supported</b>",
+        "push_error": "<b>Failed to push.</b>",
+        "upd_note": "Update note",
+        "upd_settings": "Update settings",
+        "guide": "<b>module setup guide => </b><a href=\"https://sunnexgb.github.io/Heroku-documentations-md/guide-for-digital-garden-module/\"><b>here</b></a>",
+        "_cfg_doc_repo_name_cfg": "The name of the GitHub repository",
+        "_cfg_doc_username_cfg": "Your GitHub username",
+        "_cfg_doc_github_token_cfg": "A GitHub token with contents permissions. You can see how to generate it <a href=\"https://docs.forestry.md/advanced/fine-grained-access-token/\"> here!</a>",
+        "_cfg_doc_theme_cfg": "Theme a your website\n <b>themes list:</b> <a href=\"https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-css-themes.json\"> here!</a>",
+        "_cfg_doc_sitename_cfg": "The name of your site. This will be displayed as the site header.",
+        "_cfg_doc_logo_cfg": "Raw path to an image in your vault to use as a logo instead of the sitename. Leave blank to show sitename text.",
+        "_cfg_doc_main_lang_cfg": "Main page language",
+        "_cfg_doc_fav_icon_cfg": "Icon for your site",
+        "_cfg_doc_full_resolution_cfg": "By default, the images on your site are compressed to make your site load faster. If you instead want to use the full resolution images, enable this setting.",
+        "_cfg_doc_custom_filters_cfg": "Define regex filters to replace note content before publishing.\nFormat: <code>regex pattern, replacement, regex flags</code>\nExample: filter <code>:smile:,🦊, g</code> will replace text with real emojis",
+        "no_config_ru": "<b>Конфиг не настроен.</b> Используй <code>{prefix}cfg DigitalGarden</code> и вставь <code>repo_name</code>, <code>username</code> и <code>github_token</code>",
+        "no_args_ru": "<b>Ты не указал аргументов:</b> <code>{prefix}dg Название [тег1,тег2]</code>",
+        "no_reply_ru": "<b>Ответь на сообщение или на файл <code>.txt</code> или <code>.md</code></b>",
+        "published_ru": "<b>Заметка <code>{name}</code> опубликована! Ожидайте окончания деплоя.</b>",
+        "updated_ru": "<b>Заметка <code>{name}</code> обновлена! Ожидайте окончания деплоя.</b>",
+        "tags_updated_ru": "<b>Для заметки <code>{name}</code> были обновлены теги.</b>",
+        "not_found_ru": "<b>Заметка <code>{name}</code> не найдена в репозитории.</b>",
+        "unsupported_file_ru": "<b>Поддерживаются только <code>.txt</code> и <code>.md</code></b>",
+        "push_error_ru": "<b>Не удалось запушить</b>",
+        "upd_note_ru": "Обновление заметки",
+        "upd_settings_ru": "Обновление настроек",
+        "guide_ru": "<b>гайд по настройке модуля => </b><a href=\"https://sunnexgb.github.io/Heroku-documentations-md/guide-for-digital-garden-module/\"><b>тут</b></a>",
+        "_cfg_doc_repo_name_cfg_ru": "Название гитхаб репозитория",
+        "_cfg_doc_username_cfg_ru": "Ваш гитхаб юзернейм",
+        "_cfg_doc_github_token_cfg_ru": "Гитхаб токен. Инструкция по тому как создать токен можно узанть <a href=\"https://docs.forestry.md/advanced/fine-grained-access-token/\"> тут!</a>",
+        "_cfg_doc_theme_cfg_ru": "Тема для вашего веб-сайта\n <b>Список тем:</b> <a href=\"https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-css-themes.json\"> тут!</a>",
+        "_cfg_doc_sitename_cfg_ru": "Имя сайта которое будет отображаться в заголовке сайта",
+        "_cfg_doc_logo_cfg_ru": "Абсолютный путь к лого, которое будет использоваться в качестве логотипа вместо названия сайта. Оставьте поле пустым, чтобы отобразить название сайта.",
+        "_cfg_doc_main_lang_cfg_ru": "ну язык сайта в целом бесполезная хуйня",
+        "_cfg_doc_fav_icon_cfg_ru": "Иконка для вашего сайта",
+        "_cfg_doc_full_resolution_cfg_ru": "По умолчанию изображения на вашем сайте сжимаются, чтобы ускорить деплой. Если вы хотите использовать изображения в оригинале, включите этот параметр.",
+        "_cfg_doc_custom_filters_cfg_ru": "Регекс фильтры для заменты текста перед публикацией.\nСинтаксис: <code>регекс, на что заменить, регекс флаги</code>\nПример: <code>:smile:,🦊, g</code> заменит текст на настоящие смайлики"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
+    "SunnexGB/Heroku-Modules/LiveLyrics.py": {
+      "name": "LiveLyrics",
+      "description": "life lyrics current song",
+      "cls_doc": {
+        "ru": "Лайв слова текущей песни."
+      },
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/6725e5a0-0c9e-48ed-be85-dfd857c2aa5f.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/6725e5a0-0c9e-48ed-be85-dfd857c2aa5f.jpg",
+        "developer": "@SunnexGB",
+        "fhsdesc": "Spotify, YaMusic, music, музыка, Lyrics, слова, текст, трек, песня"
+      },
+      "commands": [
+        {
+          "snowl": "- show synchronized lyrics for current track | (RU) - показать синхронизированный текст песни"
+        },
+        {
+          "ynowl": "- show synchronized lyrics for current track | (RU) - показать синхронизированный текст песни"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "snowl",
+          "original_name": "snowlcmd",
+          "description": {
+            "default": "- show synchronized lyrics for current track",
+            "ru": "- показать синхронизированный текст песни"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ynowl",
+          "original_name": "ynowlcmd",
+          "description": {
+            "default": "- show synchronized lyrics for current track",
+            "ru": "- показать синхронизированный текст песни"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "LiveLyrics",
+        "no_spotifymod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod not found,but u can install it. You can also support developer: </b> @ke_mods",
+        "no_yamusic": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod not found,but u can install it. You can also support developer: </b> @codrago_m",
+        "no_auth_spotify": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages.</b>",
+        "no_auth_yamusic": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages and setup token to continue.</b>",
+        "no_spotify": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on Spotify.</b>",
+        "no_ym": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on YaMusic.</b>",
+        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
+        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
+        "TrackEnded": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
+        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
+        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
+        "yamusic_installed": "YaMusic installed!",
+        "spotify_installed": "SpotifyMod installed!",
+        "song_link": "🔗 song.link",
+        "close": "❌ Close",
+        "ok": "OK",
+        "no_spotifymod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>SpotifyMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @ke_mods",
+        "no_yamusic_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod не найден, но его можно установить. Вы также можете поддержать разработчика: </b> @codrago_m",
+        "no_auth_spotify_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji> <b>Вы не авторизованы в SpotifyMod. Перейдите в Избранное.</b>",
+        "no_auth_yamusic_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в YaMusicMod, перейдите в Избранное и установите токен для продолжения работы.</b>",
+        "no_spotify_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В Spotify ничего не играет.</b>",
+        "no_ym_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В YaMusic ничего не играет.</b>",
+        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
+        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
+        "TrackEnded_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
+        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
+        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>.",
+        "yamusic_installed_ru": "YaMusic Установлен!",
+        "spotify_installed_ru": "SpotifyMod Установлен!",
+        "song_link_ru": "🔗 song.link",
+        "close_ru": "❌ Закрыть",
+        "ok_ru": "OK"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/spotify_ph.py": {
       "name": "spotifyph",
       "description": "Progress bar current track in spotify",
@@ -721,8 +919,8 @@
       "inline_handlers": [],
       "strings": {
         "name": "spotify_ph",
-        "start_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
-        "start_full_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
+        "start_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
+        "start_full_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
         "mid_duration": "<tg-emoji emoji-id=5386623003389888935>🎶</tg-emoji>",
         "empty_mid": "<tg-emoji emoji-id=5384267235302870604>🎶</tg-emoji>",
         "end_duration": "<tg-emoji emoji-id=5386826786703186322>🎶</tg-emoji>",
@@ -855,62 +1053,6 @@
       },
       "has_on_load": false,
       "has_on_unload": true,
-      "class_cmd_names": {}
-    },
-    "SunnexGB/Heroku-Modules/YandexLyrics.py": {
-      "name": "YandexLyrics",
-      "description": "life lyrics current song",
-      "cls_doc": {},
-      "meta": {
-        "pic": "https://r2.fakecrime.bio/uploads/ab42b5e2-91f1-4ed1-8002-51b3184e3839.jpg",
-        "banner": "https://r2.fakecrime.bio/uploads/ab42b5e2-91f1-4ed1-8002-51b3184e3839.jpg",
-        "developer": "@SunnexGB",
-        "fhsdesc": "YaMusic, music, музыка, яндекс музыка,Lyrics, слова, текст, трек, песня"
-      },
-      "commands": [
-        {
-          "ynowl": "- show synchronized lyrics for current YaMusic track | (RU) - показать синхронизированный текст песни"
-        }
-      ],
-      "new_commands": [
-        {
-          "name": "ynowl",
-          "original_name": "ynowlcmd",
-          "description": {
-            "default": "- show synchronized lyrics for current YaMusic track",
-            "ru": "- показать синхронизированный текст песни"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        }
-      ],
-      "inline_handlers": [],
-      "strings": {
-        "name": "YandexLyrics",
-        "no_YaMusicMod": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod not found,but u can install it. You can also support developer: </b> @codrago_m",
-        "no_auth": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> You not authorized in SpotifyMod, visit you Saved Messages and setup token to continue.</b>",
-        "no_ym": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>Nothing is playing on YaMusic.</b>",
-        "no_lyrics": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Lyrics not found for:</b> <code>{}</code>",
-        "not_synced": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Lyrics are not synchronized.</i>\n\n",
-        "finished": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Playback ended or track changed.",
-        "header": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Oopsi, looks like we've got a timeout here</b>.",
-        "cls_doc_ru": "Лайв слова текущей песни.",
-        "no_YaMusicMod_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>YaMusicMod не найден,но его можно установить. Вы также можете поддержать разработчика: </b> @codrago_m",
-        "no_auth_ru": "<tg-emoji emoji-id=5429225166250984904>⁉️</tg-emoji><b> Вы не авторизированы в YaMusicMod, перейдите в Избранное и установите токен для продолжения работы.</b>",
-        "no_ym_ru": "<tg-emoji emoji-id=5429164207780152924>😅</tg-emoji> <b>В YaMusic ничего не играет.</b>",
-        "no_lyrics_ru": "<tg-emoji emoji-id=5431402435497181911>💢</tg-emoji> <b>Текст не найден для:</b> <code>{}</code>",
-        "not_synced_ru": "<i><tg-emoji emoji-id=5431445849026611010>⚠️</tg-emoji> Текст не синхронизирован.</i>\n\n",
-        "finished_ru": "<tg-emoji emoji-id=5429638011392377649>‼️</tg-emoji> Воспроизведение завершено или трек сменился.",
-        "header_ru": "<tg-emoji emoji-id=5429413328768224565>🎤</tg-emoji> <b>{} - {}</b>\n\n",
-        "timeout_ru": "<b><tg-emoji emoji-id=5429455831764584284>⏳</tg-emoji></b><b> Упси, похоже кто то словил таймаут.</b>."
-      },
-      "has_on_load": false,
-      "has_on_unload": false,
       "class_cmd_names": {}
     },
     "SunnexGB/Heroku-Modules/Hangman.py": {
@@ -56769,6 +56911,47 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "mead0wsss/mead0wsMods/ramka.py": {
+      "name": "RamkaMod",
+      "description": "Вставляет фото в рамку",
+      "cls_doc": {},
+      "meta": {
+        "pic": null,
+        "banner": null,
+        "developer": "@mead0wssMods"
+      },
+      "commands": [
+        {
+          "ramka": "- Сделай реплай на фото, чтобы вставить его в рамку"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "ramka",
+          "original_name": "ramka",
+          "description": {
+            "default": "- Сделай реплай на фото, чтобы вставить его в рамку"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "Ramka",
+        "no_reply": "<b><tg-emoji emoji-id=5870782662234346251>🖼</tg-emoji></b><b> Требуется реплай на фото!</b>",
+        "processing": "<tg-emoji emoji-id=5116476703002068797>⌛️</tg-emoji> <b>Процесс создания рамки...</b>",
+        "download_error": "<tg-emoji emoji-id=5078075400408531654>❌</tg-emoji> <b>Ошибка при скачивании исходника рамки.</b>",
+        "process_error": "<tg-emoji emoji-id=5078075400408531654>❌</tg-emoji> <b>Ошибка при обработке фото:</b> <code>{}</code>"
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "mead0wsss/mead0wsMods/SteamProfile.py": {
       "name": "SteamProfile",
       "description": "Модуль для получения информации о пользователях Steam.",
@@ -58053,14 +58236,14 @@
       "meta": {
         "pic": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
         "banner": "https://raw.githubusercontent.com/SenkoGuardian/SenkoGuardian.github.io/main/OfficialSenkoGuardianBanner.png",
-        "developer": "@SenkoGuardianModules (from VIP section)"
+        "developer": "@SenkoGuardianModules"
       },
       "commands": [
         {
-          "chatcopy": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
+          "chatcopy": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--noflood] [-status] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
         },
         {
-          "ccwatch": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+          "ccwatch": "<src> <dest> [start_id|last] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
         },
         {
           "cchelp": "— Подробная документация по модулю ChatCopy"
@@ -58077,7 +58260,7 @@
           "name": "chatcopy",
           "original_name": "chatcopy",
           "description": {
-            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
+            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--noflood] [-status] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Добавить задачу в очередь."
           },
           "cmd_names": {},
           "aliases": [],
@@ -58090,7 +58273,7 @@
           "name": "ccwatch",
           "original_name": "ccwatch",
           "description": {
-            "default": "<src> <dest> [start_id:final_id] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
+            "default": "<src> <dest> [start_id|last] [-n] [-dmc] [--itopic 1] [-theme123] [--media|--photo_video|--docs|--text] — Наблюдение за чатом"
           },
           "cmd_names": {},
           "aliases": [],
@@ -58146,14 +58329,15 @@
         "cfg_delay": "Задержка ОТПРАВКИ между пачками (сек)",
         "cfg_flood_buffer": "Дополнительное время к FloodWait (сек)",
         "cfg_timezone": "Часовой пояс для времени в статусах (UTC offset, например 3 для MSK)",
-        "copy_start_prem": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n🚫 <b>Игнор топиков:</b> {ignored_topics}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
-        "copy_start_no_prem": "🚀 <b>ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n⏬⏬⏬⏬\n<b>Цель:</b> {dest}\n\n⚙️ <b>Режим:</b> {mode}\n🔢 <b>Старт с ID:</b> {start_id}\n👤 <b>Без автора:</b> {no_auth}\n💬 <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n🚫 <b>Игнор топиков:</b> {ignored_topics}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
-        "copy_done_detailed_prem": "<emoji document_id=5208422125924275090>✅</emoji> <b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n<emoji document_id=5123248930124989216>✅</emoji> <b>Перенесено сообщений: {count}</b> <emoji document_id=5123248930124989216>✅</emoji>\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
-        "copy_done_detailed_no_prem": "<b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n✔️ <b>Перенесено сообщений: {count}</b> ✔️\n⏱ <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
-        "flood_wait_notice": "⏸ <b>FloodWait</b>\n📊 <b>Задержка:</b> <code>{minutes}m {seconds}s</code>\n🕐 <b>Возобновление:</b> <code>{resume_time}</code>\n📨 <b>Переслано:</b> <code>{count}</code> сообщений\n⏳ <b>Осталось:</b> <code>{remaining}</code> сообщений\n⚡ <b>Скорость:</b> <code>{speed}</code> сообщений/мин",
-        "panel_summary": "<b>📊 ChatCopy Status</b>\n\n<b>🔄 Активная:</b> {active}\n<b>⏳ В очереди:</b> {queue_len}\n<b>👀 Слежка:</b> {watching_count}\n<b>⏱ Последний FW:</b> {last_flood}",
-        "panel_task_running": "{name}\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин | 📊 {progress}%\n├ ⏱ Прошло: {elapsed} | Осталось: {eta}\n└ 🕐 Начало: {start_time} | Окончание: {end_time}",
-        "panel_task_paused": "{name}\n├ ⏸ На паузе (FW: {flood_time})\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин\n└ 🕐 Продолжение: {resume_time}",
+        "copy_start": "<emoji document_id=5372917041193828849>🚀</emoji><b> ChatCopy: Запуск копирования</b>\n\n<b>Источник:</b> {src}\n<emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji><emoji document_id=5116204921766544244>⏬</emoji>\n<b>Цель:</b> {dest}\n\n<emoji document_id=5258096772776991776>⚙️</emoji> <b>Режим:</b> {mode}\n<emoji document_id=5226513232549664618>🔢</emoji> <b>Старт с ID:</b> {start_id}\n<emoji document_id=6035191085452497972>👤</emoji> <b>Без автора:</b> {no_auth}\n<emoji document_id=6028504027531055196>💬</emoji> <b>Без подписей:</b> {no_capt}\n📎 <b>Фильтр:</b> {filter_type}\n🚫 <b>Игнор топиков:</b> {ignored_topics}\n<emoji document_id=6030550768426159669>🛡</emoji> <b>Обход:</b> {bypass}\n📦 <b>Всего сообщений:</b> {total_msgs}\n⏱ <b>Оценка времени:</b> {estimated_time}\n\n<i>Задача добавлена в очередь. Позиция: {position}</i>",
+        "status_none": "<emoji document_id=5440708164787081930>ℹ️</emoji> Сейчас нет активных копирований.",
+        "status_header": "<emoji document_id=5258096772776991776>📊</emoji> <b>Статус ChatCopy</b> (активных: {n})\n",
+        "status_item": "\n<blockquote><b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>{status}</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ Скорость: <code>{speed}/мин</code>\n├ ETA: <code>{eta}</code>\n├ Пересылка: <code>{fwd}</code>\n├ Скачка: <code>{bypass}</code>\n├ Сейчас: <code>{working}</code>\n└ FloodWait'ов: <code>{floods}</code> (всего ~{flood_time})</blockquote>",
+        "copy_done_detailed": "<emoji document_id=5208422125924275090>✅</emoji> <b>Задача выполнена</b>\n<blockquote>{src} → {dest}\nБез автора: {no_auth}\nБез подписей: {no_capt}\nСтарт с ID: {start_id}\nРежим: {mode}\nФильтр: {filter_type}</blockquote>\n<emoji document_id=5123248930124989216>✅</emoji> <b>Перенесено сообщений: {count}</b> <emoji document_id=5123248930124989216>✅</emoji>\n⏱  <b>Длительность:</b> {duration}\n⚡ <b>Средняя скорость:</b> {avg_speed} сообщений/мин{flood_info}",
+        "flood_wait_notice": "<emoji document_id=5386761726538570473>⏸</emoji> <b>FloodWait</b>\n🛑 <b>На FloodWait:</b> <code>{flood_path}</code>\n🔁 <b>Сейчас:</b> <code>{working}</code>\n<emoji document_id=5983150113483134607>🕐</emoji> <b>Задержка:</b> <code>{minutes}m {seconds}s</code>\n<emoji document_id=5983150113483134607>🕐</emoji> <b>Возобновление:</b> <code>{resume_time}</code>\n<emoji document_id=5411563083908797492>📨</emoji> <b>Переслано:</b> <code>{count}</code> сообщений\n<emoji document_id=5316575093269214796>⏳</emoji> <b>Осталось:</b> <code>{remaining}</code> сообщений\n<emoji document_id=5877613700344450910>⚡</emoji> <b>Скорость:</b> <code>{speed}</code> сообщений/мин",
+        "panel_summary": "<b><emoji document_id=5231200819986047254>📊</emoji> ChatCopy Status</b>\n\n<b><emoji document_id=5249019346512008974>🔄</emoji> Активная:</b> {active}\n<b><emoji document_id=5316575093269214796>⏳</emoji> В очереди:</b> {queue_len}\n<b><emoji document_id=5220070652756635426>👀</emoji> Слежка:</b> {watching_count}\n<b><emoji document_id=5983150113483134607>⏱</emoji> Последний FW:</b> {last_flood}",
+        "panel_task_running": "{name}\n├ <a href='tg://emoji?id=6030474915008745842'>📦</a> {count}/{total} сообщений\n├ <a href='tg://emoji?id=5190418524962570367'>⚡️</a> {speed}/мин | 📊 {progress}%\n├ ⏱ Прошло: {elapsed} | Осталось: {eta}\n└ 🕐 Начало: {start_time} | Окончание: {end_time}",
+        "panel_task_paused": "{name}\n├ ⏸ На паузе (FW: {flood_time})\n├ 📦 {count}/{total} сообщений\n├ <a href='tg://emoji?id=5190418524962570367'>⚡️</a> {speed}/мин\n└ 🕐 Продолжение: {resume_time}",
         "btn_stop": "🛑 Стоп",
         "btn_pause": "⏸ Пауза",
         "btn_resume": "▶️ Продолжить",
@@ -58162,11 +58346,69 @@
         "btn_watch": "👀 Слежка",
         "btn_settings": "⚙️ Настройки",
         "btn_stats": "📊 Статистика",
+        "btn_profiles": "📋 Профили",
+        "profiles_title": "<b><a href='tg://emoji?id=5203910550542631009'>📋</a> Профили копирования</b>\n\n",
+        "profiles_empty": "<i>Нет сохранённых профилей. Нажми «➕ Создать» чтобы добавить.</i>",
+        "profiles_item": "{num}. {flags} {src} → {dst}{details}\n",
+        "profiles_flags": "{filter}{auth}{capt}",
+        "profiles_flag_filter_all": "📄",
+        "profiles_flag_filter_media": "📎",
+        "profiles_flag_filter_photo_video": "<a href='tg://emoji?id=5257974976094412956'>📷</a>",
+        "profiles_flag_filter_docs": "💼",
+        "profiles_flag_filter_text": "📝",
+        "profiles_flag_noauth": "<a href='tg://emoji?id=5879770735999717115'>👤</a><a href='tg://emoji?id=5888558080173545731'>❌</a>",
+        "profiles_flag_auth": "<a href='tg://emoji?id=5879770735999717115'>👤</a><a href='tg://emoji?id=5886277285035644362'>✅</a>",
+        "profiles_flag_nocapt": "💬<a href='tg://emoji?id=5888558080173545731'>❌</a>",
+        "profiles_flag_capt": "💬<a href='tg://emoji?id=5886277285035644362'>✅</a>",
+        "profiles_btn_create": "➕ Создать",
+        "profiles_btn_delete": "🗑 Удалить",
+        "profiles_btn_reset": "🔄 Сбросить",
+        "profiles_wizard_title": "<b>🛠 Создание профиля</b>\n\n",
+        "profiles_wizard_ask_src": "<b>📥 Шаг 1/4:</b> Отправь ссылку, юзернейм или ID чата-<b>источника</b>.\n\nЕсли отправишь ссылку на сообщение, стартовый ID подтянется автоматически.\nПримеры: <code>@channel</code>, <code>-1001234567890</code>, <code>https://t.me/c/1234567890/12345</code>",
+        "profiles_wizard_ask_dst": "<b>📤 Шаг 2/4:</b> Теперь отправь чат-<b>назначения</b>.\n\nМожно отправить ссылку на топик: <code>https://t.me/c/1234567890/1234</code>\nЕсли это ссылка на сообщение в топике, например <code>.../1234/123456</code>, назначением станет топик <code>6365</code>.",
+        "profiles_wizard_ask_start": "<b>🔢 Шаг 3/4:</b> Откуда начинать копирование?\n\nИсточник: <b>{src}</b>\nНайдено из ссылки: <code>{detected}</code>\nСейчас выбрано: <code>{current}</code>\n\nОтправь ID сообщения/ссылку на сообщение или нажми кнопку ниже.",
+        "profiles_wizard_ask_flags": "<b>⚙️ Шаг 4/4:</b> Проверь профиль и настрой флаги:\n\n📥 <b>Источник:</b> {src}\n📤 <b>Назначение:</b> {dst}\n🔢 <b>Старт:</b> {start}\n🧵 <b>Топик назначения:</b> {dest_topic}\n\n📎 <b>Фильтр:</b> {filter}\n👤 <b>Автор:</b> {auth}\n💬 <b>Подписи медиа:</b> {capt}\n🚫 <b>Игнор топиков:</b> {ignored}\n\n<i>Можно изменить любой шаг или сохранить профиль.</i>",
+        "profiles_created": "✅ <b>Профиль #{num} сохранён!</b>\n{src} → {dst}\nСтарт: <code>{start}</code>\nКонец: <code>{end}</code>\nТопик назначения: <code>{dest_topic}</code>\nФлаги: {flags}",
+        "profiles_updated": "✅ <b>Профиль #{num} обновлён!</b>\n{src} → {dst}\nСтарт: <code>{start}</code>\nКонец: <code>{end}</code>\nТопик назначения: <code>{dest_topic}</code>\nФлаги: {flags}",
+        "profiles_detail": "<b>📋 Профиль #{num}</b>\n\n📥 <b>Источник:</b> {src}\n📤 <b>Назначение:</b> {dst}\n🔢 <b>Старт:</b> <code>{start}</code>\n➡️ <b>Следующий ID:</b> {next}\n🏁 <b>Конец:</b> <code>{end}</code>\n🧵 <b>Топик источника:</b> {src_topic}\n🧵 <b>Топик назначения:</b> {dest_topic}\n📎 <b>Фильтр:</b> {filter}\n👤 <b>Автор:</b> {auth}\n💬 <b>Подписи:</b> {capt}",
+        "profiles_range_settings": "<b>🔢 Диапазон профиля #{num}</b>\n\nСтартовая точка: <code>{start}</code>\nСледующий запуск: {next}\nКонечный ID: <code>{end}</code>\n\nСтарт нужен как базовая точка и для сброса. После запуска профиль сам запоминает последний обработанный ID и продолжает дальше.",
+        "profiles_range_ask_start": "<b>🔢 Новый стартовый ID для профиля #{num}</b>\n\nОтправь ID сообщения или ссылку на сообщение.\n<code>0</code> или <code>с начала</code> — сбросить старт.",
+        "profiles_range_ask_end": "<b>🏁 Конечный ID для профиля #{num}</b>\n\nОтправь ID сообщения или ссылку на сообщение.\n<code>0</code> или <code>нет</code> — убрать ограничение.",
+        "profiles_run_confirm": "<b>▶️ Подтвердить запуск профиля #{num}?</b>\n\n{src} → {dst}\nСледующий ID: {next}\nКонец: <code>{end}</code>\nТопик назначения: {dest_topic}",
+        "profiles_deleted": "🗑 Профиль #{num} удалён.",
+        "profiles_reset": "🔄 Профиль #{num} сброшен к стартовой точке.",
+        "profiles_not_found": "❌ Профиль #{num} не найден.",
+        "profiles_run_started": "▶️ <b>Запущен профиль #{num}</b>\n{src} → {dst}\nТопик назначения: <code>{dest_topic}</code>\nНачинаю поиск новых сообщений...",
+        "profiles_run_done": "✅ <b>Профиль #{num} завершён</b>\nПереслано: {count} сообщений{flood_info}",
+        "profiles_run_stopped": "🛑 <b>Профиль #{num} остановлен</b>\nПереслано: {count} сообщений",
+        "profiles_wizard_cancelled": "❌ Создание профиля отменено.",
+        "profiles_wizard_bad_entity": "❌ Не удалось найти чат. Попробуй другую ссылку или ID.",
+        "profiles_btn_cancel_wizard": "❌ Отмена",
+        "profiles_btn_next": "▶️ Далее",
+        "profiles_btn_back_wizard": "◀️ Назад",
+        "profiles_btn_from_start": "⏮ С начала",
+        "profiles_btn_use_detected": "🔢 Использовать {id}",
+        "profiles_btn_change_src": "✏️ Источник",
+        "profiles_btn_change_dst": "✏️ Куда",
+        "profiles_btn_change_start": "✏️ Старт",
+        "profiles_btn_run": "▶️ Запустить",
+        "profiles_btn_confirm_run": "✅ Да, запустить",
+        "profiles_btn_edit": "✏️ Изменить",
+        "profiles_btn_range": "🔢 Диапазон",
+        "profiles_btn_set_start": "🔢 Старт",
+        "profiles_btn_set_end": "🏁 Конец",
+        "profiles_btn_clear_end": "♾ Без конца",
+        "profiles_btn_toggle_filter": "📎 Фильтр: {val}",
+        "profiles_btn_toggle_auth": "👤 Автор: {val}",
+        "profiles_btn_toggle_capt": "💬 Подписи: {val}",
+        "profiles_btn_save": "✅ Сохранить",
+        "profile_run_header": "<b>▶️ Профиль #{num}</b>\n<b>{src}</b> → <b>{dst}</b>\n├ 📦 {count}/{total} сообщений\n├ ⚡ {speed}/мин | 📊 {progress}%\n├ ⏱ Прошло: {elapsed} | Осталось: {eta}\n└ 🕐 Начало: {start_time} | Окончание: {end_time}",
+        "profiles_btn_run_all": "▶️ Запустить все",
         "forum_enabled": "✅ Топики включены в {chat}",
         "forum_enable_failed": "❌ Не удалось включить топики в {chat}. Нужны права администратора.",
         "forum_not_channel": "❌ {chat} не является каналом/группой",
         "err_ent": "❌ Ошибка: Чат не найден или нет доступа.",
-        "args_err": "❌ Синтаксис: .chatcopy <src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--itopic 1|\"Имя\"] [-theme123] [--media|--photo_video|--docs|--text]",
+        "args_err": "❌ Синтаксис: .chatcopy <src> <dest> [start_id:final_id] [-n] [-dmc] [--now] [--noflood] [--itopic 1|\"Имя\"] [-theme123] [--media|--photo_video|--docs|--text]\n.ccwatch <src> <dest> [start_id|last] [-n] [-dmc] [--itopic 1|\"Имя\"] [фильтр]",
         "watch_added": "<b>👀 Наблюдение активировано</b>\nID: <code>{src_id}</code>\n{src} -> {dest}\nРежим топиков: {topics}\nБез подписей: {no_capt}\nФильтр: {filter_type}\nИгнор топиков: {ignored}",
         "copy_restricted": "❌ <b>Источник защищён запретом копирования/пересылки Telegram.</b>\n\nМодуль остановлен до добавления в очередь: скрытый обход этой защиты не выполняется. Используй источник, где копирование разрешено, или отключи защиту в своём чате.",
         "queue_wait": "⏳ <b>Задача в очереди...</b> ({pos})",
@@ -58180,6 +58422,7 @@
         "task_item_compact_queued": "⏳{num}. <b>{src}</b> → <b>{dest}</b> (через {wait})",
         "task_item_compact_paused": "⚠️{num}. <b>{src}</b> → <b>{dest}</b> (FW)",
         "task_item_compact_completed": "✅{num}. <b>{src}</b> → <b>{dest}</b>",
+        "task_item_compact_stopped": "🛑{num}. <b>{src}</b> → <b>{dest}</b> (останавливается)",
         "task_item_compact_error": "❌{num}. <b>{src}</b> → <b>{dest}</b>",
         "task_detail_running": "<b>▶️ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Выполняется</code>\n├ Прогресс: <code>{current}/{total}</code> ({progress}%)\n├ Скорость: <code>{speed}/мин</code>\n├ Прошло: <code>{elapsed}</code>\n├ Осталось: <code>{eta_left}</code>\n├ Начато: <code>{start_time}</code>\n├ Окончание: <code>{end_time}</code>\n└ Позиция: <code>{position}</code>",
         "task_detail_queued": "<b>⏳ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>В очереди</code>\n├ Позиция: <code>{position}</code>\n├ Сообщений: <code>~{total}</code>\n├ Ожидание старта: <code>{eta_start}</code>\n└ Примерное время работы: <code>{estimated_duration}</code>",
@@ -58187,8 +58430,7 @@
         "task_detail_completed": "<b>✅ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Завершена</code>\n├ Переслано: <code>{count}</code> сообщений\n├ Длительность: <code>{duration}</code>\n├ Средняя скорость: <code>{avg_speed}/мин</code>\n├ Завершено: <code>{end_time}</code>\n└ FloodWait'ов: <code>{floods}</code>",
         "task_detail_error": "<b>❌ Задача #{num}</b>\n\n<b>{src}</b> → <b>{dest}</b>\n├ Статус: <code>Ошибка</code>\n└ Попробуйте перезапустить",
         "no_tasks": "<i>Нет активных задач</i>",
-        "preparing_prem": "<emoji document_id=5208722554591659638>💫</emoji> <b>Подготовка к копированию. Подсчитываем (да, вручную!) кол-во медиа, это может занять время...</b>",
-        "preparing_no_prem": "⌛️ <b>Подготовка к копированию. Подсчитываем кол-во медиа, это может занять время...</b>"
+        "preparing": "<emoji document_id=5208722554591659638>💫</emoji> <b>Подготовка к копированию. Подсчитываем (да, вручную!) кол-во медиа, это может занять время...</b>"
       },
       "has_on_load": false,
       "has_on_unload": true,
@@ -80016,7 +80258,7 @@
     }
   },
   "meta": {
-    "total_modules": 1011,
-    "generated_at": "2026-06-12T08:37:15.698186"
+    "total_modules": 1013,
+    "generated_at": "2026-07-05T02:27:31.863173"
   }
 }
