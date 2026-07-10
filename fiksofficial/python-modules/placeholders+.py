@@ -478,37 +478,65 @@ class PlaceholdersMod(loader.Module):
     
     async def _get_weather_data(self):
         city = self.config["weather_city"]
-        
         cache_key = f"weather_{city}"
+        
         cached = self.cache.get(cache_key)
         if cached:
             return cached
-        
+
         try:
-            async with self.session.get(f"http://wttr.in/{city}?format=j1&lang=ru") as resp:
+            url = f"http://wttr.in/{city}?format=j1&lang=ru"
+            logging.debug(f"Запрос погоды: {url}")
+
+            async with self.session.get(url) as resp:
+                logging.debug(f"Статус: {resp.status} | Content-Type: {resp.headers.get('content-type')}")
+
+                response_text = await resp.text()
+                
+                logging.debug("Начало ответа от wttr.in:")
+                logging.debug(repr(response_text[:700]))
+
                 if resp.status == 200:
-                    data = await resp.json()
-                    c = data["current_condition"][0]
+                    try:
+                        data = json.loads(response_text)
+                        logging.debug("Успешно распарсено как JSON")
+                    except Exception as json_err:
+                        logging.debug(f"Не JSON: {json_err}")
+                        raise
+
+                    c = data.get("current_condition", [{}])[0]
+
+                    lang_ru_list = c.get("lang_ru", [])
+                    condition = lang_ru_list[0].get("value") if lang_ru_list else None
+
+                    if not condition:
+                        weather_desc = c.get("weatherDesc", [])
+                        condition = weather_desc[0].get("value") if weather_desc else "Неизвестно"
+
                     weather_data = {
-                        "condition": c["lang_ru"][0]["value"],
-                        "temp": f"{c['temp_C']}°C",
-                        "weather_temp": f"{c['lang_ru'][0]['value']} {c['temp_C']}°C",
-                        "humidity": f"{c['humidity']}%",
-                        "pressure": f"{c['pressure']} мм",
-                        "wind": f"{c['windspeedKmph']} км/ч",
+                        "condition": condition,
+                        "temp": f"{c.get('temp_C', 'N/A')}°C",
+                        "weather_temp": f"{condition} {c.get('temp_C', 'N/A')}°C",
+                        "humidity": f"{c.get('humidity', 'N/A')}%",
+                        "pressure": f"{c.get('pressure', 'N/A')} мм",
+                        "wind": f"{c.get('windspeedKmph', 'N/A')} км/ч",
+                        "feels_like": f"{c.get('FeelsLikeC', 'N/A')}°C",
                     }
+                    
                     self.cache.set(cache_key, weather_data)
                     return weather_data
-        except:
-            pass
-        
+
+        except Exception as e:
+            logging.debug(f"Ошибка получения погоды для {city}: {e}")
+
         default = {
             "condition": "Неизвестно",
             "temp": "??°C",
-            "weather_temp": "??",
+            "weather_temp": "Погода недоступна",
             "humidity": "??%",
             "pressure": "?? мм",
             "wind": "?? км/ч",
+            "feels_like": "??°C",
         }
         self.cache.set(cache_key, default)
         return default
