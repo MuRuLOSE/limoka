@@ -7,20 +7,24 @@
 # meta developer: @nullmod
 # scope: hikka_min 2.0.0
 
-__version__ = (1, 2, 2)
+__version__ = (1, 3, 2)
 
 import io
 import math
+import re
 
 from PIL import Image, ImageDraw
 
 from herokutl.tl.custom import Message
+from herokutl.tl.functions.messages import GetCustomEmojiDocumentsRequest
 from herokutl.tl.functions.payments import GetUniqueStarGiftRequest
 from herokutl.tl.functions.help import (
-    GetPeerProfileColorsRequest
+    GetPeerProfileColorsRequest,
 )
 from herokutl.tl.types import (
+    Channel,
     EmojiStatusCollectible,
+    MessageMediaWebPage,
     StarGiftAttributeBackdrop,
 )
 from herokutl.tl.types.payments import (
@@ -29,7 +33,30 @@ from herokutl.tl.types.payments import (
 
 from .. import loader, utils
 
-def resize_image(image: Image.Image, max_size: int = 1280) -> Image.Image:
+SHAPES = {
+ # NO FURTHER DEVELOPMENT
+}
+
+BBOX_TGA = (
+    2894 / 8268,
+    1260 / 8268,
+    2504 / 8268,
+    2504 / 8268,
+)
+
+BBOX_IOS = (
+    2590 / 8268,
+    629 / 8268,
+    3120 / 8268,
+    3120 / 8268,
+)
+
+DEFAULT_PP_SIZE = 2048 # no need to use a bigger size since Telegram will compress it anyway
+                       # better than overloading the script with large images
+
+RE_ONLY_ONE_EMOJI = re.compile(r"^<tg-emoji emoji-id=(\d+)>[^<]+</tg-emoji>$|^<emoji document_id=(\d+)>[^<]+</emoji>$")
+
+def resize_image(image: Image.Image, max_size: int = DEFAULT_PP_SIZE) -> Image.Image:
     w, h = image.size
     if max(w, h) <= max_size:
         return image
@@ -85,19 +112,34 @@ def get_gradient(size: tuple, color1: tuple, color2: tuple, gradient_type: str =
 
     return gradient
 
-def set_gradient(im: io.BytesIO, gradient: Image.Image) -> io.BytesIO:
-    img = resize_image(Image.open(im).convert('RGBA'))
 
-    max_size = max(img.width, img.height)
-    gradient = gradient.resize((max_size, max_size), Image.LANCZOS).convert('RGBA')
-    left = (max_size - img.width) // 2
-    top = (max_size - img.height) // 2
+def set_gradient(img: Image.Image, gradient: Image.Image, scale: int = 100) -> io.BytesIO:
+    grad_size = DEFAULT_PP_SIZE
+
+    gradient = gradient.resize((grad_size,) * 2, Image.LANCZOS).convert('RGBA')
+
+    target_size = grad_size * scale / 100
+
+    img_w, img_h = img.size
+    img_max = max(img_w, img_h)
+
+    fit_size = min(target_size, img_max * 4)
+
+    scale_factor = fit_size / img_max
+    new_w = max(1, int(round(img_w * scale_factor)))
+    new_h = max(1, int(round(img_h * scale_factor)))
+
+    resampling = Image.LANCZOS if scale_factor <= 1 else Image.BICUBIC
+    img = img.resize((new_w, new_h), resampling)
+
+    left = (grad_size - new_w) // 2
+    top = (grad_size - new_h) // 2
     gradient.paste(img, (left, top), img)
+
     buffer = io.BytesIO()
-
     gradient.save(buffer, format='PNG')
-
     buffer.seek(0)
+
     return buffer
 
 def crop_by_bbox(img: Image.Image, bbox: tuple):
@@ -126,30 +168,12 @@ def hexes_to_rgbs(value: list):
         res = hex_to_rgb(value[0])
         return (res, res)
 
-SHAPES = {
- # TODO: фигуры для создания масок на авы
-}
-
-BBOX_TGA_TGD = (
-    2894 / 8268,
-    1260 / 8268,
-    2504 / 8268,
-    2504 / 8268,
-)
-
-BBOX_IOS = (
-    2590 / 8268,
-    629 / 8268,
-    3120 / 8268,
-    3120 / 8268,
-)
-
 
 @loader.tds
 class Gradientor(loader.Module):
     strings = {
         "name": "Gradientor",
-        "_cls_doc": "A module to create your profile picture with a background from your profile",
+        "_cls_doc": "A module to create your profile picture with a background from your profile\n\nALSO TRY: @gradientorbot!!!",
         "gradient_creating": "<tg-emoji emoji-id=5886667040432853038>🔁</tg-emoji> Creating gradient...",
         "gradient_created": "<tg-emoji emoji-id=5818804345247894731>✅</tg-emoji> Gradient created!",
         "nft_done": (
@@ -163,7 +187,7 @@ class Gradientor(loader.Module):
         ),
     }
     strings_ru = {
-        "_cls_doc": "Модуль для создания вашей аватарки на фоне из вашего профиля",
+        "_cls_doc": "Модуль для создания вашей аватарки на фоне из вашего профиля\n\nТАК ЖЕ ПОПРОБУЙТЕ: @gradientorbot!!!",
         "gradient_creating": "<tg-emoji emoji-id=5886667040432853038>🔁</tg-emoji> Создание градиента...",
         "gradient_created": "<tg-emoji emoji-id=5818804345247894731>✅</tg-emoji> Градиент создан!",
         "nft_done": (
@@ -196,7 +220,7 @@ class Gradientor(loader.Module):
 
     async def make_gradient(
         self,
-        photo_source: Message,
+        photo: bytes | None,
         bbox: tuple,
         color1: int,
         color2: int,
@@ -204,21 +228,23 @@ class Gradientor(loader.Module):
         add_glow: bool = False,
         _full: bool = False,
         background_only: bool = True,
-    ):
-        gradient = get_gradient((1280, 1280), color1, color2, "linear" if force_linear else "radial")
+        resize_percent: int = 100,
+    ) -> io.BytesIO:
+        gradient = get_gradient((DEFAULT_PP_SIZE,)*2, color1, color2, "linear" if force_linear else "radial")
 
         if add_glow:
-            pass # TODO
+            pass # NO FURTHER DEVELOPMENT
 
         if not _full:
             gradient = crop_by_bbox(gradient, bbox)
 
         if not background_only and not _full:
-            p_b = await photo_source.download_media(bytes)
-            p_b_io = io.BytesIO(p_b)
+            p_b_io = io.BytesIO(photo)
             p_b_io.seek(0)
 
-            result = set_gradient(p_b_io, gradient)
+            img = Image.open(p_b_io).convert('RGBA')
+
+            result = set_gradient(img, gradient, resize_percent)
 
         else:
             result = io.BytesIO()
@@ -228,29 +254,52 @@ class Gradientor(loader.Module):
         result.name = "grad @nullmod.png"
         
         return result
+
+    async def _get_photo(self, m: Message):
+        if m.document and "image/" in getattr(m.document, "mime_type", "") and not isinstance(m.media, MessageMediaWebPage):
+            photo = await m.download_media(bytes)
+        elif not m.document and m.message:
+            match = RE_ONLY_ONE_EMOJI.match(m.text.strip())
+            if match:
+                emoji_id = match.group(1) or match.group(2)
+                try:
+                    doc = (await self.client(GetCustomEmojiDocumentsRequest([int(emoji_id)])))[0]
+                    if "image/" in getattr(doc, "mime_type", ""):
+                        photo = await self.client.download_media(doc, bytes)
+                    else:
+                        photo = None
+                except Exception:
+                    photo = None
+            else:
+                photo = None
+        else:
+            photo = None
+
+        return photo
     
-    async def _get_photo_source(self, m: Message, r: Message):
-        photo_source = (
-            m
-            if (not r or not (r.photo or r.document and "image/" in getattr(r.document, "mime_type", "")))
-            else r
-        )
-        if not (photo_source.photo or photo_source.document and "image/" in getattr(photo_source.document, "mime_type", "")):
-            return None
-        
-        return photo_source
+    async def get_photo(self, m: Message, r: Message):
+        photo = None
+        if r:
+            photo = await self._get_photo(r)
+
+        if not photo:
+            photo = await self._get_photo(m)
+
+        return photo
 
     @loader.command(
-        ru_doc="[фотография/reply] - создать аватарку с градиентом из цвета профиля\n"
+        ru_doc="[фотография/reply/emoji] - создать аватарку с градиентом из цвета профиля\n"
                 "--update-cache - обновить кеш профиля, если вы только что сменили фон профиля\n"
                 "--linear - использовать линейный градиент\n"
+                "--scale [масштаб в процентах] - изменить размер накладываемого фото (по умолчанию 100)\n"
                 "--light - использовать светлую тему\n"
                 "--ios - создать аватарку для iOS-клиентов"
     )
     async def makepp(self, message: Message):
-        """[photo/reply] - create a profile picture with a gradient from profile color
+        """[photo/reply/emoji] - create a profile picture with a gradient from profile color
             --update-cache - update profile cache if you just changed profile background
             --linear - use linear gradient
+            --scale [scale in percents] - change the size of the overlaid photo (default 100)
             --light - use light theme
             --ios - create a profile picture for iOS clients"""
         reply: Message = await message.get_reply_message()
@@ -260,9 +309,9 @@ class Gradientor(loader.Module):
             bbox = BBOX_IOS
             _type = "ios"
             args.remove("--ios")
-        
+
         else:
-            bbox = BBOX_TGA_TGD
+            bbox = BBOX_TGA
             _type = "android"
 
         if "--update-cache" in args:
@@ -276,6 +325,20 @@ class Gradientor(loader.Module):
             args.remove("--linear")
         else:
             force_linear = False
+        
+        if "--scale" in args:
+            _scale_indx = args.index("--scale")
+            try:
+                scale = int(args[_scale_indx + 1])
+                args.pop(_scale_indx + 1)
+                args.pop(_scale_indx)
+            except ValueError:
+                args.remove("--scale")
+                scale = 100
+
+            del _scale_indx
+        else:
+            scale = 100
 
         if "--light" in args:
             theme = "light"
@@ -296,7 +359,7 @@ class Gradientor(loader.Module):
         if args:
             user = await self.client.get_entity(int(args[0]) if args[0].isdigit() else args[0])
 
-        if not (photo_source := await self._get_photo_source(message, reply)):
+        if not (photo := await self.get_photo(message, reply)):
             background_only = True
 
         if not user:
@@ -307,7 +370,7 @@ class Gradientor(loader.Module):
             else:
                 user = self.client.hikka_me
 
-        if not user.premium:
+        if not isinstance(user, Channel) and not user.premium:
             color1, color2 = (28, 28, 28), (28, 28, 28)
 
         elif user.emoji_status and isinstance(user.emoji_status, EmojiStatusCollectible):
@@ -335,14 +398,15 @@ class Gradientor(loader.Module):
         await utils.answer(message, self.strings["gradient_creating"])
 
         result = await self.make_gradient(
-            photo_source,
+            photo,
             bbox,
             color1,
             color2,
             force_linear,
             add_glow,
             _full,
-            background_only
+            background_only,
+            scale,
         )
 
         await utils.answer(message, self.strings["gradient_created"], file=result, force_document=True)
@@ -358,13 +422,27 @@ class Gradientor(loader.Module):
             args.remove("--ios")
         
         else:
-            bbox = BBOX_TGA_TGD
+            bbox = BBOX_TGA
 
         if "--linear" in args:
             force_linear = True
             args.remove("--linear")
         else:
             force_linear = False
+        
+        if "--scale" in args:
+            _scale_indx = args.index("--scale")
+            try:
+                scale = int(args[_scale_indx + 1])
+                args.pop(_scale_indx + 1)
+                args.pop(_scale_indx)
+            except ValueError:
+                args.remove("--scale")
+                scale = 100
+
+            del _scale_indx
+        else:
+            scale = 100
 
         if "--full" in args:
             _full = True
@@ -391,19 +469,21 @@ class Gradientor(loader.Module):
         color1 = hex_to_rgb(color1)
         color2 = hex_to_rgb(color2)
 
-        if not (photo_source := await self._get_photo_source(message, reply)):
+        if not (photo := await self.get_photo(message, reply)):
             background_only = True
 
         await utils.answer(message, self.strings["gradient_creating"])
 
         result = await self.make_gradient(
-            photo_source,
+            photo,
             bbox,
             color1,
             color2,
             force_linear,
-            _full=_full,
-            background_only=background_only
+            False,
+            _full,
+            background_only,
+            scale,
         )
 
         await utils.answer(message, self.strings["nft_done"].format(args), file=result, force_document=True)
