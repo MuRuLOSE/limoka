@@ -14,8 +14,8 @@ class spotifyph(loader.Module):
     
     strings = {
         "name": "spotify_ph",
-        "start_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
-        "start_full_duration": "<tg-emoji emoji-id=5386793861483894694>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
+        "start_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384507693341906264>🎶</tg-emoji>",
+        "start_full_duration": "<tg-emoji emoji-id=5255953176074425678>🎶</tg-emoji><tg-emoji emoji-id=5384401375721463792>🎶</tg-emoji>",
         "mid_duration": "<tg-emoji emoji-id=5386623003389888935>🎶</tg-emoji>",
         "empty_mid": "<tg-emoji emoji-id=5384267235302870604>🎶</tg-emoji>",
         "end_duration": "<tg-emoji emoji-id=5386826786703186322>🎶</tg-emoji>",
