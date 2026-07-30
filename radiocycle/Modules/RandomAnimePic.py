@@ -56,7 +56,7 @@ class RandomAnimePicMod(loader.Module):
         await utils.answer(message, self.strings["loading"])
 
         try:
-            category = await utils.get_args_raw().strip()
+            category = utils.get_args_raw(message).strip()
 
             def fetch_image():
                 params = {"limit": 1, "rating": ["safe"]}
