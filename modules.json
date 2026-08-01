@@ -64384,7 +64384,7 @@
       "meta": {
         "pic": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
         "banner": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
-        "developer": "@SunnexGB"
+        "developer": "@H_SunMods"
       },
       "commands": [
         {
@@ -64420,6 +64420,8 @@
         "result_url": "<b><emoji document_id=4967503352863654812>〰️</emoji>Song recognized:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Artist:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Title:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Listen on Shazam</a>",
         "shazam_history": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Your last 10 recognised songs</b>",
         "no_history": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>What do you want to see here?</b>",
+        "unknown_artist": "Unknown Artist",
+        "unknown_title": "Unknown Title",
         "name_ru": "Shazamio",
         "processing_ru": "<b>Обработка <emoji document_id=5325731315004218660>🫥</emoji></b>",
         "shazaming_ru": "<b><emoji document_id=4967658551506895731>🔈</emoji>| Шазамлю...</b>",
@@ -64430,7 +64432,9 @@
         "result_ru": "<b><emoji document_id=4967689020004893467>🔈</emoji>| Песня найдена:</b>\n\n<b><emoji document_id=4967689020004893467>🔈</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967925573918655510>🚮</emoji>Название:</b><code>{title}</code>",
         "result_url_ru": "<b><emoji document_id=4967503352863654812>〰️</emoji>Песня найдена:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Название:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Слушайте на Shazam</a>",
         "shazam_history_ru": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Твои 10 последних распознаных треков</b>",
-        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>"
+        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>",
+        "unknown_artist_ru": "Неизвестный Исполнитель",
+        "unknown_title_ru": "Неизвестный трек"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -80406,6 +80410,6 @@
   },
   "meta": {
     "total_modules": 1014,
-    "generated_at": "2026-07-27T02:12:55.892234"
+    "generated_at": "2026-08-01T02:08:43.931405"
   }
 }
