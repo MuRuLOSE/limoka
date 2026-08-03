@@ -55322,6 +55322,170 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "ZetGoHack/nullmod/Example.py": {
+      "name": "TheBestExampleEverMod",
+      "description": "Это описание модуля. Оно отображается после установки и в меню команды `.help TheBestExampleEverMod`",
+      "cls_doc": {
+        "default": "This is the best example module ever!",
+        "ru": "Это лучший пример модуля!",
+        "jp": "これは最高のモジュールの例です！"
+      },
+      "meta": {
+        "pic": "https://github.com/ZetGoHack/Nullmod/raw/main/20250401_100043.jpg",
+        "banner": "https://github.com/ZetGoHack/Nullmod/raw/main/20250401_100043.jpg",
+        "developer": "@ZetGo"
+      },
+      "commands": [
+        {
+          "example": "Example description for a command in English | (RU) Пример описания для команды на русском | (JP) コマンドの日本語の説明の例"
+        },
+        {
+          "exmplmkp": "Example of a command with inline buttons | (RU) Пример команды с инлайн-кнопками | (JP) インラインボタンを使用したコマンドの例"
+        },
+        {
+          "inlexample": "Example description for an inline command in English"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "example",
+          "original_name": "example",
+          "description": {
+            "default": "Example description for a command in English",
+            "ru": "Пример описания для команды на русском",
+            "jp": "コマンドの日本語の説明の例"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "exmplmkp",
+          "original_name": "exmplmkp",
+          "description": {
+            "default": "Example of a command with inline buttons",
+            "ru": "Пример команды с инлайн-кнопками",
+            "jp": "インラインボタンを使用したコマンドの例"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "inlexample",
+          "original_name": "inlexample",
+          "description": {
+            "default": "Example description for an inline command in English"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": true,
+          "is_inline_handler": true,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [
+        {
+          "name": "inlexample",
+          "description": {
+            "default": "Example description for an inline command in English"
+          },
+          "decorators": []
+        }
+      ],
+      "strings": {
+        "name": "TheBestExampleEver",
+        "_cls_doc": "This is the best example module ever!",
+        "cfg_changed": "Config value changed to {}!",
+        "loading": "<emoji document_id=5382187328670282655>🐱</emoji> Your result is loading...",
+        "loaded": "<emoji emoji-id=5382147531503319073>😶</emoji> Just kidding! I haven't loaded anything, here are the arguments you entered: {}",
+        "user_online": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{} is online!</b>",
+        "user_offline": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{} is offline!</b>",
+        "inl__a_message": "This is a simple message",
+        "inl__a_message_desc": "Example of a simple message",
+        "inl__a_message_text": "<b>You entered in inline arguments: {}!</b>",
+        "inl__mrk_example": "Example of a message with buttons",
+        "inl__a_photo": "This is an example of a message with photo",
+        "inl__a_photo_desc": "Example of a message with photo for inline",
+        "inl__a_photo_caption": "<b>This is a photo with caption!</b>",
+        "inl__gallery": "Example gallery",
+        "inl__gallery_desc": "Example of inline gallery from query",
+        "inl__gallery_caption": "<b>This photo was opened from query_gallery</b>",
+        "inl__button": "Button in inline",
+        "inl__insert_query": "Insert query",
+        "inl__a_gif": "Example GIF",
+        "inl__a_gif_desc": "Example of a gif result",
+        "inl__a_gif_caption": "<b>This is a gif with caption!</b>",
+        "inl__a_video": "Example video",
+        "inl__a_video_desc": "Example of a video result",
+        "inl__a_video_caption": "<b>This is a video with caption!</b>",
+        "inl__a_file": "Example file",
+        "inl__a_file_desc": "Example of a document result",
+        "inl__a_file_caption": "<b>This is a PDF file!</b>",
+        "cfg_changed_ru": "Значение конфига изменено на {}!",
+        "loading_ru": "<emoji document_id=5382187328670282655>🐱</emoji> Ваш пример загружается...",
+        "loaded_ru": "<emoji document_id=5382147531503319073>😶</emoji> Шучу! Я ничего не загружал, вот аргументы, которые вы ввели: {}",
+        "user_online_ru": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{} вошёл в сеть!</b>",
+        "user_offline_ru": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{} вышел из сети!</b>",
+        "inl__a_message_ru": "Это простое сообщение",
+        "inl__a_message_desc_ru": "Пример простого сообщения",
+        "inl__a_message_text_ru": "<b>Вы ввели в аргументы инлайна: {}!</b>",
+        "inl__mrk_example_ru": "Пример сообщения с кнопками",
+        "inl__a_photo_ru": "Это пример сообщения с фото",
+        "inl__a_photo_desc_ru": "Пример сообщения с фото для инлайна",
+        "inl__a_photo_caption_ru": "<b>Это фото с подписью!</b>",
+        "inl__gallery_ru": "Пример галереи",
+        "inl__gallery_desc_ru": "Пример инлайн-галереи из запроса",
+        "inl__gallery_caption_ru": "<b>Это фото открыто через query_gallery</b>",
+        "inl__button_ru": "Кнопка в инлайне",
+        "inl__insert_query_ru": "Вставить запрос",
+        "inl__a_gif_ru": "Пример GIF",
+        "inl__a_gif_desc_ru": "Пример результата с gif",
+        "inl__a_gif_caption_ru": "<b>Это gif с подписью!</b>",
+        "inl__a_video_ru": "Пример видео",
+        "inl__a_video_desc_ru": "Пример результата с видео",
+        "inl__a_video_caption_ru": "<b>Это видео с подписью!</b>",
+        "inl__a_file_ru": "Пример файла",
+        "inl__a_file_desc_ru": "Пример результата с документом",
+        "inl__a_file_caption_ru": "<b>Это PDF-файл!</b>",
+        "cfg_changed_jp": "構成値が{}に変更されました！",
+        "loading_jp": "<emoji document_id=5382187328670282655>🐱</emoji> 結果を読み込んでいます...",
+        "loaded_jp": "<emoji document_id=5382147531503319073>😶</emoji> 冗談です！何も読み込んでいません。入力した引数は次のとおりです：{}",
+        "user_online_jp": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{}がオンラインです！</b>",
+        "user_offline_jp": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{}がオフラインです！</b>",
+        "inl__a_message_jp": "これは単純なメッセージです",
+        "inl__a_message_desc_jp": "単純なメッセージの例",
+        "inl__a_message_text_jp": "<b>インライン引数に入力した内容：{}！</b>",
+        "inl__mrk_example_jp": "ボタン付きメッセージの例",
+        "inl__a_photo_jp": "これは写真付きメッセージの例です",
+        "inl__a_photo_desc_jp": "インラインの写真付きメッセージの例",
+        "inl__a_photo_caption_jp": "<b>これはキャプション付きの写真です！</b>",
+        "inl__gallery_jp": "ギャラリーの例",
+        "inl__gallery_desc_jp": "クエリから開くインラインギャラリーの例",
+        "inl__gallery_caption_jp": "<b>この写真は query_gallery から開かれました</b>",
+        "inl__button_jp": "インラインのボタン",
+        "inl__insert_query_jp": "クエリを挿入",
+        "inl__a_gif_jp": "GIF の例",
+        "inl__a_gif_desc_jp": "GIF 結果の例",
+        "inl__a_gif_caption_jp": "<b>これはキャプション付きの GIF です！</b>",
+        "inl__a_video_jp": "動画の例",
+        "inl__a_video_desc_jp": "動画結果の例",
+        "inl__a_video_caption_jp": "<b>これはキャプション付きの動画です！</b>",
+        "inl__a_file_jp": "ファイルの例",
+        "inl__a_file_desc_jp": "ドキュメント結果の例",
+        "inl__a_file_caption_jp": "<b>これは PDF ファイルです！</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "MuRuLOSE/HikkaModulesRepo/CustomPing.py": {
       "name": "CustomPing",
       "description": "Have you seen a customizable ping module in Netfoll? I have, yes, but I find it unacceptable to use Netfoll, so I took the idea of custom ping, and replicated it.",
@@ -64384,7 +64548,7 @@
       "meta": {
         "pic": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
         "banner": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
-        "developer": "@SunnexGB"
+        "developer": "@H_SunMods"
       },
       "commands": [
         {
@@ -64420,6 +64584,8 @@
         "result_url": "<b><emoji document_id=4967503352863654812>〰️</emoji>Song recognized:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Artist:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Title:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Listen on Shazam</a>",
         "shazam_history": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Your last 10 recognised songs</b>",
         "no_history": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>What do you want to see here?</b>",
+        "unknown_artist": "Unknown Artist",
+        "unknown_title": "Unknown Title",
         "name_ru": "Shazamio",
         "processing_ru": "<b>Обработка <emoji document_id=5325731315004218660>🫥</emoji></b>",
         "shazaming_ru": "<b><emoji document_id=4967658551506895731>🔈</emoji>| Шазамлю...</b>",
@@ -64430,7 +64596,9 @@
         "result_ru": "<b><emoji document_id=4967689020004893467>🔈</emoji>| Песня найдена:</b>\n\n<b><emoji document_id=4967689020004893467>🔈</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967925573918655510>🚮</emoji>Название:</b><code>{title}</code>",
         "result_url_ru": "<b><emoji document_id=4967503352863654812>〰️</emoji>Песня найдена:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Название:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Слушайте на Shazam</a>",
         "shazam_history_ru": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Твои 10 последних распознаных треков</b>",
-        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>"
+        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>",
+        "unknown_artist_ru": "Неизвестный Исполнитель",
+        "unknown_title_ru": "Неизвестный трек"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -80405,7 +80573,7 @@
     }
   },
   "meta": {
-    "total_modules": 1014,
-    "generated_at": "2026-07-27T02:12:55.892234"
+    "total_modules": 1015,
+    "generated_at": "2026-08-03T02:07:05.530044"
   }
 }
