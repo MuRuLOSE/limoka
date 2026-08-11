@@ -104,12 +104,8 @@ class PicToStoriesMod(loader.Module):
 
         w, h = img.size
         curr_ratio = w / h
-        variants = [
-            (5 / 4, 2),
-            (4 / 5, 3),
-            (3 / 5, 4),
-            (9 / 16, 5)
-        ]
+        cell_ratio = 1.25
+        variants = [(3 / (rows * cell_ratio), rows) for rows in (2, 3, 4, 5)]
         best_ratio, rows = min(variants, key=lambda x: abs(curr_ratio - x[0]))
 
         new_h = int(w / best_ratio)
