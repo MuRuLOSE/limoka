@@ -20336,46 +20336,71 @@
       "class_cmd_names": {}
     },
     "TheKsenon/MyHikkaModules/kuploader.py": {
-      "name": "UploaderMod",
-      "description": "Module for uploading files to various file hosting services",
+      "name": "KUploaderMod",
+      "description": "Загрузить файлы на хостинги.",
       "cls_doc": {},
       "meta": {
         "pic": null,
-        "banner": null,
-        "developer": "@kmodules"
+        "banner": "https://i.ibb.co/LXxqyd3T/telecodex-file-b6eb8b2c-e187-4b91-928a-72bac914825f.jpg",
+        "developer": "@kmodules",
+        "version": "2.0.0",
+        "tags": "uploader, upload, file, cloud, kmodules"
       },
       "commands": [
         {
-          "catbox": "Upload file to catbox.moe"
+          "uguu": "Upload a file to Uguu. | (RU) — загрузить файл на Uguu | (EN) — upload a file to Uguu"
         },
         {
-          "envs": "Upload file to envs.sh"
+          "quax": "Upload a file to QuAx. | (RU) — загрузить файл на QuAx | (EN) — upload a file to QuAx"
         },
         {
-          "kappa": "Upload file to kappa.lol"
+          "tmpfiles": "Upload a file to Tmpfiles. | (RU) — загрузить файл на Tmpfiles | (EN) — upload a file to Tmpfiles"
         },
         {
-          "oxo": "Upload file to 0x0.st"
+          "tempsh": "Upload a file to Temp.sh. | (RU) — загрузить файл на Temp.sh | (EN) — upload a file to Temp.sh"
         },
         {
-          "x0": "Upload file to x0.at"
+          "filebin": "Upload a file to Filebin. | (RU) — загрузить файл на Filebin | (EN) — upload a file to Filebin"
         },
         {
-          "tmpfiles": "Upload file to tmpfiles.org"
+          "waifuvault": "Upload a file to WaifuVault. | (RU) — загрузить файл на WaifuVault | (EN) — upload a file to WaifuVault"
         },
         {
-          "pomf": "Upload file to pomf.lain.la"
+          "gofile": "Upload a file to GoFile, switching regions automatically on error. | (RU) — загрузить файл на GoFile(авторегионы) | (EN) — upload a file to GoFile (automatic regions)"
         },
         {
-          "bash": "Upload file to bashupload.com"
+          "file2": "Upload a file to File2.me. | (RU) — загрузить файл на File2.me | (EN) — upload a file to File2.me"
+        },
+        {
+          "tmp0": "Upload a file to Tmp0.cc. | (RU) — загрузить файл на Tmp0.cc | (EN) — upload a file to Tmp0.cc"
+        },
+        {
+          "tmpfile": "Upload a file to Tmpfile.link. | (RU) — загрузить файл на Tmpfile.link | (EN) — upload a file to Tmpfile.link"
+        },
+        {
+          "filepost": "Upload a file to FilePost. | (RU) — загрузить файл на FilePost | (EN) — upload a file to FilePost"
+        },
+        {
+          "storage": "Upload a file to Storage.to. | (RU) — загрузить файл на Storage.to | (EN) — upload a file to Storage.to"
+        },
+        {
+          "tempfile": "Upload a file to TempFile.org. | (RU) — загрузить файл на TempFile.org | (EN) — upload a file to TempFile.org"
+        },
+        {
+          "easysend": "Upload a file to EasySend. | (RU) — загрузить файл на EasySend | (EN) — upload a file to EasySend"
+        },
+        {
+          "zerostorage": "Upload a file to ZeroStorage. | (RU) — загрузить файл на ZeroStorage | (EN) — upload a file to ZeroStorage"
         }
       ],
       "new_commands": [
         {
-          "name": "catbox",
-          "original_name": "catboxcmd",
+          "name": "uguu",
+          "original_name": "uguu",
           "description": {
-            "default": "Upload file to catbox.moe"
+            "default": "Upload a file to Uguu.",
+            "ru": "— загрузить файл на Uguu",
+            "en": "— upload a file to Uguu"
           },
           "cmd_names": {},
           "aliases": [],
@@ -20385,49 +20410,12 @@
           "decorators": []
         },
         {
-          "name": "envs",
-          "original_name": "envscmd",
+          "name": "quax",
+          "original_name": "quax",
           "description": {
-            "default": "Upload file to envs.sh"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        },
-        {
-          "name": "kappa",
-          "original_name": "kappacmd",
-          "description": {
-            "default": "Upload file to kappa.lol"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        },
-        {
-          "name": "oxo",
-          "original_name": "oxocmd",
-          "description": {
-            "default": "Upload file to 0x0.st"
-          },
-          "cmd_names": {},
-          "aliases": [],
-          "usage": null,
-          "inline": false,
-          "is_inline_handler": false,
-          "decorators": []
-        },
-        {
-          "name": "x0",
-          "original_name": "x0cmd",
-          "description": {
-            "default": "Upload file to x0.at"
+            "default": "Upload a file to QuAx.",
+            "ru": "— загрузить файл на QuAx",
+            "en": "— upload a file to QuAx"
           },
           "cmd_names": {},
           "aliases": [],
@@ -20438,9 +20426,11 @@
         },
         {
           "name": "tmpfiles",
-          "original_name": "tmpfilescmd",
+          "original_name": "tmpfiles",
           "description": {
-            "default": "Upload file to tmpfiles.org"
+            "default": "Upload a file to Tmpfiles.",
+            "ru": "— загрузить файл на Tmpfiles",
+            "en": "— upload a file to Tmpfiles"
           },
           "cmd_names": {},
           "aliases": [],
@@ -20450,10 +20440,12 @@
           "decorators": []
         },
         {
-          "name": "pomf",
-          "original_name": "pomfcmd",
+          "name": "tempsh",
+          "original_name": "tempsh",
           "description": {
-            "default": "Upload file to pomf.lain.la"
+            "default": "Upload a file to Temp.sh.",
+            "ru": "— загрузить файл на Temp.sh",
+            "en": "— upload a file to Temp.sh"
           },
           "cmd_names": {},
           "aliases": [],
@@ -20463,10 +20455,162 @@
           "decorators": []
         },
         {
-          "name": "bash",
-          "original_name": "bashcmd",
+          "name": "filebin",
+          "original_name": "filebin",
           "description": {
-            "default": "Upload file to bashupload.com"
+            "default": "Upload a file to Filebin.",
+            "ru": "— загрузить файл на Filebin",
+            "en": "— upload a file to Filebin"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "waifuvault",
+          "original_name": "waifuvault",
+          "description": {
+            "default": "Upload a file to WaifuVault.",
+            "ru": "— загрузить файл на WaifuVault",
+            "en": "— upload a file to WaifuVault"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "gofile",
+          "original_name": "gofile",
+          "description": {
+            "default": "Upload a file to GoFile, switching regions automatically on error.",
+            "ru": "— загрузить файл на GoFile(авторегионы)",
+            "en": "— upload a file to GoFile (automatic regions)"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "file2",
+          "original_name": "file2",
+          "description": {
+            "default": "Upload a file to File2.me.",
+            "ru": "— загрузить файл на File2.me",
+            "en": "— upload a file to File2.me"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "tmp0",
+          "original_name": "tmp0",
+          "description": {
+            "default": "Upload a file to Tmp0.cc.",
+            "ru": "— загрузить файл на Tmp0.cc",
+            "en": "— upload a file to Tmp0.cc"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "tmpfile",
+          "original_name": "tmpfile",
+          "description": {
+            "default": "Upload a file to Tmpfile.link.",
+            "ru": "— загрузить файл на Tmpfile.link",
+            "en": "— upload a file to Tmpfile.link"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "filepost",
+          "original_name": "filepost",
+          "description": {
+            "default": "Upload a file to FilePost.",
+            "ru": "— загрузить файл на FilePost",
+            "en": "— upload a file to FilePost"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "storage",
+          "original_name": "storage",
+          "description": {
+            "default": "Upload a file to Storage.to.",
+            "ru": "— загрузить файл на Storage.to",
+            "en": "— upload a file to Storage.to"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "tempfile",
+          "original_name": "tempfile",
+          "description": {
+            "default": "Upload a file to TempFile.org.",
+            "ru": "— загрузить файл на TempFile.org",
+            "en": "— upload a file to TempFile.org"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "easysend",
+          "original_name": "easysend",
+          "description": {
+            "default": "Upload a file to EasySend.",
+            "ru": "— загрузить файл на EasySend",
+            "en": "— upload a file to EasySend"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "zerostorage",
+          "original_name": "zerostorage",
+          "description": {
+            "default": "Upload a file to ZeroStorage.",
+            "ru": "— загрузить файл на ZeroStorage",
+            "en": "— upload a file to ZeroStorage"
           },
           "cmd_names": {},
           "aliases": [],
@@ -20478,16 +20622,24 @@
       ],
       "inline_handlers": [],
       "strings": {
-        "name": "K:Uploader",
-        "uploading": "⚡ <b>Uploading file...</b>",
-        "reply_to_file": "❌ <b>Reply to file!</b>",
-        "uploaded": "❤️ <b>File uploaded!</b>\n\n🔥 <b>URL:</b> <code>{}</code>",
-        "error": "❌ <b>Error while uploading: {}</b>",
-        "name_ru": "K:Uploader",
-        "uploading_ru": "⚡ <b>Загружаю файл...</b>",
-        "reply_to_file_ru": "❌ <b>Ответьте на файл!</b>",
-        "uploaded_ru": "❤️ <b>Файл загружен!</b>\n\n🔥 <b>URL:</b> <code>{}</code>",
-        "error_ru": "❌ <b>Ошибка при загрузке: {}</b>"
+        "name": "K:Uploader 2.0",
+        "uploading": "<tg-emoji emoji-id=5873204392429096339>⌨</tg-emoji><b>Uploading file...</b>",
+        "uploaded": "<tg-emoji emoji-id=5870570722778156940>📁</tg-emoji><b>File uploaded:</b>\n<blockquote>{link}</blockquote>",
+        "upload_error": "<tg-emoji emoji-id=5870657884844462243>❌</tg-emoji> <b>File upload error: </b>\n<blockquote>{error}</blockquote>",
+        "reply_to_file": "<b>Upload a file to Uploader:</b> reply to a file, photo, video, or other media with <code>{prefix}{command}</code>.",
+        "file_too_large": "<b>File is too large.</b> Module limit: <code>{limit} MB</code>.",
+        "name_ru": "K:Uploader 2.0",
+        "uploading_ru": "<tg-emoji emoji-id=5873204392429096339>⌨</tg-emoji><b>Загружаю файл...</b>",
+        "uploaded_ru": "<tg-emoji emoji-id=5870570722778156940>📁</tg-emoji><b>Файл был загружен:</b>\n<blockquote>{link}</blockquote>",
+        "upload_error_ru": "<tg-emoji emoji-id=5870657884844462243>❌</tg-emoji> <b>Ошибка при загрузке файла: </b>\n<blockquote>{error}</blockquote>",
+        "reply_to_file_ru": "<b>Загрузить файл на Uploader:</b> ответьте на файл, фото, видео или другой медиафайл командой <code>{prefix}{command}</code>.",
+        "file_too_large_ru": "<b>Файл слишком большой.</b> Лимит модуля: <code>{limit} МБ</code>.",
+        "name_ja": "K:Uploader 2.0",
+        "uploading_ja": "<tg-emoji emoji-id=5873204392429096339>⌨</tg-emoji><b>ファイルをアップロードしています...</b>",
+        "uploaded_ja": "<tg-emoji emoji-id=5870570722778156940>📁</tg-emoji><b>ファイルをアップロードしました:</b>\n<blockquote>{link}</blockquote>",
+        "upload_error_ja": "<tg-emoji emoji-id=5870657884844462243>❌</tg-emoji> <b>ファイルのアップロード中にエラーが発生しました: </b>\n<blockquote>{error}</blockquote>",
+        "reply_to_file_ja": "<b>Uploader にファイルをアップロード:</b> ファイル、写真、動画などに <code>{prefix}{command}</code> で返信してください。",
+        "file_too_large_ja": "<b>ファイルが大きすぎます。</b> モジュールの上限: <code>{limit} MB</code>。"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -55322,6 +55474,170 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "ZetGoHack/nullmod/Example.py": {
+      "name": "TheBestExampleEverMod",
+      "description": "Это описание модуля. Оно отображается после установки и в меню команды `.help TheBestExampleEverMod`",
+      "cls_doc": {
+        "default": "This is the best example module ever!",
+        "ru": "Это лучший пример модуля!",
+        "jp": "これは最高のモジュールの例です！"
+      },
+      "meta": {
+        "pic": "https://github.com/ZetGoHack/Nullmod/raw/main/20250401_100043.jpg",
+        "banner": "https://github.com/ZetGoHack/Nullmod/raw/main/20250401_100043.jpg",
+        "developer": "@ZetGo"
+      },
+      "commands": [
+        {
+          "example": "Example description for a command in English | (RU) Пример описания для команды на русском | (JP) コマンドの日本語の説明の例"
+        },
+        {
+          "exmplmkp": "Example of a command with inline buttons | (RU) Пример команды с инлайн-кнопками | (JP) インラインボタンを使用したコマンドの例"
+        },
+        {
+          "inlexample": "Example description for an inline command in English"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "example",
+          "original_name": "example",
+          "description": {
+            "default": "Example description for a command in English",
+            "ru": "Пример описания для команды на русском",
+            "jp": "コマンドの日本語の説明の例"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "exmplmkp",
+          "original_name": "exmplmkp",
+          "description": {
+            "default": "Example of a command with inline buttons",
+            "ru": "Пример команды с инлайн-кнопками",
+            "jp": "インラインボタンを使用したコマンドの例"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "inlexample",
+          "original_name": "inlexample",
+          "description": {
+            "default": "Example description for an inline command in English"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": true,
+          "is_inline_handler": true,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [
+        {
+          "name": "inlexample",
+          "description": {
+            "default": "Example description for an inline command in English"
+          },
+          "decorators": []
+        }
+      ],
+      "strings": {
+        "name": "TheBestExampleEver",
+        "_cls_doc": "This is the best example module ever!",
+        "cfg_changed": "Config value changed to {}!",
+        "loading": "<emoji document_id=5382187328670282655>🐱</emoji> Your result is loading...",
+        "loaded": "<emoji emoji-id=5382147531503319073>😶</emoji> Just kidding! I haven't loaded anything, here are the arguments you entered: {}",
+        "user_online": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{} is online!</b>",
+        "user_offline": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{} is offline!</b>",
+        "inl__a_message": "This is a simple message",
+        "inl__a_message_desc": "Example of a simple message",
+        "inl__a_message_text": "<b>You entered in inline arguments: {}!</b>",
+        "inl__mrk_example": "Example of a message with buttons",
+        "inl__a_photo": "This is an example of a message with photo",
+        "inl__a_photo_desc": "Example of a message with photo for inline",
+        "inl__a_photo_caption": "<b>This is a photo with caption!</b>",
+        "inl__gallery": "Example gallery",
+        "inl__gallery_desc": "Example of inline gallery from query",
+        "inl__gallery_caption": "<b>This photo was opened from query_gallery</b>",
+        "inl__button": "Button in inline",
+        "inl__insert_query": "Insert query",
+        "inl__a_gif": "Example GIF",
+        "inl__a_gif_desc": "Example of a gif result",
+        "inl__a_gif_caption": "<b>This is a gif with caption!</b>",
+        "inl__a_video": "Example video",
+        "inl__a_video_desc": "Example of a video result",
+        "inl__a_video_caption": "<b>This is a video with caption!</b>",
+        "inl__a_file": "Example file",
+        "inl__a_file_desc": "Example of a document result",
+        "inl__a_file_caption": "<b>This is a PDF file!</b>",
+        "cfg_changed_ru": "Значение конфига изменено на {}!",
+        "loading_ru": "<emoji document_id=5382187328670282655>🐱</emoji> Ваш пример загружается...",
+        "loaded_ru": "<emoji document_id=5382147531503319073>😶</emoji> Шучу! Я ничего не загружал, вот аргументы, которые вы ввели: {}",
+        "user_online_ru": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{} вошёл в сеть!</b>",
+        "user_offline_ru": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{} вышел из сети!</b>",
+        "inl__a_message_ru": "Это простое сообщение",
+        "inl__a_message_desc_ru": "Пример простого сообщения",
+        "inl__a_message_text_ru": "<b>Вы ввели в аргументы инлайна: {}!</b>",
+        "inl__mrk_example_ru": "Пример сообщения с кнопками",
+        "inl__a_photo_ru": "Это пример сообщения с фото",
+        "inl__a_photo_desc_ru": "Пример сообщения с фото для инлайна",
+        "inl__a_photo_caption_ru": "<b>Это фото с подписью!</b>",
+        "inl__gallery_ru": "Пример галереи",
+        "inl__gallery_desc_ru": "Пример инлайн-галереи из запроса",
+        "inl__gallery_caption_ru": "<b>Это фото открыто через query_gallery</b>",
+        "inl__button_ru": "Кнопка в инлайне",
+        "inl__insert_query_ru": "Вставить запрос",
+        "inl__a_gif_ru": "Пример GIF",
+        "inl__a_gif_desc_ru": "Пример результата с gif",
+        "inl__a_gif_caption_ru": "<b>Это gif с подписью!</b>",
+        "inl__a_video_ru": "Пример видео",
+        "inl__a_video_desc_ru": "Пример результата с видео",
+        "inl__a_video_caption_ru": "<b>Это видео с подписью!</b>",
+        "inl__a_file_ru": "Пример файла",
+        "inl__a_file_desc_ru": "Пример результата с документом",
+        "inl__a_file_caption_ru": "<b>Это PDF-файл!</b>",
+        "cfg_changed_jp": "構成値が{}に変更されました！",
+        "loading_jp": "<emoji document_id=5382187328670282655>🐱</emoji> 結果を読み込んでいます...",
+        "loaded_jp": "<emoji document_id=5382147531503319073>😶</emoji> 冗談です！何も読み込んでいません。入力した引数は次のとおりです：{}",
+        "user_online_jp": "<emoji document_id=5323703983066324828>🟢</emoji> <b>{}がオンラインです！</b>",
+        "user_offline_jp": "<emoji document_id=5325738268556271707>🔴</emoji> <b>{}がオフラインです！</b>",
+        "inl__a_message_jp": "これは単純なメッセージです",
+        "inl__a_message_desc_jp": "単純なメッセージの例",
+        "inl__a_message_text_jp": "<b>インライン引数に入力した内容：{}！</b>",
+        "inl__mrk_example_jp": "ボタン付きメッセージの例",
+        "inl__a_photo_jp": "これは写真付きメッセージの例です",
+        "inl__a_photo_desc_jp": "インラインの写真付きメッセージの例",
+        "inl__a_photo_caption_jp": "<b>これはキャプション付きの写真です！</b>",
+        "inl__gallery_jp": "ギャラリーの例",
+        "inl__gallery_desc_jp": "クエリから開くインラインギャラリーの例",
+        "inl__gallery_caption_jp": "<b>この写真は query_gallery から開かれました</b>",
+        "inl__button_jp": "インラインのボタン",
+        "inl__insert_query_jp": "クエリを挿入",
+        "inl__a_gif_jp": "GIF の例",
+        "inl__a_gif_desc_jp": "GIF 結果の例",
+        "inl__a_gif_caption_jp": "<b>これはキャプション付きの GIF です！</b>",
+        "inl__a_video_jp": "動画の例",
+        "inl__a_video_desc_jp": "動画結果の例",
+        "inl__a_video_caption_jp": "<b>これはキャプション付きの動画です！</b>",
+        "inl__a_file_jp": "ファイルの例",
+        "inl__a_file_desc_jp": "ドキュメント結果の例",
+        "inl__a_file_caption_jp": "<b>これは PDF ファイルです！</b>"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "MuRuLOSE/HikkaModulesRepo/CustomPing.py": {
       "name": "CustomPing",
       "description": "Have you seen a customizable ping module in Netfoll? I have, yes, but I find it unacceptable to use Netfoll, so I took the idea of custom ping, and replicated it.",
@@ -64186,6 +64502,70 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/AniSearch.py": {
+      "name": "AniSearchMod",
+      "description": "Searches for anime exact moment by only frame screenshot",
+      "cls_doc": {
+        "ru": "Ищет конкретную серию и тайм-код аниме по скриншоту",
+        "jp": "スクリーンショットからアニメの特定のエピソードとタイムコードを検索します"
+      },
+      "meta": {
+        "pic": "https://static.dan.tatar/anisearch_icon.png",
+        "banner": "https://r2.fakecrime.bio/uploads/38dc99ec-1ed3-4e09-830f-785aec51435d.jpg",
+        "developer": "Author: @hikarimods | Forked by: @SunnexGB"
+      },
+      "commands": [
+        {
+          "anisearch": "- Search anime by photo | (RU) - Найти аниме по фото | (JP) - 写真でアニメを検索"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "anisearch",
+          "original_name": "anisearchcmd",
+          "description": {
+            "default": "- Search anime by photo",
+            "ru": "- Найти аниме по фото",
+            "jp": "- 写真でアニメを検索"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "AniSearch",
+        "no_lib": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> | <b>Library not loaded</b>",
+        "404": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>I don't know which anime it is...</b>",
+        "searching": "<tg-emoji emoji-id=5345778951031658558>😭</tg-emoji> <b>Let me take a look...</b>",
+        "result": "\n        <aside><b>{title}</b></aside>\n\n        <figure>\n        <img src=\"{cover}\"/>\n        <figcaption>Episode: {ep} | {time} | I think it is ~{proc}% similarity</figcaption>\n        </figure>\n\n        <hr/>\n\n        <table bordered>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Alias</b></td>\n            <td><b>{aliases}</b></td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Genre</b></td>\n            <td><b>{genres}</b></td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Studio</b></td>\n            <td>\n            {studios}\n            </td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>External Links</b></td>\n            <td>\n            {e_links}\n            </td>\n        </tr>\n        </table>\n\n<aside><b>Information provided by</b> <a href=\"https://anilist.co/\">anilist.co</a></aside>\n",
+        "media_not_found": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>Media not found</b>",
+        "no_data": "no data",
+        "header_title_cfg": "header title language",
+        "no_lib_ru": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> | <b>>Библиотека не была загружена</b>",
+        "404_ru": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>Я не знаю что это за аниме...</b>",
+        "searching_ru": "<tg-emoji emoji-id=5345778951031658558>😭</tg-emoji> <b>Дай-ка мне посмотреть...</b>",
+        "result_ru": "\n        <aside><b>{title}</b></aside>\n\n        <figure>\n        <img src=\"{cover}\"/>\n        <figcaption>Серия: {ep} | {time} | Я уверен в сходстве на ~{proc}%</figcaption>\n        </figure>\n\n        <hr/>\n\n        <table bordered>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Другие названия</b></td>\n            <td><b>{aliases}</b></td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Жанры</b></td>\n            <td><b>{genres}</b></td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Студии</b></td>\n            <td>\n            {studios}\n            </td>\n        </tr>\n        <tr>\n            <td align=\"center\" valign=\"middle\"><b>Внешние ссылки</b></td>\n            <td>\n            {e_links}\n            </td>\n        </tr>\n        </table>\n\n<aside><b>Информация бралась из</b> <a href=\"https://anilist.co/\">anilist.co</a></aside>\n",
+        "media_not_found_ru": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>Media not found</b>",
+        "no_data_ru": "no data",
+        "header_title_cfg_ru": "Язык на котором будет заголовок.",
+        "name_jp": "AniSearch",
+        "no_lib_jp": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> | <b>ライブラリがロードされていません</b>",
+        "404_jp": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>どのアニメかわかりません…</b>",
+        "searching_jp": "<tg-emoji emoji-id=5345778951031658558>😭</tg-emoji> <b>ちょっと見てみますね…</b>",
+        "result_jp": "\n    <aside><b>{title}</b></aside>\n\n    <figure>\n    <img src=\"{cover}\"/>\n    <figcaption>第: {ep}話 | {time} | 類似度約: {proc}%</figcaption>\n    </figure>\n\n    <hr/>\n\n    <table bordered>\n    <tr>\n        <td align=\"center\" valign=\"middle\"><b>別名</b></td>\n        <td><b>{aliases}</b></td>\n    </tr>\n    <tr>\n        <td align=\"center\" valign=\"middle\"><b>ジャンル</b></td>\n        <td><b>{genres}</b></td>\n    </tr>\n    <tr>\n        <td align=\"center\" valign=\"middle\"><b>スタジオ</b></td>\n        <td>\n        {studios}\n        </td>\n    </tr>\n    <tr>\n        <td align=\"center\" valign=\"middle\"><b>外部リンク</b></td>\n        <td>\n        {e_links}\n        </td>\n    </tr>\n    </table>\n\n    <aside><b>情報提供元:</b> <a href=\"https://anilist.co/\">anilist.co</a></aside>\n    ",
+        "media_not_found_jp": "<tg-emoji emoji-id=5348118479847333898>🗑</tg-emoji> <b>メディアが見つかりません</b>",
+        "no_data_jp": "データなし",
+        "header_title_cfg_jp": "ヘッダータイトルの言語"
+      },
+      "has_on_load": false,
+      "has_on_unload": true,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/Hangman.py": {
       "name": "Hangman",
       "description": "Висилица",
@@ -64384,7 +64764,7 @@
       "meta": {
         "pic": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
         "banner": "https://r2.fakecrime.bio/uploads/54b3c78d-38cb-4970-b925-18b7ec2b268d.jpg",
-        "developer": "@SunnexGB"
+        "developer": "@H_SunMods"
       },
       "commands": [
         {
@@ -64420,6 +64800,8 @@
         "result_url": "<b><emoji document_id=4967503352863654812>〰️</emoji>Song recognized:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Artist:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Title:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Listen on Shazam</a>",
         "shazam_history": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Your last 10 recognised songs</b>",
         "no_history": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>What do you want to see here?</b>",
+        "unknown_artist": "Unknown Artist",
+        "unknown_title": "Unknown Title",
         "name_ru": "Shazamio",
         "processing_ru": "<b>Обработка <emoji document_id=5325731315004218660>🫥</emoji></b>",
         "shazaming_ru": "<b><emoji document_id=4967658551506895731>🔈</emoji>| Шазамлю...</b>",
@@ -64430,7 +64812,9 @@
         "result_ru": "<b><emoji document_id=4967689020004893467>🔈</emoji>| Песня найдена:</b>\n\n<b><emoji document_id=4967689020004893467>🔈</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967925573918655510>🚮</emoji>Название:</b><code>{title}</code>",
         "result_url_ru": "<b><emoji document_id=4967503352863654812>〰️</emoji>Песня найдена:</b>\n\n<b><emoji document_id=4967925573918655510>🚮</emoji>Исполнитель:</b><code>{artist}</code>\n<b><emoji document_id=4967689020004893467>🔈</emoji>Название:</b><code>{title}</code>\n\n<emoji document_id=4967826519087907994>🔗</emoji><a href=\"{url}\">Слушайте на Shazam</a>",
         "shazam_history_ru": "<emoji document_id=4969829017524896906>〰️</emoji>| <b>Твои 10 последних распознаных треков</b>",
-        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>"
+        "no_history_ru": "<emoji document_id=4970064390322652183>〰️</emoji>| <b>Ну и что ты тут хотел увидеть?</b>",
+        "unknown_artist_ru": "Неизвестный Исполнитель",
+        "unknown_title_ru": "Неизвестный трек"
       },
       "has_on_load": false,
       "has_on_unload": false,
@@ -64622,6 +65006,79 @@
       "has_on_unload": false,
       "class_cmd_names": {}
     },
+    "SunnexGB/Heroku-Modules/onitama.py": {
+      "name": "onitama",
+      "description": "Onitama - это мини игра для двоих с полем 5 на 5.",
+      "cls_doc": {},
+      "meta": {
+        "pic": "https://r2.fakecrime.bio/uploads/00b416c7-4987-4eed-a314-497c159b5403.jpg",
+        "banner": "https://r2.fakecrime.bio/uploads/00b416c7-4987-4eed-a314-497c159b5403.jpg",
+        "developer": "@H_SunMods",
+        "fhsdesc": "mini-game, game, onitama, strategy, sunnex",
+        "tags": "mini-game, game, onitama, strategy, sunnex"
+      },
+      "commands": [
+        {
+          "othelp": "- Показать правила игры"
+        },
+        {
+          "ot": "- Ответом / @username / id. начать игру"
+        }
+      ],
+      "new_commands": [
+        {
+          "name": "othelp",
+          "original_name": "othelp",
+          "description": {
+            "default": "- Показать правила игры"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        },
+        {
+          "name": "ot",
+          "original_name": "ot",
+          "description": {
+            "default": "- Ответом / @username / id. начать игру"
+          },
+          "cmd_names": {},
+          "aliases": [],
+          "usage": null,
+          "inline": false,
+          "is_inline_handler": false,
+          "decorators": []
+        }
+      ],
+      "inline_handlers": [],
+      "strings": {
+        "name": "Onitama",
+        "invite_msg": "<b>{owner_name}</b> приглашает тебя сыграть в Онитаму!\nПринять вызов?",
+        "accept_button": "Принять",
+        "decline_button": "Отклонить",
+        "othelp_btn": "Перейти",
+        "cant_accept_own": "Сам с собой что ли играть собрался? Давай уж в другой раз",
+        "not_for_u": "Это приглашение не для тебя",
+        "invite_cancelled": "Приглашение отменено",
+        "invite_declined": "Приглашение отклонено",
+        "invalid_user": "Не удалось найти этого пользователя",
+        "move_msg": "<b>{human} VS {nigga}\n{w_arrow}🤴🏻 {human}\n{b_arrow}🤴🏿 {nigga}</b>",
+        "win_msg": "<b>{win_name} победил(а)!</b>",
+        "game_not_found": "Эта игра уже мертва",
+        "not_ur_turn": "Сейчас не твой ход",
+        "not_u_card": "Это не твоя карта, дурак!",
+        "first_selectt": "Сначала выбери карту",
+        "select_own_piece": "Выбери одну из своих фигур",
+        "illegal_move": "Ты не можешь сделать ход на эту клетку.",
+        "oth_msg": "Подробный гайд можно посмотреть у меня в канале,так как мне было лень писать целуюю полноценную команду."
+      },
+      "has_on_load": false,
+      "has_on_unload": false,
+      "class_cmd_names": {}
+    },
     "SunnexGB/Heroku-Modules/everlastingsummer.py": {
       "name": "EverlastingSummer",
       "description": "Встретив Семёна, главного героя игры, вы никогда бы не обратили на него внимания. Просто обычный молодой человек среди тысяч, даже сотен тысяч таких, как он, в каждом обычном городе. Но однажды с ним происходит нечто совершенно необычное: он засыпает в автобусе зимой и просыпается... посреди жаркого лета. Перед ним - \"Совёнок\" - пионерский лагерь, а за ним - его прежняя жизнь. Чтобы понять, что с ним произошло, Семёну придется познакомиться с местными жителями (и, возможно, даже найти любовь), сориентироваться в сложном лабиринте человеческих отношений и своих собственных проблем, а также разгадать тайны лагеря. И ответить на главный вопрос - как вернуться? Стоит ли ему возвращаться?",
@@ -64807,7 +65264,9 @@
     "SunnexGB/Heroku-Modules/whatbeatsrock.py": {
       "name": "WhatBeatsRock",
       "description": "Rock scissors paper /w AI",
-      "cls_doc": {},
+      "cls_doc": {
+        "ru": "Не обычные камень ножницы бумага с ИИ"
+      },
       "meta": {
         "pic": "https://r2.fakecrime.bio/uploads/ee7f6884-af8d-4af9-8356-56eec2f8c2a3.jpg",
         "banner": "https://r2.fakecrime.bio/uploads/ee7f6884-af8d-4af9-8356-56eec2f8c2a3.jpg",
@@ -64815,7 +65274,7 @@
       },
       "commands": [
         {
-          "wbr": "start a game"
+          "wbr": "start a game | (RU) начать игру"
         }
       ],
       "new_commands": [
@@ -64823,7 +65282,8 @@
           "name": "wbr",
           "original_name": "wbr",
           "description": {
-            "default": "start a game"
+            "default": "start a game",
+            "ru": "начать игру"
           },
           "cmd_names": {},
           "aliases": [],
@@ -64836,10 +65296,20 @@
       "inline_handlers": [],
       "strings": {
         "name": "WhatBeatsRock",
+        "lang": "en",
+        "item": "rock",
         "main_msg": "⠀⠀⠀⠀⠀⠀⠀    ⠀<b>what beats</b>:\n⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠀<code>{item}?</code>\n⠀⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠀{emoji}\n <blockquote>{reason}</blockquote>\n\n <b>follow the creators </b><a href=\"https://x.com/dragon_khoi\"><b>khoi🐟</b></a><b> & </b><a href=\"https://x.com/qualiaspace\"><b>kyle</b></a>🥬\n⠀<b>join the community on </b><a href=\"https://discord.gg/bjbHyFEyWv\"><b>discord</b></a> 💬\n⠀<b>powered by </b><a href=\"https://deepinfra.com/?utm_source=whatbeatsrock\"><b>deepinfra</b></a> 🤖",
-        "give_guess": "What a beat this is item",
+        "give_guess": "What a beat this is item?",
         "guess_btn": "Enter guess",
-        "close_btn": "Close"
+        "close_btn": "Close",
+        "custom_message_cfg": "Edit your custom inline message",
+        "lang_ru": "ru",
+        "item_ru": "камень",
+        "main_msg_ru": "⠀⠀⠀⠀⠀⠀⠀    ⠀<b>Что бьет</b>:\n⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠀<code>{item}?</code>\n⠀⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠀{emoji}\n <blockquote>{reason}</blockquote>\n\n <b>Следите за создателями </b><a href=\"https://x.com/dragon_khoi\"><b>khoi🐟</b></a><b> & </b><a href=\"https://x.com/qualiaspace\"><b>kyle</b></a>🥬\n⠀<b>Станьте частью комьюнити в </b><a href=\"https://discord.gg/bjbHyFEyWv\"><b>discord</b></a> 💬\n⠀<b>Разработано компанией: </b><a href=\"https://deepinfra.com/?utm_source=whatbeatsrock\"><b>deepinfra</b></a> 🤖",
+        "give_guess_ru": "Что сможет побить этот предмет?",
+        "guess_btn_ru": "Написать догадку",
+        "close_btn_ru": "Закрыть",
+        "custom_message_cfg_ru": "Изменить ваше сообщение в инлайне"
       },
       "has_on_load": false,
       "has_on_unload": true,
@@ -80405,7 +80875,7 @@
     }
   },
   "meta": {
-    "total_modules": 1014,
-    "generated_at": "2026-07-27T02:12:55.892234"
+    "total_modules": 1017,
+    "generated_at": "2026-08-13T01:19:56.517981"
   }
 }
