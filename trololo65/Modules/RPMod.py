@@ -289,10 +289,21 @@ class RPMod(loader.Module):
 				await utils.answer(message, f"<b>Ошибка:\n</b>{e}")
 			
 	async def rpblockcmd(self, message):
-		"""Используй: .rpblock чтобы добавить/удалить исключение(использовать в нужном чате).\nИспользуй: .rpblock list чтобы просмотреть чаты в исключениях.\nИспользуй .rpblock (ид) чтобы удалить чат из исключений."""
+		"""Используй: .rpblock чтобы добавить/удалить исключение(использовать в нужном чате).\nИспользуй: .rpblock list чтобы просмотреть чаты в исключениях.\nИспользуй .rpblock (ид) чтобы удалить чат из исключений.\nРеплай на сообщение — добавить/убрать пользователя."""
 		args = utils.get_args_raw(message)
 		ex = self.db.get("RPMod", "exlist")
-		if not args:
+		reply = await message.get_reply_message()
+		if not args and reply:
+			a = await message.client.get_entity(reply.sender_id)
+			if a.id in ex:
+				ex.remove(a.id)
+				self.db.set("RPMod", "exlist", ex)
+				await utils.answer(message, f'<i>Пользователь <b><u>{a.first_name}</u></b>[<code>{a.id}</code>] удален из исключений.</i>')
+			else:
+				ex.append(a.id)
+				self.db.set("RPMod", "exlist", ex)
+				await utils.answer(message, f'<i>Пользователь <b><u>{a.first_name}</u></b>[<code>{a.id}</code>] добавлен в исключения.</i>')
+		elif not args:
 			a = await message.client.get_entity(message.to_id)
 			if a.id in ex:
 				ex.remove(a.id)
@@ -325,7 +336,7 @@ class RPMod(loader.Module):
 				try:
 					a = await message.client.get_entity(args)
 				except:
-					await utils.answer(message, '<b>Неверный ид.</b>')
+					return await utils.answer(message, '<b>Неверный ид.</b>')
 				ex.append(args)
 				self.db.set("RPMod", "exlist", ex)
 				try:
@@ -338,12 +349,12 @@ class RPMod(loader.Module):
 			if ex_len == 0:
 				await utils.answer(message, f'<b>Список исключений пуст.</b>')
 				return
-			sms = f'<i> Чаты, которые есть в исключениях({ex_len}):</i>'
+			sms = f'<i> Чаты и пользователи в исключениях({ex_len}):</i>'
 			for i in ex:
 				try:
 					a = await message.client.get_entity(i)
 				except:
-					await utils.answer(message, f'<b>Неверный ид -- {a}</b>')
+					await utils.answer(message, f'<b>Неверный ид -- {i}</b>')
 					return
 				try:
 					name = a.title
@@ -447,7 +458,7 @@ class RPMod(loader.Module):
 			conf = self.db.get("RPMod", "rpconfigurate", conf_default)
 			
 			chat_rp = await message.client.get_entity(message.to_id)
-			if status != 1 or chat_rp.id in ex: return
+			if status != 1 or chat_rp.id in ex or message.sender_id in ex: return
 			me_id = (await message.client.get_me()).id
 
 			if message.sender_id not in users_accept["users"] and message.sender_id != me_id and chat_rp.id not in users_accept["chats"]: return
