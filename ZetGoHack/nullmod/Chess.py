@@ -1,14 +1,14 @@
-__version__ = (2, 0, 6)
+__version__ = (2, 1, 0)
 #░░░███░███░███░███░███
 #░░░░░█░█░░░░█░░█░░░█░█
 #░░░░█░░███░░█░░█░█░█░█
 #░░░█░░░█░░░░█░░█░█░█░█
 #░░░███░███░░█░░███░███
-#H:Mods Team [💎]
 
 # meta developer: @nullmod
 # requires: python-chess gdown
-# packurl: https://github.com/ZetGoHack/TestingModules/raw/main/chess.yml
+# packurl: https://github.com/ZetGoHack/Nullmod/raw/main/langpacks/chess.yml
+# scope: hikka_min 6.7.67
 
 import asyncio
 import chess
@@ -210,37 +210,43 @@ class Chess(loader.Module):
                 "symbol": "[♔⚪] ",
                 "r": "♖⚫", "n": "♘⚫", "b": "♗⚫", "q": "♕⚫", "k": "♔⚫", "p": "♙⚫",
                 "R": "♖⚪", "N": "♘⚪", "B": "♗⚪", "Q": "♕⚪", "K": "♔⚪", "P": "♙⚪",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
             "figures": {
                 "symbol": "[♔] ",
                 "r": "♜", "n": "♞", "b": "♝", "q": "𝗾", "k": "♚", "p": "♟",
                 "R": "♖", "N": "♘", "B": "♗", "Q": "𝗤", "K": "♔", "P": "♙",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
             "letters": {
                 "symbol": "[𝗞] ",
                 "r": "𝗿", "n": "𝗻", "b": "𝗯", "q": "𝗾", "k": "𝗸", "p": "𝗽",
                 "R": "𝗥", "N": "𝗡", "B": "𝗕", "Q": "𝗤", "K": "𝗞", "P": "𝗣",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
             "figures-with-cyr-letters": {
                 "symbol": "[♔Б] ",
                 "r": "♖Ч", "n": "♘Ч", "b": "♗Ч", "q": "♕Ч", "k": "♔Ч", "p": "♙Ч",
                 "R": "♖Б", "N": "♘Б", "B": "♗Б", "Q": "♕Б", "K": "♔Б", "P": "♙Б",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
             "figures-with-latin-letters": {
                 "symbol": "[♔W] ",
                 "r": "♖B", "n": "♘B", "b": "♗B", "q": "♕B", "k": "♔B", "p": "♙B",
                 "R": "♖W", "N": "♘W", "B": "♗W", "Q": "♕W", "K": "♔W", "P": "♙W",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
             "figures-with-comb-letters": {
                 "symbol": "[♔ⷱ] ",
                 "r": "♖ⷱ", "n": "♘ⷱ", "b": "♗ⷱ", "q": "♕ⷱ", "k": "♔ⷱ", "p": "♙ⷱ",
                 "R": "♖ⷠ", "N": "♘ⷠ", "B": "♗ⷠ", "Q": "♕ⷠ", "K": "♔ⷠ", "P": "♙ⷠ",
-                "move": "●", "capture": "×", "promotion": "↻", "capture_promotion": "×↻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
+            },
+            "figures-with-emoji": {
+                "symbol": "[♟ⷱ] ",
+                "r": "🏰", "n": "🐴", "b": "🦣", "q": "👸🏿", "k": "🤴🏿", "p": "👶🏿",
+                "R": "🏛", "N": "🦄", "B": "🐘", "Q": "👸🏻", "K": "🤴🏻", "P": "👶🏻",
+                "move": "success", "capture": "danger", "promotion": "↻", "capture_promotion": "×↻", # может быть потом сможно будет добавить совместимость со старыми стилями
             },
         }
         self.coords = {
@@ -302,7 +308,7 @@ class Chess(loader.Module):
 
         if isinstance(message, InlineCall):
             opp_id = message.from_user.id
-            opp_name = message.from_user.first_name
+            opp_name = (await self.client.get_entity(opp_id)).first_name
 
         elif message.is_reply:
             r = await message.get_reply_message()
@@ -841,20 +847,18 @@ class Chess(loader.Module):
         piece = game["game"]["board"].piece_at(chess.parse_square(coord))
         return game["style"][piece.symbol()] if piece else " "
 
-    def _get_move_symbol(self, game_id: str, move: str) -> str:
+    def _get_move_symbol(self, game_id: str, move: str) -> tuple[str, str | None]:
         game = self.games[game_id]
+        color_move = chess.Move.from_uci(move)
+        is_capture = game["game"]["board"].is_capture(color_move)
         if len(move) == 5:
-            return game["style"][
-                "capture_promotion" if (move := chess.Move.from_uci(move))
-                and game["game"]["board"].is_capture(move)
-                else "promotion"
-            ]
-        else:
-            return game["style"][
-                "capture" if (move := chess.Move.from_uci(move))
-                and game["game"]["board"].is_capture(move)
-                else "move"
-            ]
+            promotion = "capture_promotion" if is_capture else "promotion"
+            return game["style"][promotion], None
+        if is_capture:
+            capture_figure = game["game"]["board"].piece_at(color_move.to_square)
+            text = game["style"][capture_figure.symbol()] if capture_figure else game["style"]["p" if  game["game"]["board"].turn else "P"]
+            return text, game["style"]["capture"]
+        return " ", game["style"]["move"]
 
     def _get_available_moves(self, game_id: str, coord: str) -> list[str]:
         if not coord: return []
@@ -867,14 +871,19 @@ class Chess(loader.Module):
         game = self.games[game_id]
         coords = copy.deepcopy(self.coords)
         for coord in self.coords:
-            coords[coord] = self._get_piece_symbol(game_id, coord)
-
+            coords[coord] = {"text": self._get_piece_symbol(game_id, coord)}
         if game["game"]["state"] == "in_choose":
             choosen_coord = game["game"]["add_params"]["chosen_figure_coord"]
             for move in self._get_available_moves(game_id, choosen_coord):
                 coord = move[2:4]
-                coords[coord] = self._get_move_symbol(game_id, move)
-
+                text, style = self._get_move_symbol(game_id, move)
+                coords[coord] = {
+                    "text": text,
+                    **({"style": style}
+                       if style
+                       else {}
+                    )
+                }
         return coords
 
     def _get_reply_markup(self, game_id: str, promotion: bool = False, resign_confirm: bool = False, draw_confirm: bool = False) -> list[list[dict]]:
@@ -884,11 +893,16 @@ class Chess(loader.Module):
         reply_markup = utils.chunks(
             [
                 {
-                    "text": figure,
+                    "text": data["text"],
                     "callback": self.choose_coord,
                     "args": (game_id, coord),
+                    **(
+                        {"style": data["style"]}
+                       if "style" in data
+                       else {}
+                    )
                 }
-                for coord, figure in self._get_board_dict(game_id).items()
+                for coord, data in self._get_board_dict(game_id).items()
             ][::-1],
             8
         )
