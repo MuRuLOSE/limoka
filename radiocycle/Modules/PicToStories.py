@@ -41,6 +41,10 @@ class PicToStoriesMod(loader.Module):
             "<emoji document_id=5778527486270770928>❌</emoji> "
             "<b>Error:</b> {}"
         ),
+        "too_much_stories": (
+            "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> "
+            "You have too much stories. Wait {}h."
+        ),
     }
 
     strings_ru = {
@@ -59,6 +63,10 @@ class PicToStoriesMod(loader.Module):
         "err": (
             "<emoji document_id=5778527486270770928>❌</emoji> "
             "<b>Ошибка:</b> {}"
+        ),
+        "too_much_stories": (
+            "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> "
+            "У тебя слишком много историй. Подожди {}ч."
         ),
     }
 
@@ -89,6 +97,7 @@ class PicToStoriesMod(loader.Module):
         """<reply to photo> [album name] - make grid"""
         args = utils.get_args_raw(message)
         reply = await message.get_reply_message()
+        period = str(self.config["period"])
         if not reply or not reply.media:
             await utils.answer(message, self.strings["no_rep"])
             return
@@ -96,6 +105,8 @@ class PicToStoriesMod(loader.Module):
         try:
             image_bytes = await reply.download_media(file=bytes)
             img = Image.open(io.BytesIO(image_bytes))
+            if img.mode != "RGB":
+                img = img.convert("RGB")
         except Exception as e:
             await utils.answer(message, self.strings["err"].format(e))
             return
@@ -104,12 +115,8 @@ class PicToStoriesMod(loader.Module):
 
         w, h = img.size
         curr_ratio = w / h
-        variants = [
-            (5 / 4, 2),
-            (4 / 5, 3),
-            (3 / 5, 4),
-            (9 / 16, 5)
-        ]
+        cell_ratio = 1.25
+        variants = [(3 / (rows * cell_ratio), rows) for rows in (1, 2, 3, 4, 5)]
         best_ratio, rows = min(variants, key=lambda x: abs(curr_ratio - x[0]))
 
         new_h = int(w / best_ratio)
@@ -143,14 +150,23 @@ class PicToStoriesMod(loader.Module):
             out.seek(0)
 
             uploaded_file = await self.client.upload_file(out, file_name="s.jpg")
-            res = await self.client(
-                functions.stories.SendStoryRequest(
-                    peer=types.InputPeerSelf(),
-                    media=types.InputMediaUploadedPhoto(uploaded_file),
-                    privacy_rules=privacy,
-                    period=self.config["period"] * 3600,
+            try:
+                res = await self.client(
+                    functions.stories.SendStoryRequest(
+                        peer=types.InputPeerSelf(),
+                        media=types.InputMediaUploadedPhoto(uploaded_file),
+                        privacy_rules=privacy,
+                        period=self.config["period"] * 3600,
+                    )
                 )
-            )
+            except Exception as e:
+                if "STORIES_TOO_MUCH" in str(e):
+                    await utils.answer(
+                        message, self.strings["too_much_stories"].format(period)
+                    )
+                else:
+                    await utils.answer(message, self.strings["err"].format(e))
+                return
 
             sid = next(
                 (
