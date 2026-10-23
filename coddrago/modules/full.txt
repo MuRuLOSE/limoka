@@ -23,3 +23,13 @@ stats
 tagwatcher
 hardspam
 YaMusic
+MentionsTagger
+GuestBotCleaner
+SkyBlockHelper
+StickerToEmoji
+Avatars
+VoiceToText
+CUploader
+SoundGif
+EmojiToSticker
+ReplyReactor
