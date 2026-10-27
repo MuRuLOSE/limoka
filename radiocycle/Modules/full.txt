@@ -1,7 +1,0 @@
-Neofetch
-RandomAnimePic
-SpotifyMod
-UnbanAll
-voicetotext
-LastFm
-PicToStories
