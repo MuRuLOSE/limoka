@@ -17,7 +17,7 @@ import html
 import json
 import re
 import asyncio
-from typing import Iterable, Union, List, Dict, Any, Optional
+from typing import Iterable, Union, List, Dict, Any, Optional, Tuple
 import hashlib
 from telethon.types import Message
 from telethon.errors.rpcerrorlist import WebpageMediaEmptyError
@@ -521,7 +521,13 @@ class Limoka(loader.Module):
                 )
 
     async def _validate_url(self, url: str) -> Optional[str]:
-        if not url or url in self._invalid_banners:
+        if not url:
+            logger.debug("_validate_url: URL is empty, returning None")
+            return None
+        if url in self._invalid_banners:
+            logger.debug(
+                f"_validate_url: URL already in invalid_banners: {url}, returning None"
+            )
             return None
 
         def _is_supported_media(content_type: str) -> bool:
@@ -533,14 +539,24 @@ class Limoka(loader.Module):
                     url, timeout=5, allow_redirects=True
                 ) as response:
                     if response.status != 200:
+                        logger.debug(
+                            f"_validate_url: HEAD returned non-200 ({response.status}) for {url}"
+                        )
                         self._invalid_banners.add(url)
                         return None
                     ct = response.headers.get("Content-Type", "").lower()
+                    logger.debug(
+                        f"_validate_url: Content-Type from HEAD: '{ct}' for {url}"
+                    )
                     if not _is_supported_media(ct):
+                        logger.debug(
+                            f"_validate_url: Unsupported Content-Type '{ct}' for {url}, marking invalid"
+                        )
                         self._invalid_banners.add(url)
                         return None
-                    return url
+                    return url, ct
         except Exception as e:
+            logger.debug(f"_validate_url: exception for {url}: {type(e).__name__}: {e}")
             if url:
                 self._invalid_banners.add(url)
             return None
@@ -829,33 +845,53 @@ class Limoka(loader.Module):
         )
         return markup
 
+    def _get_media_kwargs(self, media: Optional[Tuple[str, str]]) -> Dict[str, str]:
+        if not media:
+            logger.debug("_get_media_kwargs: no media provided")
+            return {}
+        url, mime = media
+        if mime == "image/gif":
+            media_kwargs = {"gif": url}
+        elif mime.startswith("image/"):
+            media_kwargs = {"photo": url}
+        elif mime.startswith("video/mp4"):
+            media_kwargs = {"video": url}
+        else:
+            media_kwargs = {}
+        logger.debug(f"_get_media_kwargs: mime={mime}, media_kwargs={media_kwargs}")
+        return media_kwargs
+
     async def _safe_display(
         self,
         message_or_call: Union[Message, InlineCall],
         text: str,
         markup: list,
-        photo: Optional[Any] = None,
+        media: Optional[Tuple[str, str]] = None,
     ):
         try:
             if message_or_call is None:
                 logger.error("message_or_call is None in _safe_display")
                 return
+            media_kwargs = self._get_media_kwargs(media)
+            logger.debug(
+                f"_safe_display: type={type(message_or_call).__name__}, media_kwargs={media_kwargs}, text_length={len(text)}"
+            )
             if isinstance(message_or_call, Message):
-                if photo is not None:
+                if media_kwargs:
                     await self.inline.form(
                         text=text,
                         message=message_or_call,
                         reply_markup=markup,
-                        photo=photo,
+                        **media_kwargs,
                     )
                 else:
                     await self.inline.form(
                         text=text, message=message_or_call, reply_markup=markup
                     )
             else:
-                if photo is not None:
+                if media_kwargs:
                     await message_or_call.edit(
-                        text=text, reply_markup=markup, photo=photo
+                        text=text, reply_markup=markup, **media_kwargs
                     )
                 else:
                     await message_or_call.edit(text=text, reply_markup=markup)
@@ -880,11 +916,13 @@ class Limoka(loader.Module):
 
             lang = self.user_lang
             module_banner_raw = module_info.get("meta", {}).get("banner")
-            photo = await self._validate_url(module_banner_raw)
+            media = await self._validate_url(module_banner_raw)
+            logger.debug(f"_display_module: module_banner_raw={module_banner_raw}, validated_media={media}")
 
-            if not photo:
+            if not media:
                 state_banner_raw = self._get_banner_for_state("no_banner")
-                photo = await self._validate_url(state_banner_raw)
+                media = await self._validate_url(state_banner_raw)
+                logger.debug(f"_display_module: fallback banner={state_banner_raw}, validated_media={media}")
 
             header, body_pages, footer, categories_text = self._format_module_content(
                 module_info,
@@ -901,7 +939,7 @@ class Limoka(loader.Module):
                 session, body_pages, page_body, module_path
             )
 
-            await self._safe_display(message_or_call, full_message, markup, photo)
+            await self._safe_display(message_or_call, full_message, markup, media)
         except Exception as e:
             logger.exception(f"Error in _display_module: {e}")
             if isinstance(message_or_call, Message):

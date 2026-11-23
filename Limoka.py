@@ -17,7 +17,7 @@ import html
 import json
 import re
 import asyncio
-from typing import Iterable, Union, List, Dict, Any, Optional
+from typing import Iterable, Union, List, Dict, Any, Optional, Tuple
 import hashlib
 from telethon.types import Message
 from telethon.errors.rpcerrorlist import WebpageMediaEmptyError
@@ -650,6 +650,12 @@ class Limoka(loader.Module):
                 True,
                 lambda: "If enabled, Limoka will periodically check for updates and notify you when a new version is available.",
                 validator=loader.validators.Boolean(),
+            ),
+            loader.ConfigValue(
+                "show_warning_legacy",
+                True,
+                lambda: "Show warning about legacy version of Limoka for non-Heroku userbots.",
+                validator=loader.validators.Boolean(),
             )
         )
         self.name = self.strings["name"]
@@ -671,6 +677,8 @@ class Limoka(loader.Module):
             "not_found": "https://raw.githubusercontent.com/MuRuLOSE/hikka-assets/main/Limoka%20-%20Not%20Found.png",
             "filter_select": "https://raw.githubusercontent.com/MuRuLOSE/hikka-assets/main/Limoka%20-%20Categories.png",
         }
+
+        self.unsupported_userbots = {"hikka"} # ftg and gtg later
 
     def _filter_newbies(self, modules: Dict[str, Any]) -> Dict[str, Any]:
         """[DEPRECATED] Use ModuleRepository.apply_newbie_filter instead."""
@@ -755,6 +763,29 @@ class Limoka(loader.Module):
     async def client_ready(self, client, db):
         """Initialize client and load data."""
         self.client: TelegramClient = client
+        userbot = self.find_userbot(self.db.keys()).lower()
+        if userbot != "heroku" and self.config["show_warning_legacy"]:
+            logger.warning(
+                f"Limoka for now is optimized for Heroku Userbot. Not for {userbot.title()} Userbot"
+                f"\nHowever, if you want to use Limoka on {userbot.title()} Userbot"
+                " please download a legacy version of Limoka or get rid of this message by yourself."
+                f"\n{self.get_prefix()}fcfg Limoka show_warning_legacy False"
+                "\n<i>And remember, we cant guarantee that Limoka will work correctly on non-Heroku userbots, so use it at your own risk.</i>"
+                "\nOf course you can report any issues for non-supported userbots, but our priority is Heroku userbot, so we cant promise that all issues will be fixed."
+                "\nMore precisely: https://t.me/limokanews/133"
+                "\n\nDownload link: https://raw.githubusercontent.com/MuRuLOSE/limoka/refs/heads/main/LimokaLegacy.py"
+                (
+                    "\nBut unfourtunately, now module unloads."
+                    if userbot in self.unsupported_userbots
+                    else ""
+                )
+            )
+           
+            if userbot in self.unsupported_userbots:
+                message = await self.client.send_message('me', '.ulm Limoka')
+                await self.invoke("unloadmod", "Limoka", message.chat_id)
+                await message.delete()
+                return
         self.db = db
         self.api = APIClient()
         self.schema = Schema(
@@ -845,13 +876,15 @@ class Limoka(loader.Module):
             else:
                 logger.error(f"Skipping unsafe rmtree for {folder}")
 
-    async def _validate_url(self, url: str) -> Optional[str]:
+    async def _validate_url(self, url: str) -> Optional[Tuple[str, str]]:
         logger.debug(f"_validate_url called with: {url}")
         if not url:
             logger.warning("_validate_url: URL is empty, returning None")
             return None
         if url in self._invalid_banners:
-            logger.debug(f"_validate_url: URL already in invalid_banners: {url}, returning None")
+            logger.debug(
+                f"_validate_url: URL already in invalid_banners: {url}, returning None"
+            )
             return None
         
         # Headers to mimic a browser request
@@ -865,6 +898,9 @@ class Limoka(loader.Module):
                 ct = None
                 response_status = None
                 
+                def _is_supported_media(content_type: str) -> bool:
+                    return content_type.startswith("image/") or content_type.startswith("video/mp4")
+
                 # Try HEAD first (more efficient)
                 try:
                     logger.debug(f"_validate_url: Attempting HEAD request for {url}")
@@ -878,9 +914,6 @@ class Limoka(loader.Module):
                             logger.debug(f"_validate_url: Content-Type from HEAD: '{ct}' for {url}")
                 except (aiohttp.ClientError, asyncio.TimeoutError) as head_error:
                     logger.debug(f"_validate_url: HEAD failed ({type(head_error).__name__}), will try GET for {url}")
-                
-                def _is_supported_media(content_type: str) -> bool:
-                    return content_type.startswith("image/") or content_type.startswith("video/mp4")
 
                 # If HEAD didn't work or returned non-200, try GET
                 if ct is None:
@@ -891,17 +924,22 @@ class Limoka(loader.Module):
                                 url, timeout=10, headers=headers, allow_redirects=True
                             ) as response:
                                 if response.status != 200:
+                                    logger.debug(
+                                        f"_validate_url: GET returned non-200 ({response.status}) for {url}"
+                                    )
                                     self._invalid_banners.add(url)
                                     return None
                                 ct = response.headers.get("Content-Type", "").lower()
-                                
+                                logger.debug(
+                                    f"_validate_url: Content-Type from GET: '{ct}' for {url}"
+                                )
                                 # Try to get MIME if Content-Type is missing
                                 if not ct:
                                     try:
                                         data = await response.content.read(2048)
                                         mime = filetype.guess_mime(data, mime=True)
                                         if mime and _is_supported_media(mime):
-                                            return url
+                                            return url, mime
                                         else:
                                             self._invalid_banners.add(url)
                                             return None
@@ -914,21 +952,25 @@ class Limoka(loader.Module):
                             else:
                                 self._invalid_banners.add(url)
                                 return None
-                
+
                 # Check Content-Type from successful request
                 if ct and _is_supported_media(ct):
-                    return url
+                    return url, ct
                 elif ct:
+                    logger.debug(
+                        f"_validate_url: Unsupported Content-Type '{ct}' for {url}, marking invalid"
+                    )
                     self._invalid_banners.add(url)
                     return None
                 else:
+                    logger.debug(
+                        f"_validate_url: No Content-Type determined for {url}, marking invalid"
+                    )
                     self._invalid_banners.add(url)
                     return None
-                    
+        
         except Exception as e:
-            if url:
-                self._invalid_banners.add(url)
-            return None
+            logger.debug(f"_validate_url: exception for {url}: {type(e).__name__}: {e}")
         
     def find_userbot(self, keys: Iterable[str]) -> str | None:
         scores = defaultdict(int)
@@ -1133,37 +1175,58 @@ class Limoka(loader.Module):
         )
         return markup
 
+    def _get_media_kwargs(self, media: Optional[Tuple[str, str]]) -> Dict[str, str]:
+        if not media:
+            logger.debug("_get_media_kwargs: no media provided")
+            return {}
+        url, mime = media
+        if mime == "image/gif":
+            media_kwargs = {"gif": url}
+        elif mime.startswith("image/"):
+            media_kwargs = {"photo": url}
+        elif mime.startswith("video/mp4"):
+            media_kwargs = {"video": url}
+        else:
+            media_kwargs = {}
+        logger.debug(f"_get_media_kwargs: mime={mime}, media_kwargs={media_kwargs}")
+        return media_kwargs
+
     async def _safe_display(
         self,
         message_or_call: Union[Message, InlineCall],
         text: str,
         markup: list,
-        photo: Optional[Any] = None,
+        media: Optional[Tuple[str, str]] = None,
     ):
         try:
             if message_or_call is None:
                 logger.error("message_or_call is None in _safe_display")
                 return
+            media_kwargs = self._get_media_kwargs(media)
+            logger.debug(
+                f"_safe_display: type={type(message_or_call).__name__}, media_kwargs={media_kwargs}, text_length={len(text)}"
+            )
             if isinstance(message_or_call, Message):
-                # WORKAROUND: Telegram doesn't show premium emojis in first call,
-                # until it's edited. Firstly sending something, than fixing.
-                if photo is not None:
+                if media_kwargs:
+                    await self.inline.form(
+                        text=text,
+                        message=message_or_call,
+                        reply_markup=markup,
+                        **media_kwargs,
+                    )
+                else:
+                    # WORKAROUND: Telegram doesn't show premium emojis in first call,
+                    # until it's edited. Firstly sending something, than fixing.
                     msg = await self.inline.form(
                         text="🍋",
                         message=message_or_call,
                         reply_markup=[[{"text": "🍋", "action": "close"}]],
-                        photo=photo,
-                    )
-                    await msg.edit(text=text, reply_markup=markup, photo=photo)
-                else:
-                    msg = await self.inline.form(
-                        text="🍋", message=message_or_call, reply_markup=[[{"text": "🍋", "action": "close"}]]
                     )
                     await msg.edit(text=text, reply_markup=markup)
             else:
-                if photo is not None:
+                if media_kwargs:
                     await message_or_call.edit(
-                        text=text, reply_markup=markup, photo=photo
+                        text=text, reply_markup=markup, **media_kwargs
                     )
                 else:
                     await message_or_call.edit(text=text, reply_markup=markup)
@@ -1188,11 +1251,13 @@ class Limoka(loader.Module):
 
             lang = self.user_lang
             module_banner_raw = module_info.get("meta", {}).get("banner")
-            photo = await self._validate_url(module_banner_raw)
+            media = await self._validate_url(module_banner_raw)
+            logger.debug(f"_display_module: module_banner_raw={module_banner_raw}, validated_media={media}")
 
-            if not photo:
+            if not media:
                 state_banner_raw = self._get_banner_for_state("no_banner")
-                photo = await self._validate_url(state_banner_raw)
+                media = await self._validate_url(state_banner_raw)
+                logger.debug(f"_display_module: fallback banner={state_banner_raw}, validated_media={media}")
 
             header, body_pages, footer, categories_text = self._format_module_content(
                 module_info,
@@ -1210,7 +1275,7 @@ class Limoka(loader.Module):
                 session, body_pages, page_body, module_path
             )
 
-            await self._safe_display(message_or_call, full_message, markup, photo)
+            await self._safe_display(message_or_call, full_message, markup, media)
         except Exception as e:
             logger.exception(f"Error in _display_module: {e}")
             if isinstance(message_or_call, Message):
