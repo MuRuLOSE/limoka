@@ -1,1 +1,1 @@
-My modules for Heroku userbot and plugins for exteraless, telegram channel: https://t.me/NFModules
+My modules for Heroku userbot and plugins for Exteraless, telegram channel: https://t.me/NFModules
