@@ -1,14 +1,15 @@
 import argparse
-import asyncio
 import ast
-from html import escape
+import asyncio
 import logging
 import os
 import subprocess
 import tempfile
+from html import escape
 from pathlib import Path
 
 import aiohttp
+
 import parse
 
 parser = argparse.ArgumentParser(description="Update Diffs Script")
