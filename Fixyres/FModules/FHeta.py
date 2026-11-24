@@ -1,4 +1,4 @@
-__version__ = (9, 4, 0)
+__version__ = (9, 4, 1)
 
 # meta developer: @NFModules
 # meta pic: https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/logo.png
@@ -14,6 +14,7 @@ __version__ = (9, 4, 0)
 
 import asyncio
 import aiohttp
+import base64
 import re
 import uuid
 import inspect
@@ -24,6 +25,12 @@ from urllib.parse import unquote
 import telethon
 from .. import loader, utils
 from herokutl.tl.functions.contacts import UnblockRequest
+
+try:
+    import ataraxiatl
+    PLATFORM = "ataraxia"
+except ImportError:
+    PLATFORM = "heroku"
 
 
 class FHetaAPI:
@@ -558,6 +565,8 @@ class FHeta(loader.Module):
             await self.api.session.close()
         if hasattr(self, "inline") and hasattr(self.inline, "unregister_bot_update_handler"):
             self.inline.unregister_bot_update_handler("fheta_chosen")
+        if getattr(self, "_chosen_client", None) is not None:
+            self._chosen_client.remove_event_handler(self.chosen_raw)
             
     async def client_ready(self, client: 'telethon.TelegramClient', database: 'loader.Database') -> None:
         await client(UnblockRequest("@FHeta_robot"))
@@ -583,6 +592,8 @@ class FHeta(loader.Module):
                 if isinstance(event, telethon.tl.types.UpdateBotInlineSend) and getattr(event, "id", "").startswith("fh_"):
                     await self.chosen(event)
             self.inline.register_bot_update_handler("fheta_chosen", "chosen_inline_result", fheta_chosen)
+        else:
+            self.watch()
 
         if self.token and not await self.api.fetch("validatetkn", user_id=str(self.identifier)):
             self.token = None
@@ -608,10 +619,18 @@ class FHeta(loader.Module):
         await callback.answer(text=text or "", show_alert=alert)
 
     async def edit(self, target: Any, text: str, buttons: List[List[Dict[str, Any]]], banner: Optional[str] = None) -> None:
-        markup = self.inline.generate_markup(buttons)
-
         if banner and banner not in text:
             text = f'<a href="{banner}">&#8204;</a>' + text
+
+        if not hasattr(self.inline.bot, "edit_message"):
+            await target.edit(
+                text,
+                reply_markup=buttons,
+                link_preview_options={"url": banner, "show_above_text": True} if banner else {"is_disabled": True}
+            )
+            return
+
+        markup = self.inline.generate_markup(buttons)
         
         inline_msg_id = target.inline_message_id if hasattr(target, "inline_message_id") else None
 
@@ -643,6 +662,15 @@ class FHeta(loader.Module):
         banner = data.get("banner")
         if banner and banner not in text:
             text = f'<a href="{banner}">&#8204;</a>' + text
+        if not hasattr(self.inline.bot, "edit_message"):
+            await self.inline.bot.edit_message_text(
+                text,
+                inline_message_id=base64.urlsafe_b64encode(bytes(event.msg_id)[4:]).decode().rstrip("="),
+                parse_mode="HTML",
+                reply_markup=self.inline.generate_markup(buttons),
+                link_preview_options={"url": banner, "show_above_text": True} if banner else {"is_disabled": True}
+            )
+            return
         await self.inline.bot.edit_message(
             event.msg_id,
             None,
@@ -652,6 +680,19 @@ class FHeta(loader.Module):
             link_preview=banner is not None,
             invert_media=banner is not None
         )
+
+    def watch(self) -> None:
+        client = getattr(self.inline, "_bot_client", None)
+        if client is None or client is getattr(self, "_chosen_client", None):
+            return
+        if getattr(self, "_chosen_client", None) is not None:
+            self._chosen_client.remove_event_handler(self.chosen_raw)
+        client.add_event_handler(self.chosen_raw, telethon.events.Raw(types=telethon.tl.types.UpdateBotInlineSend))
+        self._chosen_client = client
+
+    async def chosen_raw(self, event: Any) -> None:
+        if str(getattr(event, "id", "")).startswith("fh_") and getattr(event, "msg_id", None) is not None:
+            await self.chosen(event)
 
     async def show(self, callback: Any, index: int, modules: List[Dict[str, Any]], query: str) -> None:
         await self.answer(callback)
@@ -754,7 +795,7 @@ class FHeta(loader.Module):
                 "thumb": "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/try_other_query.png"
             }
         
-        modules = await self.api.fetch("search", query=query, inline="true", token=self.token, user_id=self.identifier, ood=str(self.config["only_official_developers"]).lower())
+        modules = await self.api.fetch("search", query=query, inline="true", token=self.token, user_id=self.identifier, ood=str(self.config["only_official_developers"]).lower(), platform=PLATFORM)
         
         if not modules or not isinstance(modules, list):
             return {
@@ -773,9 +814,31 @@ class FHeta(loader.Module):
             if isinstance(description, dict):
                 description = description.get(self.strings["lang"]) or description.get("doc") or next(iter(description.values()), "")
             
+            thumb_url = data.get("pic") or "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/empty_pic.png"
+
+            if not hasattr(event, "builder"):
+                self.watch()
+                text = self.ui.format(data, query, 1, 1, True)
+                banner = data.get("banner")
+                if banner and banner not in text:
+                    text = f'<a href="{banner}">&#8204;</a>' + text
+                results.append({
+                    "type": "article",
+                    "id": f"fh_{queryid}_{index}",
+                    "title": str(data.get("name", "")),
+                    "description": str(description)[:250] + ("..." if len(str(description)) > 250 else ""),
+                    "thumbnail_url": thumb_url,
+                    "input_message_content": {
+                        "message_text": text,
+                        "parse_mode": "HTML",
+                        "link_preview_options": {"url": banner, "show_above_text": True} if banner else {"is_disabled": True}
+                    },
+                    "reply_markup": self.inline.generate_markup(self.ui.buttons(data.get("install", ""), data, 0, [data], query))
+                })
+                continue
+
             markup = self.inline.generate_markup(self.ui.buttons(data.get("install", ""), data, index, modules, query))
                 
-            thumb_url = data.get("pic") or "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/FHeta/empty_pic.png"
             thumb = self.inline._web_document(thumb_url)
             
             results.append(
@@ -813,7 +876,7 @@ class FHeta(loader.Module):
 
         message = await utils.answer(message, f"{self.ui.emoji('search')} <b>{self.strings['search'].format(query=f'<code>{utils.escape_html(query)}</code>')}</b>")
         
-        modules = await self.api.fetch("search", query=query, inline="false", token=self.token, user_id=self.identifier, ood=str(self.config["only_official_developers"]).lower())
+        modules = await self.api.fetch("search", query=query, inline="false", token=self.token, user_id=self.identifier, ood=str(self.config["only_official_developers"]).lower(), platform=PLATFORM)
         
         if not modules or not isinstance(modules, list):
             return await utils.answer(message, f"{self.ui.emoji('error')} <b>{self.strings['notfound'].format(query=f'<code>{utils.escape_html(query)}</code>')}</b>")
@@ -844,7 +907,7 @@ class FHeta(loader.Module):
             
         url = message.raw_text.strip()
         
-        if not url.startswith("https://api.fixyres.com/module/"):
+        if not url.startswith("https://api.fixyres.com/module/") or url.split("?")[0].endswith(".hmod"):
             return
             
         ologs = self.get_logs()
