@@ -1,5 +1,3 @@
 akinator
 FHeta
-BSR
 SCD
-LFSecurity

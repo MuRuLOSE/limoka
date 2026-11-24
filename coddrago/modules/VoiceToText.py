@@ -16,7 +16,7 @@
 # meta banner: https://raw.githubusercontent.com/coddrago/modules/refs/heads/main/banner.png
 # ---------------------------------------------------------------------------------
 
-__version__ = (1, 2, 0)
+__version__ = (1, 4, 0)
 
 import asyncio
 import json
@@ -61,6 +61,8 @@ class VoiceToTextMod(loader.Module):
         "ffmpeg_missing": "<tg-emoji emoji-id=\"5267310332325437921\">💢</tg-emoji> <b>ffmpeg not found on the system</b>",
         "auto_on": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>Auto-transcription enabled in this chat</b>",
         "auto_off": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>Auto-transcription disabled in this chat</b>",
+        "auto_on_all": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>Auto-transcription enabled in ALL chats</b>",
+        "auto_off_all": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>Auto-transcription disabled everywhere</b>",
         "key_set": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>{provider} API key saved</b>",
         "key_removed": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>{provider} API key removed</b>",
         "key_usage": "<tg-emoji emoji-id=\"5267310332325437921\">💢</tg-emoji> <b>Usage:</b> <code>{prefix}v2tkey &lt;groq|deepgram|mistral&gt; [api_key]</code>",
@@ -69,13 +71,14 @@ class VoiceToTextMod(loader.Module):
         "mistral_api_key_doc": "Mistral API key (console.mistral.ai) — fallback provider (Voxtral)",
         "lang_doc": "Recognition language (Google/Deepgram — ru-RU format, Groq/Mistral use the short code)",
         "max_duration_doc": "Maximum audio duration in seconds for auto-transcription",
+        "own_only_doc": "Transcribe only your own (outgoing) voice messages, ignore incoming ones",
         "list_header": '<tg-emoji emoji-id="5267003499861810620">✨</tg-emoji> <b>Chats with auto-transcription: {count}</b>',
         "list_empty": '<tg-emoji emoji-id="5267139079094442194">🫥</tg-emoji> <b>Auto-transcription is not enabled in any chat.</b>\nEnable it in the desired chat: <code>{prefix}v2tauto on</code>',
         "list_unavailable": "Chat unavailable",
         "list_page": 'Page {page}/{pages} · <code>{prefix}v2tlist &lt;page&gt;</code>',
         "list_usage": '<tg-emoji emoji-id="5267310332325437921">💢</tg-emoji> <b>Enter a page from 1 to {pages}:</b> <code>{prefix}v2tlist &lt;page&gt;</code>',
         "_cmd_doc_v2t": "(reply to a voice/video message) — transcribe it to text",
-        "_cmd_doc_v2tauto": "[on/off] — enable/disable auto-transcription of incoming voice messages in this chat",
+        "_cmd_doc_v2tauto": "[on/off|all/-all] - enable/disable auto-transcription in this chat, or in all chats",
         "_cmd_doc_v2tlist": "[page] — list chats with auto-transcription enabled",
         "_cmd_doc_v2tkey": "<groq|deepgram|mistral> [api_key] — set/remove a provider API key (fallback)",
     }
@@ -91,7 +94,9 @@ class VoiceToTextMod(loader.Module):
         "ffmpeg_missing": "<tg-emoji emoji-id=\"5267310332325437921\">💢</tg-emoji> <b>ffmpeg не найден в системе</b>",
         "auto_on": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>Автотранскрибация включена в этом чате</b>",
         "auto_off": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>Автотранскрибация выключена в этом чате</b>",
-        "_cmd_doc_v2tauto": "[on/off] — включить/выключить автотранскрибацию входящих голосовых в текущем чате",
+        "auto_on_all": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>Автотранскрибация включена во ВСЕХ чатах</b>",
+        "auto_off_all": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>Автотранскрибация выключена везде</b>",
+        "_cmd_doc_v2tauto": "[on/off|all/-all] — включить/выключить автотранскрибацию входящих голосовых в этом чате или во всех",
         "key_set": "<tg-emoji emoji-id=\"5267003499861810620\">✨</tg-emoji> <b>{provider} API ключ сохранён</b>",
         "key_removed": "<tg-emoji emoji-id=\"5264902955911388775\">🌙</tg-emoji> <b>{provider} API ключ удалён</b>",
         "key_usage": "<tg-emoji emoji-id=\"5267310332325437921\">💢</tg-emoji> <b>Использование:</b> <code>{prefix}v2tkey &lt;groq|deepgram|mistral&gt; [api_key]</code>",
@@ -100,6 +105,7 @@ class VoiceToTextMod(loader.Module):
         "mistral_api_key_doc": "Mistral API ключ (console.mistral.ai) — резервный провайдер (Voxtral)",
         "lang_doc": "Язык распознавания (для Google/Deepgram — формат ru-RU, для Groq/Mistral берётся короткий код)",
         "max_duration_doc": "Максимальная длительность аудио в секундах для автотранскрибации",
+        "own_only_doc": "Расшифровывать только свои (исходящие) голосовые, входящие игнорировать",
         "list_header": '<tg-emoji emoji-id="5267003499861810620">✨</tg-emoji> <b>Чаты с авторасшифровкой: {count}</b>',
         "list_empty": '<tg-emoji emoji-id="5267139079094442194">🫥</tg-emoji> <b>Авторасшифровка нигде не включена.</b>\nВключить в нужном чате: <code>{prefix}v2tauto on</code>',
         "list_unavailable": "Чат недоступен",
@@ -211,6 +217,8 @@ class VoiceToTextMod(loader.Module):
         "ffmpeg_missing": '<tg-emoji emoji-id="5267310332325437921">💢</tg-emoji> <b>FileNotFoundError: ffmpeg is not in PATH</b>',
         "auto_on": '<tg-emoji emoji-id="5267003499861810620">✨</tg-emoji> <b>auto_transcription[this_chat] = True</b>',
         "auto_off": '<tg-emoji emoji-id="5264902955911388775">🌙</tg-emoji> <b>auto_transcription[this_chat] = False</b>',
+        "auto_on_all": '<tg-emoji emoji-id="5267003499861810620">✨</tg-emoji> <b>auto_transcription["*"] = True</b>',
+        "auto_off_all": '<tg-emoji emoji-id="5264902955911388775">🌙</tg-emoji> <b>auto_transcription["*"] = False</b>',
         "key_set": '<tg-emoji emoji-id="5267003499861810620">✨</tg-emoji> <b>{provider}: API key persisted</b>',
         "key_removed": '<tg-emoji emoji-id="5264902955911388775">🌙</tg-emoji> <b>{provider}: API key unset</b>',
         "key_usage": '<tg-emoji emoji-id="5267310332325437921">💢</tg-emoji> <b>Usage:</b> <code>{prefix}v2tkey &lt;groq|deepgram|mistral&gt; [api_key]</code>',
@@ -351,6 +359,12 @@ class VoiceToTextMod(loader.Module):
                 180,
                 lambda: self.strings("max_duration_doc"),
                 validator=loader.validators.Integer(minimum=1),
+            ),
+            loader.ConfigValue(
+                "own_only",
+                False,
+                lambda: self.strings("own_only_doc"),
+                validator=loader.validators.Boolean(),
             ),
         )
 
@@ -565,18 +579,58 @@ class VoiceToTextMod(loader.Module):
 
     @loader.command()
     async def v2tauto(self, message: Message):
-        """[on/off] — enable/disable auto-transcription of incoming voice messages in this chat"""
+        """[on/off|all|-all] — enable/disable auto-transcription in this chat, or all chats"""
         args = utils.get_args_raw(message).strip().lower()
         chat_id = message.chat_id
         if chat_id is None:
             return
+
+        tokens = args.split()
+        mode = None
+        scope_all = False
+        for tok in tokens:
+            if tok in ("all", "все", "везде"):
+                scope_all = True
+            elif tok in ("-all", "-все"):
+                mode, scope_all = "off", True
+            elif tok in ("on", "1", "true", "вкл"):
+                mode = "on"
+            elif tok in ("off", "0", "false", "выкл"):
+                mode = "off"
+
+        if scope_all:
+            if mode == "off":
+                self.set("auto_all", False)
+                self.set("auto_chats_except", [])
+                self.set("auto_chats", [])
+                return await utils.answer(message, self.strings["auto_off_all"])
+            self.set("auto_all", True)
+            self.set("auto_chats_except", [])
+            self.set("auto_chats", [])
+            return await utils.answer(message, self.strings["auto_on_all"])
+
+        if self.get("auto_all", False):
+            # Global mode: current chat is toggled via the exception list
+            excepts = set(self.get("auto_chats_except", []))
+            if mode is None:
+                enabled = chat_id in excepts
+            else:
+                enabled = mode == "on"
+            if enabled:
+                excepts.discard(chat_id)
+            else:
+                excepts.add(chat_id)
+            self.set("auto_chats_except", sorted(excepts))
+            return await utils.answer(
+                message,
+                self.strings["auto_on"] if enabled else self.strings["auto_off"],
+            )
+
         chats = set(self.get("auto_chats", []))
-        if args in ("on", "1", "true", "вкл"):
-            enabled = True
-        elif args in ("off", "0", "false", "выкл"):
-            enabled = False
-        else:
+        if mode is None:
             enabled = chat_id not in chats
+        else:
+            enabled = mode == "on"
 
         if enabled:
             chats.add(chat_id)
@@ -617,35 +671,46 @@ class VoiceToTextMod(loader.Module):
             await utils.answer(message, self.strings["list_empty"].format(prefix=prefix))
             return
 
-        pages = (len(chats) + 9) // 10
+        per_page = 10
+        page_count = (len(chats) + per_page - 1) // per_page
         try:
-            page = int(utils.get_args_raw(message).strip() or "1")
-        except ValueError:
-            page = 0
-        if not 1 <= page <= pages:
+            start_page = int(utils.get_args_raw(message).strip() or "1")
+        except (ValueError, AttributeError):
+            start_page = 0
+        if not 1 <= start_page <= page_count:
             await utils.answer(
                 message,
-                self.strings["list_usage"].format(prefix=prefix, pages=pages),
+                self.strings["list_usage"].format(prefix=prefix, pages=page_count),
             )
             return
 
-        offset = (page - 1) * 10
-        selected = chats[offset:offset + 10]
-        semaphore = asyncio.Semaphore(4)
+        semaphore = asyncio.Semaphore(8)
         names = await asyncio.gather(
-            *(self._auto_chat_name(chat_id, semaphore) for chat_id in selected)
+            *(self._auto_chat_name(chat_id, semaphore) for chat_id in chats)
         )
-        lines = [self.strings["list_header"].format(count=len(chats)), ""]
-        lines.extend(
-            f"{offset + index}. <b>{name}</b> — <code>{chat_id}</code>"
-            for index, (chat_id, name) in enumerate(zip(selected, names), start=1)
-        )
-        if pages > 1:
-            lines.extend((
-                "",
-                self.strings["list_page"].format(page=page, pages=pages, prefix=prefix),
-            ))
-        await utils.answer(message, "\n".join(lines), parse_mode="HTML", link_preview=False)
+
+        dot = '<tg-emoji emoji-id="5873022839866527761">⚪️</tg-emoji>'
+        header = self.strings["list_header"].format(count=len(chats))
+        pages = []
+        for index in range(page_count):
+            chunk = list(zip(chats, names))[index * per_page:(index + 1) * per_page]
+            pages.append(
+                header
+                + "\n\n"
+                + "\n".join(
+                    f"{dot} <b>{name}</b> — <code>{chat_id}</code>"
+                    for chat_id, name in chunk
+                )
+            )
+
+        if page_count > 1 and start_page > 1:
+            pages = pages[start_page - 1:] + pages[:start_page - 1]
+
+        sent = await self.inline.list(message, pages)
+        if not sent:
+            await utils.answer(
+                message, pages[0], parse_mode="HTML", link_preview=False
+            )
 
     @loader.command()
     async def v2tkey(self, message: Message):
@@ -676,9 +741,17 @@ class VoiceToTextMod(loader.Module):
 
     @loader.watcher(only_messages=True)
     async def watcher(self, message: Message):
-        if message.chat_id is None or message.chat_id not in self.get("auto_chats", []):
+        if message.chat_id is None:
             return
-        if message.out:
+        if self.get("auto_all", False):
+            if message.chat_id in self.get("auto_chats_except", []):
+                return
+        elif message.chat_id not in self.get("auto_chats", []):
+            return
+        if self.config["own_only"]:
+            if not message.out:
+                return
+        elif message.out:
             return
         if not self._is_voice_media(message):
             return

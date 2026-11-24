@@ -1,4 +1,4 @@
-__version__ = (1, 1, 0)
+__version__ = (1, 1, 1)
 
 # ©️ Fixyres, 2026-2030
 # 🌐 https://github.com/Fixyres/FModules
@@ -51,9 +51,11 @@ class AsyncAki:
         })
         
         self.win = False
-        self.prog = "0.0"
-        self.step = "0"
+        self.prog = "0"
+        self.step = "1"
         self.slp = ""
+        self.num = 1
+        self.ses = ""
         self.name = None
         self.desc = ""
         self.photo = "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/akinator/banner.png"
@@ -80,54 +82,52 @@ class AsyncAki:
             
     async def start(self):
         t = await self._req("game", {"sid": 1, "cm": self.cm})
-        
-        if "technical problem" in (t if isinstance(t, str) else "").lower():
+        t = t if isinstance(t, str) else str(t)
+
+        if "technical problem" in t.lower():
             raise Exception("ATP")
 
-        ses_m = re.search(r"session['\"]\)\.val\(['\"](.+?)['\"]", t if isinstance(t, str) else str(t))
-        sig_m = re.search(r"signature['\"]\)\.val\(['\"](.+?)['\"]", t if isinstance(t, str) else str(t))
-        q_m = re.search(r'class="question-text".*?>(.+?)</p>', t if isinstance(t, str) else str(t), re.S)
+        ses_m = (
+            re.search(r"localStorage\.setItem\(['\"]session['\"],\s*['\"](.+?)['\"]", t)
+            or re.search(r"session['\"]\)\.val\(['\"](.+?)['\"]", t)
+        )
+        step_m = re.search(r"localStorage\.setItem\(['\"]step['\"],\s*['\"](\d+)['\"]", t)
+        q_m = re.search(r'class="question-text".*?>(.+?)</p>', t, re.S)
 
-        if not ses_m or not sig_m or not q_m:
+        if not ses_m or not q_m:
             raise Exception("AECF")
 
         self.ses = ses_m.group(1)
-        self.sig = sig_m.group(1)
+        if step_m:
+            self.step = step_m.group(1)
         self.q = html.unescape(q_m.group(1)).strip()
 
     async def answer(self, a):
         data = {
             "step": self.step, "progression": self.prog, "sid": 1, 
-            "cm": self.cm, "answer": a, "step_last_proposition": self.slp, 
-            "session": self.ses, "signature": self.sig
+            "cm": self.cm, "answer": a, "step_last_proposition": self.slp,
+            "num_question": self.num, "session": self.ses
         }
         res = await self._req("answer", data)
         self._upd(res)
 
     async def exclude(self):
         data = {
-            "step": self.step, "progression": self.prog, "sid": 1, 
-            "cm": self.cm, "session": self.ses, "signature": self.sig, 
-            "forward_answer": "1"
+            "step": self.step, "progression": self.prog, "sid": 1,
+            "cm": self.cm, "session": self.ses, "forward_answer": "1"
         }
+        self.win, self.name = False, None
         try:
             res = await self._req("exclude", data)
-            
-            if isinstance(res, dict) and res.get("question"):
-                self.win = False
-                self.name = None
-                self._upd(res)
-            else:
-                self.win = False
-                self.name = None
-                self.q = None
+            self._upd(res)
         except Exception:
-            self.win, self.name, self.q = False, None, None
+            self.q = None
 
     def _upd(self, d):
-        if not isinstance(d, dict): 
+        if not isinstance(d, dict) or d.get("completion") in ("KO", "SOUNDLIKE"):
+            self.win, self.name, self.q = False, None, None
             return
-        
+
         if d.get("id_proposition"):
             self.win = True
             self.name = html.unescape(d.get("name_proposition", ""))
@@ -135,17 +135,17 @@ class AsyncAki:
             self.photo = d.get("photo", "https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/akinator/banner.png")
             
             self.step = str(d.get("step", self.step))
-            self.slp = self.step
-            
+            self.slp = str(self.num)
+
             if "progression" in d and d["progression"] is not None:
                 self.prog = str(d["progression"])
                 
         elif d.get("question"):
             self.win = False
             self.q = html.unescape(d.get("question", ""))
-            self.prog = str(d.get("progression", "0"))
-            self.step = str(d.get("step", "0"))
-            self.slp = str(d.get("step_last_proposition", self.slp))
+            self.prog = str(d.get("progression", self.prog))
+            self.step = str(d.get("step", self.step))
+            self.num += 1
         else:
             self.win = False
             self.name = None
@@ -453,4 +453,4 @@ class Akinator(loader.Module):
                 self.strings["failed"],
                 photo="https://raw.githubusercontent.com/Fixyres/FModules/refs/heads/main/assets/akinator/idk.png",
                 reply_markup=[]
-        )
+    )
